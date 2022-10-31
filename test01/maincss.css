@@ -18,11 +18,6 @@ body{
 	height: auto;
 	width: 28%;
 	padding: 0px 40px 0px 40px;
-
-/*	border: solid;
-	border-width: 2px;
-	border-color: #0d0d0d;
-	background-color:#080808;	*/
 	text-align: left;
 }
 
@@ -51,6 +46,7 @@ body{
 	color: #a7a7a7;
 }
 
+/*Параметры кнопок b1_button*/
 .b1_button{
 	display: flex;
 	flex-direction: row;
@@ -59,22 +55,41 @@ body{
 	width: 100%;
 	height: 60px;
 	margin-top: 40px;
+	padding: 0px;
 
 	border-style: solid;
 	border-width: 1px;
 	border-color: #a7a7a7;
 	border-radius: 18px;
 	text-align: center;
+	background-color:#202020;	
 
+	font-family: 'Montserrat', sans-serif;
 	font-size: 18px;
-	font-weight: 200;
+	font-weight: 200;	 
 	color: #a7a7a7;
 }
 .b1_button img{
 	height: 16px;
 	padding-left: 12px;
 }
+.b1_button svg{
+	padding-left: 12px;
+ 	stroke:#a7a7a7;
+ 	width: 17px; 
+ 	height: 17px;
+ 	transition-property: stroke;
+	transition-duration: 0.6s;
+}
 
+/*Параметры анимации для b1_button*/
+.b1_button{
+	transition-property: color,border-color,box-shadow;
+	transition-duration: 0.6s;
+}
+
+
+/*Параметры cтрок b1_option*/
 .b1_optionLine{
 	display: flex;
 	flex-direction: row;

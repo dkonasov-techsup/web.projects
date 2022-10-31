@@ -1,19 +1,51 @@
 "use strict"
-// let login = prompt("Enter login","User");
 
-// // mesage1 = 'You are using a management system';
 
-// alert(`Login ${login} accept`);
+// const btn1 = document.getElementById('btnState');
+// const btn2 = document.getElementById('btnOption');
+// const btn3 = document.getElementById('btnData');
 
-const obj1 = {
-	val1:10,
-	val2:20,
-	val3:30
+const b1Buttons = document.querySelectorAll('.b1_button');
+console.log(b1Buttons);
+
+function btnClick(text){
+	console.log(text);
 }
-alert(obj1.val4);
 
-const obj2 = obj1;
-obj2.val4 = 40;
+function btnMouseEnter(event){
+	// console.log('mouseenter');
+	// console.log(event.target.id);
+	this.style.color="#0ab0ee";
+	this.style.borderColor="#0ab0ee";
+	this.style.boxShadow = "inset 0px 0px 8px 0px #0ab0ee";
+	// console.log(event.target.children[0]);
+	event.target.children[0].style.stroke="#0ab0ee";	
+}
+
+function btnMouseLeave(){
+	// console.log('mouseleave');
+	// console.log(event.target.id);
+	this.style.color="";
+	this.style.borderColor="";
+	this.style.boxShadow = "";
+	event.target.children[0].style.stroke="";	
+}
+
+// Присваивание EventListener в цикле
+b1Buttons.forEach(b1_button => {
+	 b1_button.addEventListener('mouseenter', btnMouseEnter);
+	 b1_button.addEventListener('mouseleave', btnMouseLeave)
+})
 
 
-alert(obj1.val4);
+
+// function btnMouseOver(text){
+// 	// alert(text);
+// 	btn1.style.color="blue";
+// }
+
+// function btnMouseLeave(){	
+// 	btn1.style.color='';
+// }
+
+
