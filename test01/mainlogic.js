@@ -9,7 +9,8 @@ const cBox1 = document.getElementById('b1_checkbox1');
 
 
 const b1Buttons = document.querySelectorAll('.b1_button');
-const b1CheckBox = document.querySelectorAll('.b1_switch input');
+// const b1CheckBox = document.querySelectorAll('.b1_switch input');
+const b1CheckBox = document.querySelectorAll('.b1_switch');
 console.log(b1Buttons);
 console.log(b1CheckBox);
 
@@ -38,15 +39,12 @@ function btnMouseLeave(event){
 }
 
 // Присваивание EventListener кнопкам в цикле
-b1Buttons.forEach(b1_button => {
+for(i=0;i<b1CheckBox.lenght i++) {
 	 b1_button.addEventListener('mouseenter', btnMouseEnter);
 	 b1_button.addEventListener('mouseleave', btnMouseLeave);
-})
+}
 
-// arr.forEach(addEventListener('checked', f1){
-// 	b1CheckBox;
-// })
-	
+
 
 function f1(event){
 	if(this.checked){
@@ -57,18 +55,9 @@ function f1(event){
 	}
 }
 
-// cBox1.addEventListener('change',f1);
 
 
-
-
-
-// Присваивание EventListener чекбоксам
-// b1CheckBox.forEach(b1_switch => {
-// 	 b1_switch.addEventListener('change', function(event){
-// 	 	console.log(1);
-// 	 });
-// })
+cBox1.addEventListener('change',f1);
 
 
 
