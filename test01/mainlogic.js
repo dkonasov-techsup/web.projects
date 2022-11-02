@@ -13,7 +13,7 @@ const b1Buttons = document.querySelectorAll('.b1_button');
 const b1CheckBox = document.querySelectorAll('.b1_switch');
 console.log(b1Buttons);
 console.log(b1CheckBox);
-
+console.log(b1CheckBox.childNode);
 
 function btnClick(text){
 	console.log(text);
@@ -39,10 +39,11 @@ function btnMouseLeave(event){
 }
 
 // Присваивание EventListener кнопкам в цикле
-for(i=0;i<b1CheckBox.lenght i++) {
+b1Buttons.forEach(b1_button => {
 	 b1_button.addEventListener('mouseenter', btnMouseEnter);
 	 b1_button.addEventListener('mouseleave', btnMouseLeave);
-}
+})
+
 
 
 
@@ -54,7 +55,6 @@ function f1(event){
 		console.log('unchecked');
 	}
 }
-
 
 
 cBox1.addEventListener('change',f1);
