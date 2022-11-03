@@ -40,31 +40,35 @@ b1Buttons.forEach(b1_button => {
 
 
 //Обработка чекбоксов
-//Объект для хранения состояния всех b1_checkbox
-const checkBoxState = {
-	cb0:0,
-	cb1:0,
-	cb2:0,
-}
-// console.log(checkBoxState);
 
+//Объект для хранения состояний всех b1_checkbox
+
+
+let checkBoxState = {
+
+}
+
+
+
+// Присваивание EventListener чекбоксам в цикле + заполнение объекта checkBoxState их значениями
 
 b1CheckBox.forEach(event =>{
-	this.addEventListener('change',cbm1);
+	event.addEventListener('change',checkBoxChecked);
+	checkBoxState[event.children[0].id] = checkBoxChecked && 0;
 })
 
-function cbm1(event){
+function checkBoxChecked(){
 	if(event.target.checked){
-		console.log(event.target.id+' checked');
-	}
+		// console.log(event.target.id + ' checked');
+		checkBoxState[event.target.id] = 1;
+		console.log(checkBoxState);	
+	}	
 	else{
-		console.log(event.target.id+' unchecked');
+		// console.log(event.target.id + ' unchecked');
+		checkBoxState[event.target.id] = 0;
+		console.log(checkBoxState);			
 	}
 }
-
-
-
-
 
 
 
