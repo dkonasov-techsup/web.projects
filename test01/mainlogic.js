@@ -1,19 +1,13 @@
 "use strict"
 
-
 // const btn1 = document.getElementById('btnState');
 // const btn2 = document.getElementById('btnOption');
 // const btn3 = document.getElementById('btnData');
 
-const cBox1 = document.getElementById('b1_checkbox1');
-
-
 const b1Buttons = document.querySelectorAll('.b1_button');
-// const b1CheckBox = document.querySelectorAll('.b1_switch input');
 const b1CheckBox = document.querySelectorAll('.b1_switch');
 console.log(b1Buttons);
 console.log(b1CheckBox);
-console.log(b1CheckBox.childNode);
 
 function btnClick(text){
 	console.log(text);
@@ -45,19 +39,28 @@ b1Buttons.forEach(b1_button => {
 })
 
 
+//Обработка чекбоксов
+//Объект для хранения состояния всех b1_checkbox
+const checkBoxState = {
+	cb0:0,
+	cb1:0,
+	cb2:0,
+}
+// console.log(checkBoxState);
 
 
-function f1(event){
-	if(this.checked){
-		console.log('checked');
+b1CheckBox.forEach(event =>{
+	this.addEventListener('change',cbm1);
+})
+
+function cbm1(event){
+	if(event.target.checked){
+		console.log(event.target.id+' checked');
 	}
 	else{
-		console.log('unchecked');
+		console.log(event.target.id+' unchecked');
 	}
 }
-
-
-cBox1.addEventListener('change',f1);
 
 
 
