@@ -169,7 +169,6 @@ body{
 }
 
 input:checked + .b1_slider {
-
 }
 
 input:checked + .b1_slider:before {
@@ -189,7 +188,7 @@ input:checked + .b1_slider:before {
 
 	background-color: #161616;
 	font-family: 'Montserrat', sans-serif;
-	font-size: 14px;
+	font-size: 12px;
 	color: #a7a7a7;
 }
 

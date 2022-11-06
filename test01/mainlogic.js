@@ -5,14 +5,23 @@
 // const btn3 = document.getElementById('btnData');
 
 const b1Buttons = document.querySelectorAll('.b1_button');
-const b1CheckBox = document.querySelectorAll('.b1_switch');
+const b1CheckBox = document.querySelectorAll('.b1_switch > input');
+const b1States = document.querySelectorAll('.b1_form > input');
 console.log(b1Buttons);
 console.log(b1CheckBox);
+console.log(b1States);
 
 function btnClick(text){
 	console.log(text);
 }
 
+// Присваивание EventListener кнопкам в цикле
+b1Buttons.forEach(b1_button => {
+	 b1_button.addEventListener('mouseenter', btnMouseEnter);
+	 b1_button.addEventListener('mouseleave', btnMouseLeave);
+})
+
+// Обработчикт событий для b1_button
 function btnMouseEnter(event){
 	// console.log('mouseenter');
 	// console.log(event.target.id);
@@ -32,43 +41,63 @@ function btnMouseLeave(event){
 	event.target.children[0].style.stroke="";	
 }
 
-// Присваивание EventListener кнопкам в цикле
-b1Buttons.forEach(b1_button => {
-	 b1_button.addEventListener('mouseenter', btnMouseEnter);
-	 b1_button.addEventListener('mouseleave', btnMouseLeave);
-})
-
-
 //Обработка чекбоксов
+//Коллекция для хранения всех b1_checkbox и состояний
+const checkBoxState = new Map()
 
-//Объект для хранения состояний всех b1_checkbox
-
-
-let checkBoxState = {
-
-}
-
-
-
-// Присваивание EventListener чекбоксам в цикле + заполнение объекта checkBoxState их значениями
-
-b1CheckBox.forEach(event =>{
-	event.addEventListener('change',checkBoxChecked);
-	checkBoxState[event.children[0].id] = checkBoxChecked && 0;
+// Присваивание EventListener чекбоксам в цикле + заполнение объекта checkBoxState текущими значениями
+b1CheckBox.forEach(input =>{	
+	input.addEventListener('change',checkBoxChange);
+	checkBoxState.set(input.id, checkBoxChecked(input));		
 })
 
-function checkBoxChecked(){
-	if(event.target.checked){
-		// console.log(event.target.id + ' checked');
-		checkBoxState[event.target.id] = 1;
-		console.log(checkBoxState);	
+//Считываем текущие значения
+function checkBoxChecked(input){
+	return (input.checked) ? 1 : 0;
+}
+console.log(checkBoxState);	
+
+
+//обработчик события 'change'
+function checkBoxChange(){
+	if(this.checked){
+		// console.log(this.id + ' checked');
+		checkBoxState.set(this.id, 1);		
+		console.log(checkBoxState);
+		setState(this.id);
 	}	
 	else{
-		// console.log(event.target.id + ' unchecked');
-		checkBoxState[event.target.id] = 0;
-		console.log(checkBoxState);			
+		// console.log(this.id + ' unchecked');
+		checkBoxState.set(this.id, 0);
+		console.log(checkBoxState);
+		setState(this.id);		
 	}
 }
 
+// Логика отображения статусов
+
+// Указываем зависимость статуса от чекбокса если таковая имеется
+const states = new Map;
+ states.set(b1CheckBox[0].id,b1States[0].id)
+ states.set(b1CheckBox[1].id,b1States[1].id)
+ states.set(b1CheckBox[2].id,b1States[2].id)
+console.log(states);
 
 
+function setState(id){
+	let keyId = id;
+	let key = states.get(keyId);
+	console.log(key);
+
+}
+
+// Ловим всплывающее событие 'change' от чекбоксов 
+document.body.addEventListener('change', dispm);
+
+function dispm(event){	
+	// console.log(event.target.id);
+	// let eventId = event.target.id;
+	// if(eventId in states.value()){
+	// 	console.log(yes);
+	// }
+}
