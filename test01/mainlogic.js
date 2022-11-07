@@ -53,51 +53,31 @@ b1CheckBox.forEach(input =>{
 
 //Считываем текущие значения
 function checkBoxChecked(input){
-	return (input.checked) ? 1 : 0;
+	return (input.checked) ? true : false;
 }
 console.log(checkBoxState);	
 
 
 //обработчик события 'change'
 function checkBoxChange(){
-	if(this.checked){
-		// console.log(this.id + ' checked');
-		checkBoxState.set(this.id, 1);		
-		console.log(checkBoxState);
-		setState(this.id);
-	}	
-	else{
-		// console.log(this.id + ' unchecked');
-		checkBoxState.set(this.id, 0);
-		console.log(checkBoxState);
-		setState(this.id);		
-	}
+	checkBoxState.set(this.id, this.checked);	
+	console.log(checkBoxState);
+	states.get(this.id).placeholder = checkBoxState.get(this.id) ? "ON" : "OFF";
 }
 
 // Логика отображения статусов
-
 // Указываем зависимость статуса от чекбокса если таковая имеется
 const states = new Map;
- states.set(b1CheckBox[0].id,b1States[0].id)
- states.set(b1CheckBox[1].id,b1States[1].id)
- states.set(b1CheckBox[2].id,b1States[2].id)
-console.log(states);
+	states.set(b1CheckBox[0].id, b1States[0])
+		  .set(b1CheckBox[1].id, b1States[1])
+		  .set(b1CheckBox[2].id, b1States[2])
 
+//Первоначальная проверка
+states.forEach((value, key) => value.placeholder = checkBoxState.get(key) ? "ON" : "OFF");
 
-function setState(id){
-	let keyId = id;
-	let key = states.get(keyId);
-	console.log(key);
-
-}
 
 // Ловим всплывающее событие 'change' от чекбоксов 
 document.body.addEventListener('change', dispm);
 
 function dispm(event){	
-	// console.log(event.target.id);
-	// let eventId = event.target.id;
-	// if(eventId in states.value()){
-	// 	console.log(yes);
-	// }
 }
