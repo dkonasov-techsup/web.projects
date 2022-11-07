@@ -21,7 +21,7 @@ b1Buttons.forEach(b1_button => {
 	 b1_button.addEventListener('mouseleave', btnMouseLeave);
 })
 
-// Обработчикт событий для b1_button
+// Обработчики событий для b1_button
 function btnMouseEnter(event){
 	// console.log('mouseenter');
 	// console.log(event.target.id);
@@ -62,7 +62,8 @@ console.log(checkBoxState);
 function checkBoxChange(){
 	checkBoxState.set(this.id, this.checked);	
 	console.log(checkBoxState);
-	states.get(this.id).placeholder = checkBoxState.get(this.id) ? "ON" : "OFF";
+	states.get(this.id).value = checkBoxState.get(this.id) ? "ON" : "OFF";
+	states.get(this.id).style.color = checkBoxState.get(this.id) ? "#18f15a" : "#a7a7a7";
 }
 
 // Логика отображения статусов
@@ -73,7 +74,9 @@ const states = new Map;
 		  .set(b1CheckBox[2].id, b1States[2])
 
 //Первоначальная проверка
-states.forEach((value, key) => value.placeholder = checkBoxState.get(key) ? "ON" : "OFF");
+
+states.forEach((value, key) => value.value = checkBoxState.get(key) ? "ON" : "OFF");
+
 
 
 // Ловим всплывающее событие 'change' от чекбоксов 

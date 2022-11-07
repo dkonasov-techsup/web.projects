@@ -123,11 +123,9 @@ body{
 
 	text-align: center;
 	font-size: 14px;
-	font-weight: 700;
-}
-.b1_form input::placeholder{
-	color: #18f15a;
-	opacity: 100;	
+	font-family: 'Montserrat', sans-serif;
+	font-weight: 500;
+	color: #a7a7a7;
 }
 
 /*Параметры b1_switch*/
@@ -196,3 +194,5 @@ input:checked + .b1_slider:before {
 	border: none;
 	outline: none !important;
 }
+
+
