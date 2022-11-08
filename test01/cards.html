@@ -1,0 +1,90 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+ <head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  
+  <title>test cards</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap" rel="stylesheet"> 
+ </head>
+ 
+<style type="text/css">
+	body{background-color:#f6f6f6; font-family:Roboto; font-weight:300;}	
+</style>
+
+ <body>
+ 	
+ 	<style type ="text/css">
+ 		.cardWrapper{display: flex; flex-wrap: wrap; width:80%;}
+ 		.block{display: flex; flex-direction: column; flex: 1; min-width: 28%; margin: 5px; background-color:#ffffff;}
+ 		/*Стилизация заголовка карточки*/
+ 		.blockDesc{display:flex; height:50px; justify-content:space-around; align-items:center; background-color:#fed136; font-size:20px; font-weight:500; color:#313131;}
+ 		
+ 		/*Стилизация контента карточки*/
+ 		.blockCont{display:flex; flex-direction: column; flex: 1; line-height: 140%;}
+ 		a{display: inline-flex; /*justify-content: center;*/ padding: 8px 0px 8px 36px; /*text-align:center;*/ text-decoration:none; background-color:#e3e3e3;}.last{flex-grow: 2; }  
+ 		a:visited{color:#000000;}
+ 		a:hover{background-color:#c9c9c9;}
+ 		
+
+ 		@media(max-width: 1320px){.block{min-width: 48%;}}
+ 		@media(max-width: 600px){.block{width: 100%;}} 
+
+ 	</style>
+
+
+ 	<div class = "cardWrapper">
+ 		<div class = "block">
+ 			<div class ="blockDesc">Pioneer Station</div> 			
+ 				<div class ="blockCont">
+ 					<a href="">Знакомство с программой</a>
+ 					<a href="">Описание блоков</a>
+ 					<a href="" class="last">Примеры программ</a>
+ 				</div> 			
+ 		</div>
+ 		<div class = "block">
+ 			<div class ="blockDesc">TRIK Studio</div>
+ 				<div class ="blockCont">
+ 					<a href="">Знакомство с программой</a>
+ 					<a href="">Редактор кода</a>
+ 					<a href="" class="last">Работа с USB-модемом</a>
+ 				</div>	
+ 		</div>
+ 		<div class = "block">
+ 			<div class ="blockDesc">LUA</div>		
+ 				<div class ="blockCont">
+ 					<a href>Документация по API</a>
+ 					<a href>Описание функций</a>
+ 					<a href>Распиновка платы автопилота</a>
+ 					<a href class="last">Примеры LUA-скриптов</a>
+ 				</div>		
+ 		</div>
+ 		<div class = "block">
+ 			<div class ="blockDesc">Python</div>
+ 				<div class ="blockCont">
+ 					<a href>Подготовка к программированию</a>
+ 					<a href>Описание методов Python_sdk</a>
+ 					<a href class="last">Примеры и разбор скриптов</a>
+ 				</div>	
+ 		</div>
+ 		<div class = "block">
+ 			<div class ="blockDesc">Pioneer MAX</div>
+ 				<div class ="blockCont">
+ 					<a href>PioneerBricks</a>
+ 					<a href>Инструменты разработки</a>
+ 					<a href class="last">Программирование с помощью PythonAPI</a>
+ 				</div>		
+ 		</div>
+ 		<div class = "block">
+ 			<div class ="blockDesc">Pioneer JUMP</div>
+ 				<div class ="blockCont">
+ 					<a href>Режим блочного программирования</a>
+ 					<a href>Описание блоков</a>
+ 					<a href class="last">Примеры программ</a>
+ 				</div>
+ 		</div>
+ 	</div>
+
+ </body>
+</html>
