@@ -74,7 +74,6 @@ const states = new Map;
 		  .set(b1CheckBox[2].id, b1States[2])
 
 //Первоначальная проверка
-
 states.forEach((value, key) => value.value = checkBoxState.get(key) ? "ON" : "OFF");
 
 
