@@ -16,16 +16,19 @@
  <body>
  	
  	<style type ="text/css">
- 		.cardWrapper{display: flex; flex-wrap: wrap; width:80%;}
- 		.block{display: flex; flex-direction: column; flex: 1; min-width: 28%; margin: 5px; background-color:#ffffff;}
+ 		.cardWrapper{display: flex; flex-wrap: wrap; width:100%;}
+ 		.block{display: flex; flex-direction: column; flex: 1; min-width: 28%; margin: 5px; background-color:#e3e3e3;}
  		/*Стилизация заголовка карточки*/
- 		.blockDesc{display:flex; height:50px; justify-content:space-around; align-items:center; background-color:#fed136; font-size:20px; font-weight:500; color:#313131;}
+ 		.blockDesc{display:flex; height:50px; justify-content:space-around; align-items:center; 
+ 			background-color:#fed136; font-size:20px; font-family: 'Montserrat', sans-serif; font-weight:500; color:#313131;}
  		
  		/*Стилизация контента карточки*/
  		.blockCont{display:flex; flex-direction: column; flex: 1; line-height: 140%;}
- 		a{display: inline-flex; /*justify-content: center;*/ padding: 8px 0px 8px 36px; /*text-align:center;*/ text-decoration:none; background-color:#e3e3e3;}.last{flex-grow: 2; }  
- 		a:visited{color:#000000;}
- 		a:hover{background-color:#c9c9c9;}
+ 		.blockCont a{display: inline-flex; /*justify-content: center;*/ padding: 8px 0px 8px 36px;
+ 			font-weight:300; text-decoration:none; background-color:#e3e3e3;transition: background-color 500ms;}
+ 		.last{flex-grow: 2; }  
+ 		.blockCont a:visited{color:#000000;}
+ 		.blockCont a:hover{background-color:#c9c9c9;}
  		
 
  		@media(max-width: 1320px){.block{min-width: 48%;}}
@@ -42,7 +45,7 @@
  				<div class ="blockCont">
  					<a href="">Знакомство с программой</a>
  					<a href="">Описание блоков</a>
- 					<a href="" class="last">Примеры программ</a>
+ 					<a href="">Примеры программ</a>
  				</div> 			
  		</div>
  		<div class = "block">
@@ -50,7 +53,7 @@
  				<div class ="blockCont">
  					<a href="">Знакомство с программой</a>
  					<a href="">Редактор кода</a>
- 					<a href="" class="last">Работа с USB-модемом</a>
+ 					<a href="">Работа с USB-модемом</a>
  				</div>	
  		</div>
  		<div class = "block">
@@ -59,7 +62,7 @@
  					<a href>Документация по API</a>
  					<a href>Описание функций</a>
  					<a href>Распиновка платы автопилота</a>
- 					<a href class="last">Примеры LUA-скриптов</a>
+ 					<a href>Примеры LUA-скриптов</a>
  				</div>		
  		</div>
  		<div class = "block">
@@ -67,7 +70,7 @@
  				<div class ="blockCont">
  					<a href>Подготовка к программированию</a>
  					<a href>Описание методов Python_sdk</a>
- 					<a href class="last">Примеры и разбор скриптов</a>
+ 					<a href>Примеры и разбор скриптов</a>
  				</div>	
  		</div>
  		<div class = "block">
@@ -75,7 +78,7 @@
  				<div class ="blockCont">
  					<a href>PioneerBricks</a>
  					<a href>Инструменты разработки</a>
- 					<a href class="last">Программирование с помощью PythonAPI</a>
+ 					<a href>Программирование с помощью PythonAPI</a>
  				</div>		
  		</div>
  		<div class = "block">
@@ -83,17 +86,20 @@
  				<div class ="blockCont">
  					<a href>Режим блочного программирования</a>
  					<a href>Описание блоков</a>
- 					<a href class="last">Примеры программ</a>
+ 					<a href>Примеры программ</a>
  				</div>
  		</div>
  	</div>
 
-<script type="text/javascript">
-const blocks = document.querySelectorAll('.blockCont');
-const blocks2 = document.getElementsByClassName('blockCont');
+<!-- <script type="text/javascript">
+
+const blocks = document.getElementsByClassName('blockCont');
 console.log(blocks);
-console.log(blocks2[0].children);
-</script>
+blocks[0].lastElementChild.classList.add('last');
+for(let el of blocks){
+	el.lastElementChild.classList.add('last');
+}
+</script> -->
 
  </body>
 </html>
