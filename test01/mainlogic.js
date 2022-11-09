@@ -81,5 +81,22 @@ states.forEach((value, key) => value.value = checkBoxState.get(key) ? "ON" : "OF
 // Ловим всплывающее событие 'change' от чекбоксов 
 document.body.addEventListener('change', dispm);
 
-function dispm(event){	
+function dispm(event){
+if 	
 }
+
+
+
+// -----------------------------------
+// Создание и логика всплывающих узлов
+
+let msgWrapper = document.createElement('div');
+let msgCont = document.createElement('div');
+msgWrapper.appendChild(msgCont);
+msgWrapper.className = "msgWrapper";
+msgCont.className = "msgCont";
+
+
+document.body.prepend(msgWrapper);
+
+//Вызов при отключении системы
