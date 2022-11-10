@@ -45,7 +45,7 @@ function btnMouseLeave(event){
 //Коллекция для хранения всех b1_checkbox и состояний
 const checkBoxState = new Map()
 
-// Присваивание EventListener чекбоксам в цикле + заполнение объекта checkBoxState текущими значениями
+// Присваивание EventListener чекбоксам в цикле + заполнение коллекции checkBoxState текущими значениями
 b1CheckBox.forEach(input =>{	
 	input.addEventListener('change',checkBoxChange);
 	checkBoxState.set(input.id, checkBoxChecked(input));		
@@ -62,8 +62,7 @@ console.log(checkBoxState);
 function checkBoxChange(){
 	checkBoxState.set(this.id, this.checked);	
 	console.log(checkBoxState);
-	states.get(this.id).value = checkBoxState.get(this.id) ? "ON" : "OFF";
-	states.get(this.id).style.color = checkBoxState.get(this.id) ? "#18f15a" : "#a7a7a7";
+	setValue(this.id);
 }
 
 // Логика отображения статусов
@@ -74,21 +73,46 @@ const states = new Map;
 		  .set(b1CheckBox[2].id, b1States[2])
 
 //Первоначальная проверка
-states.forEach((value, key) => value.value = checkBoxState.get(key) ? "ON" : "OFF");
+states.forEach((value, key) => setValue(key));
 
+
+function setValue(id){
+	if(checkBoxState.get(id) == true){
+	states.get(id).value ="ON";
+	states.get(id).style.color = "#18f15a";
+	}
+	else{
+	states.get(id).value ="OFF";
+	states.get(id).style.color = "#a7a7a7";
+	}
+}
 
 
 // Ловим всплывающее событие 'change' от чекбоксов 
-document.body.addEventListener('change', dispm);
+document.body.addEventListener('change', handler1);
 
-function dispm(event){
-
+function handler1(event){
+	//cтатус 1-го чекбокса
+	if(checkBoxState.get('b1_checkbox1')==false){
+		sysOff();
+	}
+	else{
+	}
 }
 
 
 
+function sysOff(){
+	for(let i=1; i<checkBoxState.size; i++){
+		checkBoxState.set(i)=false;
+		// console.log('aa');
+	}
+	console.log('system OFF');
+	console.log(checkBoxState);
+}
+
 // -----------------------------------
-// Создание и логика всплывающих узлов
+// Генерация и логика всплывающих узлов
 
 let msgWrapper = document.createElement('div');
 let msgCont = document.createElement('div');
@@ -97,6 +121,6 @@ msgWrapper.className = "msgWrapper";
 msgCont.className = "msgCont";
 
 
-document.body.prepend(msgWrapper);
+// document.body.prepend(msgWrapper);
 
-//Вызов при отключении системы
+// Вызов при отключении системы

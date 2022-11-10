@@ -207,7 +207,8 @@ input:checked + .b1_slider:before {
 .msgCont{
 	display: flex;
 	height: 100%;
-	margin: 0px 40px 0px 40px;
+	width:90%;
+	margin: auto;
 	background-color: #161616;
 	border-radius: 0px 0px 18px 18px;
 }
