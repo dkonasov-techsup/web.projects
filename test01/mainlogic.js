@@ -82,7 +82,7 @@ states.forEach((value, key) => value.value = checkBoxState.get(key) ? "ON" : "OF
 document.body.addEventListener('change', dispm);
 
 function dispm(event){
-if 	
+
 }
 
 
