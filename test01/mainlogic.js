@@ -100,20 +100,20 @@ function handler1(event){
 	}
 }
 
-
-
 function sysOff(){
-	for(let i=1; i<checkBoxState.size; i++){
-		checkBoxState.set(i)=false;
-		// console.log('aa');
-	}
-	console.log('system OFF');
+
+	b1CheckBox.forEach(input =>{	
+		input.checked = false;
+		checkBoxState.set(input.id, checkBoxChecked(input));
+		setValue(input.id);		
+	})
 	console.log(checkBoxState);
 }
 
+
 // -----------------------------------
 // Генерация и логика всплывающих узлов
-
+// Генерация блока
 let msgWrapper = document.createElement('div');
 let msgCont = document.createElement('div');
 msgWrapper.appendChild(msgCont);
@@ -121,6 +121,6 @@ msgWrapper.className = "msgWrapper";
 msgCont.className = "msgCont";
 
 
-// document.body.prepend(msgWrapper);
+document.body.prepend(msgWrapper);
 
 // Вызов при отключении системы
