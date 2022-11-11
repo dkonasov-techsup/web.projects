@@ -150,9 +150,8 @@ body{
   width: 100%;
   border-radius: 20px;
   background-color:#121212;
-  transition: .4s;
-
   box-shadow: 0px 0px 12px 0px #5c5c5c;
+  transition: .4s;
 }
 
 .b1_slider:before {
@@ -197,13 +196,22 @@ input:checked + .b1_slider:before {
 }
 
 /*------------------------------------*/
+/*Всплывающие узлы*/
+
 .msgWrapper{
 	position: fixed;
 	z-index: 2;
-	top: 0;
+	top: -38px;
 	width: 100%;
 	height: 38px;
+	transition-property: top;
+	transition-duration: 1400ms;
+  	transition-delay: 800ms;
+  	transition-timing-function: cubic-bezier(0.84,-0.01, 0.11, 1.01);
+
+  	/*transition: top,1500ms,3000ms,ease-in-out;*/	
 }
+
 .msgCont{
 	display: flex;
 	height: 100%;

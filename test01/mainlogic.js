@@ -101,13 +101,15 @@ function handler1(event){
 }
 
 function sysOff(){
-
 	b1CheckBox.forEach(input =>{	
 		input.checked = false;
 		checkBoxState.set(input.id, checkBoxChecked(input));
 		setValue(input.id);		
 	})
 	console.log(checkBoxState);
+	// document.body.prepend(msgWrapper);
+	// let msgWrapper = document.querySelectorAll('.msgWrapper')[0];
+	displayTimer()	
 }
 
 
@@ -121,6 +123,21 @@ msgWrapper.className = "msgWrapper";
 msgCont.className = "msgCont";
 
 
-document.body.prepend(msgWrapper);
+//Параметры анимации для msgWrapper
+function displayTimer(){
+	document.body.prepend(msgWrapper);
+	let msgWrapperDiv = document.querySelectorAll('.msgWrapper')[0];
+	// Обязательный запрос просчитанных стилей
+	let top = window.getComputedStyle(msgWrapperDiv).top;
+			
+	msgWrapperDiv.style.top = "0px";	
+}
 
-// Вызов при отключении системы
+
+
+// document.body.prepend(msgWrapper);
+
+// let msgWrapperDiv = document.querySelectorAll('.msgWrapper')[0];
+// console.log(msgWrapperDiv);
+
+// displayTimer()
