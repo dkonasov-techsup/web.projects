@@ -204,21 +204,30 @@ input:checked + .b1_slider:before {
 	top: -38px;
 	width: 100%;
 	height: 38px;
-	transition-property: top;
-	transition-duration: 1400ms;
-  	transition-delay: 800ms;
-  	transition-timing-function: cubic-bezier(0.84,-0.01, 0.11, 1.01);
-
-  	/*transition: top,1500ms,3000ms,ease-in-out;*/	
+	/*opacity: 0%;*/
+	transition: top 800ms 0ms ease-in-out;
+/*	transition-duration: 800ms; 
+  	transition-delay: 0ms;
+  	transition-timing-function: ease-in-out;*/
 }
 
 .msgCont{
 	display: flex;
+	justify-content: center;
+	align-items: center;
 	height: 100%;
-	width:90%;
+	width: calc(28% + 28% + 28% + 136px);
+
 	margin: auto;
 	background-color: #161616;
+	box-shadow: inset 0px 0px 0px 0px #780000;
 	border-radius: 0px 0px 18px 18px;
+
+	font-size: 14px;
+	font-family: 'Montserrat', sans-serif;
+	color: #e8e8e8;
+
+
+	/*transition: opacity 800ms 0ms;*/
+	transition: box-shadow, 800ms 0ms;
 }
-
-

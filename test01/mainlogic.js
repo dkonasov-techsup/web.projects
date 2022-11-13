@@ -1,8 +1,8 @@
 "use strict"
 
-// const btn1 = document.getElementById('btnState');
-// const btn2 = document.getElementById('btnOption');
-// const btn3 = document.getElementById('btnData');
+const sys = {
+ state:true 
+}
 
 const b1Buttons = document.querySelectorAll('.b1_button');
 const b1CheckBox = document.querySelectorAll('.b1_switch > input');
@@ -19,6 +19,7 @@ function btnClick(text){
 b1Buttons.forEach(b1_button => {
 	 b1_button.addEventListener('mouseenter', btnMouseEnter);
 	 b1_button.addEventListener('mouseleave', btnMouseLeave);
+	 b1_button.addEventListener('click', btnClick);
 })
 
 // Обработчики событий для b1_button
@@ -87,30 +88,33 @@ function setValue(id){
 	}
 }
 
-
 // Ловим всплывающее событие 'change' от чекбоксов 
 document.body.addEventListener('change', handler1);
 
 function handler1(event){
-	//cтатус 1-го чекбокса
+	//Регулярный чек певого чекбокса	
 	if(checkBoxState.get('b1_checkbox1')==false){
 		sysOff();
 	}
-	else{
-	}
+	else{sysOn();}
+}
+
+function sysOn(){
+	msgWrapperRecovery(true)
+	sys.state = true;
 }
 
 function sysOff(){
+	if (sys.state == false){msgBlink()}
+	sys.state = false;	
 	b1CheckBox.forEach(input =>{	
 		input.checked = false;
 		checkBoxState.set(input.id, checkBoxChecked(input));
 		setValue(input.id);		
 	})
 	console.log(checkBoxState);
-	// document.body.prepend(msgWrapper);
-	// let msgWrapper = document.querySelectorAll('.msgWrapper')[0];
-	displayTimer()	
-}
+	msgWrapperRecovery(false)
+}	
 
 
 // -----------------------------------
@@ -118,26 +122,29 @@ function sysOff(){
 // Генерация блока
 let msgWrapper = document.createElement('div');
 let msgCont = document.createElement('div');
+let msg = document.createTextNode('System is disabled! All functions are not available!');
+msgCont.appendChild(msg);
 msgWrapper.appendChild(msgCont);
 msgWrapper.className = "msgWrapper";
 msgCont.className = "msgCont";
 
+document.body.prepend(msgWrapper);
+let msgWrapperDiv = document.querySelectorAll('.msgWrapper')[0];
+let msgContDiv = document.querySelectorAll('.msgCont')[0];
 
-//Параметры анимации для msgWrapper
-function displayTimer(){
-	document.body.prepend(msgWrapper);
-	let msgWrapperDiv = document.querySelectorAll('.msgWrapper')[0];
-	// Обязательный запрос просчитанных стилей
-	let top = window.getComputedStyle(msgWrapperDiv).top;
-			
-	msgWrapperDiv.style.top = "0px";	
+//Параметры анимации для msgWrapper и потомков
+function msgWrapperRecovery(val){
+	// Обязательный запрос просчитанных стилей?
+	// window.getComputedStyle(msgWrapperDiv).top;
+	// window.getComputedStyle(msgWrapperDiv).opacity;
+
+	msgWrapperDiv.style.top = val ? "-38px" : "0px";
+	msgContDiv.style.opacity = val ? "0%" : "80%";
+	//Раскидать через if удаление элемента из DOM ?
 }
 
+function msgBlink(){
+	msgContDiv.style.boxShadow = "inset 0px 0px 30px 0px #780000";
+	setTimeout(function(){msgContDiv.style.boxShadow = ""},800)	
+}
 
-
-// document.body.prepend(msgWrapper);
-
-// let msgWrapperDiv = document.querySelectorAll('.msgWrapper')[0];
-// console.log(msgWrapperDiv);
-
-// displayTimer()
