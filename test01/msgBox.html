@@ -1,0 +1,103 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+ <head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  
+  <title>test cards</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap" rel="stylesheet"> 
+ </head>
+ 
+<style type="text/css">
+	body{background-color:#f6f6f6; font-family:Roboto; font-weight:300;}	
+</style>
+
+ <body>
+ 	
+ 	<style type ="text/css">
+ 		body{
+ 			width: 100%;
+ 			height: 100%;
+ 			background-color: #161616;
+ 		}
+
+ 		.wrapper{
+			position: fixed;
+ 			top:100px;
+ 			height: 380px;
+ 			width: 100%;
+ 			display: flex;
+ 			justify-content: center;
+ 			align-items: center; 			
+ 		}
+ 		.msgBox{
+ 			display: flex;
+ 			flex-direction: column;
+ 			height: 100%;
+ 			width: 600px;
+
+ 		}
+
+ 		.headerCont{
+ 			display: flex;
+ 			
+ 			text-align: left;
+ 			font-size: 30px;
+ 			font-family: 'Roboto';
+ 			font-weight: 700;
+ 			color: #ffffff;
+ 		}
+ 		.content{
+ 			position: relative;
+ 			display: flex;
+ 			flex-direction: row;
+
+ 			height: 100%;
+ 			font-family: 'Roboto';
+ 			font-weight: 300;
+ 			color: #ffffff;
+ 		}
+
+ 		.text{
+ 			width: 60%;
+ 		}
+
+ 		.imgCont{
+ 			position: absolute;
+ 			left: 220px;
+ 			/*top: 5%;*/
+ 			width: 100%;
+ 			height: 100%;
+ 			z-index: 400;
+ 			background-repeat: no-repeat;
+ 			background-image: url("copter.png");
+ 			background-size: contain;
+ 		}
+
+ 	</style>
+
+ 	<div class = "wrapper">
+ 		<div class="msgBox">
+ 			<div class="headerCont"> Новые кейсы от пользователей <br> Pioneer Mini!</div>
+ 			<div class="content">
+ 				<div class="text">На сайте появились новые кейсы от участников конкурса "Hello Pioneer"!
+ 				Предлагаем ознакомиться с трудами юных инженеров и программистов!</div>
+ 				<div class="imgCont"></div>
+ 			</div>
+ 			
+ 		<div>
+ 	</div>
+
+<!-- <script type="text/javascript">
+
+const blocks = document.getElementsByClassName('blockCont');
+console.log(blocks);
+blocks[0].lastElementChild.classList.add('last');
+for(let el of blocks){
+	el.lastElementChild.classList.add('last');
+}
+</script> -->
+
+ </body>
+</html>
