@@ -21,8 +21,17 @@ function callMsg(){
 	bgWrapper.style.display = "block";
 	
 	setTimeout(function(){bgWrapper.style.opacity = "1";},20)
+
+	let btn01 = document.querySelectorAll('.btn01')[0];
+	btn01.addEventListener('mouseenter', btn01mouseEnter);
+	btn01.addEventListener('mouseleave', btn01mouseLeave);
+	console.log(btn01);
 }
 
+function btn01mouseEnter(){
+	console.log(event);
+}
 
-
-
+function btn01mouseLeave(){
+	console.log(event);	
+}

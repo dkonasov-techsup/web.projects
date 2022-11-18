@@ -74,28 +74,57 @@
  		}
 
  		.msgBlock{
+ 			display: flex; justify-content: center; align-items: center;
  			width: 40%;
  			height: 340px;
  			margin: auto;
- 			background-color: #cecece;
+ 			background-color: #2a2a2a;
  		}
 
  		.btn01{
  			display: flex; justify-content: center; align-items: center;
+ 			position: relative;
  			width: 60%;
  			height: 60px;
- 			background-color: black;
- 			opacity: 0.2;
+ 			background-color: #ffffff00; 			
  			color: white;
- 			z-index: 100;
- 		}
- 		.btn01 span{
- 			color: white;
- 			opacity: 1;
- 			z-index: 200;
+ 			transition: all 0.5s;
+ 			
  		}
 
+ 		.btn01::before {
+		  content: '';
+		  position: absolute;
+		  top: 0;
+		  left: 0;
+		  width: 100%;
+		  height: 100%;
+		  z-index: 1;
+		  background-color: rgba(255,255,255,0.1);
+		  transition: all 0.4s;
+		}
+		.btn01:hover::before {
+		  opacity: 0 ;
+		  transform: scale(0.5,0.5);
+		}
 
+		.btn01::after {
+		  content: '';
+		  position: absolute;
+		  top: 0;
+		  left: 0;
+		  width: 100%;
+		  height: 100%;
+		  z-index: 1;
+		  opacity: 0;
+		  transition: all 0.4s;
+		  border: 1px solid rgba(255,255,255,0.5);
+		  transform: scale(1.2,1.6);
+		}
+		.btn01:hover::after {
+		  opacity: 1;
+		  transform: scale(1,1);
+		}
 
  	</style>
 
