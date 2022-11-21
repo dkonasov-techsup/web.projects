@@ -16,7 +16,7 @@
  		body{
  			width: 100%;
  			height: 100%;
- 			background-color: #161616;
+ 			background-color: #cecece;
  		}
 
  		.wrapper{
@@ -62,12 +62,14 @@
 
  		.bgWrapper{
  			position: fixed;
+ 			top: 0;
+ 			left: 0;
  			width: 100%;
  			height: 100%;
  			display: none;
  			opacity: 0;
  			z-index: 600;
- 			background-color: #ffffff;
+ 			background-color: #040404bd;
 
  			transition-property: opacity;
  			transition-duration: 1400ms;
@@ -78,7 +80,10 @@
  			width: 40%;
  			height: 340px;
  			margin: auto;
- 			background-color: #2a2a2a;
+ 			transition: all 0.5s;
+ 		}
+ 		.msgBlockHidden{
+ 			transform: scale(0,0);
  		}
 
  		.btn01{

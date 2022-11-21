@@ -6,14 +6,10 @@ const sys = {
 
 const b1Buttons = document.querySelectorAll('.b1_button');
 const b1CheckBox = document.querySelectorAll('.b1_switch > input');
-const b1States = document.querySelectorAll('.b1_form > input');
+const b1States = document.querySelectorAll('.stateLine > input');
 console.log(b1Buttons);
 console.log(b1CheckBox);
 console.log(b1States);
-
-function btnClick(text){
-	console.log(text);
-}
 
 // Присваивание EventListener кнопкам в цикле
 b1Buttons.forEach(b1_button => {
@@ -42,6 +38,17 @@ function btnMouseLeave(event){
 	event.target.children[0].style.stroke="";	
 }
 
+
+function btnClick(event){
+
+	let block = (event.path[1]);
+	if (block.id == "s1block1"){
+
+		let genStateLine = event.path[1].children[1].children[0].cloneNode(true);
+		event.path[1].children[1].append(genStateLine);
+	}
+}
+
 //Обработка чекбоксов
 //Коллекция для хранения всех b1_checkbox и состояний
 const checkBoxState = new Map()
@@ -66,7 +73,28 @@ function checkBoxChange(){
 	setValue(this.id);
 }
 
-// Логика отображения статусов
+// Логика отображения статусов и их генерация
+// Коллекция всех имеющихся статусов id-name(в идеале вероятно подтягивать с бд сервера)
+// not used now
+const mainState = {
+	"b1_val0":"System",
+	"b1_val1":"1-st module status:",
+	"b1_val2":"2-st module status:",
+	"b1_val3":"3-st module status:",
+	"b1_val4":"4-st module status:",
+	"b1_val5":"5-st module status:",
+}
+
+// mainState.forEach((value, key) => function(key){
+	console.log(mainState);
+// })
+
+// заполнение b1_content статусами
+// for (let i = 0; i<=3 i++){
+// 	MainState.
+// 	const stateLine = document.insertAjacentHTML('<div class="stateLine"><label for="val'i'">'System status:'</label><input type="text" name="val1" id="b1_val1" readonly></div>')
+// }
+
 // Указываем зависимость статуса от чекбокса если таковая имеется
 const states = new Map;
 	states.set(b1CheckBox[0].id, b1States[0])
@@ -92,7 +120,7 @@ function setValue(id){
 document.body.addEventListener('change', handler1);
 
 function handler1(event){
-	//Регулярный чек певого чекбокса	
+	//Регулярная проверка первого чекбокса	
 	if(checkBoxState.get('b1_checkbox1')==false){
 		sysOff();
 	}
@@ -118,7 +146,7 @@ function sysOff(){
 
 
 // -----------------------------------
-// Генерация и логика всплывающих узлов
+// Генерация и логика уведомлений
 // Генерация блока
 let msgWrapper = document.createElement('div');
 let msgCont = document.createElement('div');

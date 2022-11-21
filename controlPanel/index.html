@@ -10,26 +10,25 @@
 </head>
 <body>
 	<div id = "stat1">
-		<div id = "block1">
+		<div id = "s1block1" class="stat1block">
 			<div class= "b1_title">State</div>
 			<div class= "b1_content">
 
-				<form action="" method="get" class="b1_form">
+				<div class="stateLine">
 					    <label for="val1">System status:</label>
-					    <input type="text" name="val1" id="b1_val1" value="ON" readonly>
-				</form>
-				<form action="" method="get" class="b1_form">
+					    <input type="text" name="val1" id="b1_val1" readonly>
+				</div>
+				<div class="stateLine">
 					    <label for="val2">2-st module status:</label>
-					    <input type="text" name="val2" id="b1_val2" value="ON" readonly>
-				</form>
-				<form action="" method="get" class="b1_form">
+					    <input type="text" name="val2" id="b1_val2" readonly>
+				</div>
+				<div class="stateLine">
 					    <label for="val3">3-st module status:</label>
-					    <input type="text" name="val3" id="b1_val3" value="ON" readonly>
-				</form>
-
+					    <input type="text" name="val3" id="b1_val3" readonly>
+				</div>
 
 			</div>
-			<button class= "b1_button" id="btnState" onclick="btnClick('More State')">
+			<button class= "b1_button" id="btnState">
 				Get more
 				<svg class="btnIcon" viewBox="0 0 379 379" fill="none" xmlns="http://www.w3.org/2000/svg">
 					<path d="M41 316H337.5" stroke-width="24" stroke-linecap="square"/>
@@ -39,7 +38,7 @@
 			</button>
 		</div>
 
-		<div id = "block1">
+		<div id = "s1block2" class="stat1block">
 			<div class= "b1_title">Options</div>
 			<div class= "b1_content">
 
@@ -63,7 +62,7 @@
 				</div>
 
 			</div>
-			<button class="b1_button" id="btnOption" onclick="btnClick('More Options')">
+			<button class="b1_button" id="btnOption">
 				Get more
 				<svg class="btnIcon" viewBox="0 0 379 379" fill="none" xmlns="http://www.w3.org/2000/svg">
 					<path d="M41 316H337.5" stroke-width="24" stroke-linecap="square"/>
@@ -73,12 +72,12 @@
 			</button>
 		</div>
 
-		<div id = "block1">
+		<div id = "s1block3" class="stat1block">
 			<div class= "b1_title">Data</div>
 			<div class= "b1_content">
 				<textarea id= "b1_textarea"></textarea>
 			</div>
-			<button class="b1_button" id="btnData" onclick="btnClick('More Data')">
+			<button class="b1_button" id="btnData">
 				Get more 
 				<svg class="btnIcon" viewBox="0 0 379 379" fill="none" xmlns="http://www.w3.org/2000/svg">
 					<path d="M41 316H337.5" stroke-width="24" stroke-linecap="square"/>
