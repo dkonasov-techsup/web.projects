@@ -7,9 +7,9 @@ const sys = {
 const b1Buttons = document.querySelectorAll('.b1_button');
 const b1CheckBox = document.querySelectorAll('.b1_switch > input');
 const b1States = document.querySelectorAll('.stateLine > input');
-console.log(b1Buttons);
-console.log(b1CheckBox);
-console.log(b1States);
+// console.log(b1Buttons);
+// console.log(b1CheckBox);
+// console.log(b1States);
 
 // Присваивание EventListener кнопкам в цикле
 b1Buttons.forEach(b1_button => {
@@ -74,20 +74,31 @@ function checkBoxChange(){
 }
 
 // Логика отображения статусов и их генерация
-// Коллекция всех имеющихся статусов id-name(в идеале вероятно подтягивать с бд сервера)
+// Коллекция всех имеющихся статусов (в идеале вероятно подтягивать с бд сервера)
 // not used now
-const mainState = {
-	"b1_val0":"System",
-	"b1_val1":"1-st module status:",
-	"b1_val2":"2-st module status:",
-	"b1_val3":"3-st module status:",
-	"b1_val4":"4-st module status:",
-	"b1_val5":"5-st module status:",
-}
 
-// mainState.forEach((value, key) => function(key){
-	console.log(mainState);
-// })
+const mainState = [
+	{id:'b1_val0', name:'System',			   label:'val0'},
+	{id:'b1_val1', name:'1-st module status:', label:'val1'},
+	{id:'b1_val2', name:'2-st module status:', label:'val2'},
+	{id:'b1_val3', name:'3-st module status:', label:'val3'},
+	{id:'b1_val4', name:'4-st module status:', label:'val4'},
+	{id:'b1_val5', name:'5-st module status:', label:'val5'}
+]
+
+
+// console.log(mainState);
+let mainStateArr = Object.entries(mainState);
+// console.log(mainStateArr);
+mainState.forEach(item => {
+	let newStateLine = document.createElement('div');
+	newStateLine.classList = "stateLine";
+	
+	// newStateLine.insertAjacentHTML('afterbegin','<label for="'item.label'">'item.name'</label><input type="text" name="'item.label'" id="'item.id'" readonly>');
+})
+
+const stateLines = document.querySelectorAll('.stateLine');
+console.log(stateLines);
 
 // заполнение b1_content статусами
 // for (let i = 0; i<=3 i++){
