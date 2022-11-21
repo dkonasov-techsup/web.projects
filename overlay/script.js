@@ -19,6 +19,7 @@ function callMsg(){
 	
 	bgWrapper.addEventListener('transitionstart', function(){
 		setTimeout(function(){
+			console.log('ss')
 			msgBlock.classList.remove('msgBlockHidden');
 		},300)
 	})
