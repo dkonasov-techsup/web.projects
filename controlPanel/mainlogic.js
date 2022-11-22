@@ -6,7 +6,7 @@ const sys = {
 
 const b1Buttons = document.querySelectorAll('.b1_button');
 const b1CheckBox = document.querySelectorAll('.b1_switch > input');
-const b1States = document.querySelectorAll('.stateLine > input');
+// const b1States = document.querySelectorAll('.stateLine > input');
 // console.log(b1Buttons);
 // console.log(b1CheckBox);
 // console.log(b1States);
@@ -41,12 +41,6 @@ function btnMouseLeave(event){
 
 function btnClick(event){
 
-	let block = (event.path[1]);
-	if (block.id == "s1block1"){
-
-		let genStateLine = event.path[1].children[1].children[0].cloneNode(true);
-		event.path[1].children[1].append(genStateLine);
-	}
 }
 
 //Обработка чекбоксов
@@ -78,27 +72,39 @@ function checkBoxChange(){
 // not used now
 
 const mainState = [
-	{id:'b1_val0', name:'System status',	   label:'val0'},
-	{id:'b1_val1', name:'1-st module status:', label:'val1'},
-	{id:'b1_val2', name:'2-st module status:', label:'val2'},
-	{id:'b1_val3', name:'3-st module status:', label:'val3'},
-	{id:'b1_val4', name:'4-st module status:', label:'val4'},
-	{id:'b1_val5', name:'5-st module status:', label:'val5'}
+	{id:'b1_val0', desc:'System status',	   name:'val0'},
+	{id:'b1_val1', desc:'1-st module status:', name:'val1'},
+	{id:'b1_val2', desc:'2-st module status:', name:'val2'},
+	{id:'b1_val3', desc:'3-st module status:', name:'val3'},
+	{id:'b1_val4', desc:'4-st module status:', name:'val4'},
+	{id:'b1_val5', desc:'5-st module status:', name:'val5'}
 ]
 
+//Генерация div-элементов для статусов и заполнение коллекции
 const stateLines = new Map()
+mainState.forEach((item,index) => {
 
-mainState.forEach(item => {
 	let newStateLine = document.createElement('div');
 	newStateLine.classList = "stateLine";
-	let body = (`<label for="${item.label}">${item.name}</label><input type = "text" name = "${item.label}" id = "${item.id}" readonly>`);
+	let body = (`<label for="${item.name}">${item.desc}</label><input type = "text" name = "${item.name}" id = "${item.id}" readonly>`);
 	newStateLine.insertAdjacentHTML('afterbegin', body);
-	stateLines.set(item.id, newStateLine);	
+	stateLines.set(index, newStateLine);
 })
 
 console.log(stateLines);
+const stateList = document.getElementById('stateList');
 
+//Первоначальное отображение 3-x статусов
+for (let i=0; i<=2; i++){
+	let nextStateLine = stateLines.get(i);
+	stateList.append(nextStateLine);
+	console.log(nextStateLine);
+}
 
+//При раскрытии списка
+function 
+
+const b1States = document.querySelectorAll('.stateLine > input');
 
 // Указываем зависимость статуса от чекбокса если таковая имеется
 const states = new Map;
@@ -121,6 +127,8 @@ function setValue(id){
 	}
 }
 
+
+// Логика чекбоксов
 // Ловим всплывающее событие 'change' от чекбоксов 
 document.body.addEventListener('change', handler1);
 
