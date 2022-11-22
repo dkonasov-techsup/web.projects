@@ -68,7 +68,7 @@ console.log(checkBoxState);
 
 //обработчик события 'change'
 function checkBoxChange(){
-	checkBoxState.set(this.id, this.checked);	
+	checkBoxState.set(this.id, this.checked);
 	console.log(checkBoxState);
 	setValue(this.id);
 }
@@ -78,7 +78,7 @@ function checkBoxChange(){
 // not used now
 
 const mainState = [
-	{id:'b1_val0', name:'System',			   label:'val0'},
+	{id:'b1_val0', name:'System status',	   label:'val0'},
 	{id:'b1_val1', name:'1-st module status:', label:'val1'},
 	{id:'b1_val2', name:'2-st module status:', label:'val2'},
 	{id:'b1_val3', name:'3-st module status:', label:'val3'},
@@ -86,25 +86,19 @@ const mainState = [
 	{id:'b1_val5', name:'5-st module status:', label:'val5'}
 ]
 
+const stateLines = new Map()
 
-// console.log(mainState);
-let mainStateArr = Object.entries(mainState);
-// console.log(mainStateArr);
 mainState.forEach(item => {
 	let newStateLine = document.createElement('div');
 	newStateLine.classList = "stateLine";
-	
-	// newStateLine.insertAjacentHTML('afterbegin','<label for="'item.label'">'item.name'</label><input type="text" name="'item.label'" id="'item.id'" readonly>');
+	let body = (`<label for="${item.label}">${item.name}</label><input type = "text" name = "${item.label}" id = "${item.id}" readonly>`);
+	newStateLine.insertAdjacentHTML('afterbegin', body);
+	stateLines.set(item.id, newStateLine);	
 })
 
-const stateLines = document.querySelectorAll('.stateLine');
 console.log(stateLines);
 
-// заполнение b1_content статусами
-// for (let i = 0; i<=3 i++){
-// 	MainState.
-// 	const stateLine = document.insertAjacentHTML('<div class="stateLine"><label for="val'i'">'System status:'</label><input type="text" name="val1" id="b1_val1" readonly></div>')
-// }
+
 
 // Указываем зависимость статуса от чекбокса если таковая имеется
 const states = new Map;
