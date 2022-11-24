@@ -116,13 +116,10 @@ function openStateList(){
 	for(let i=stateListSize; i<=stateLines.size-1; i++){		
 		let nextStateLine = stateLines.get(i);
 		// console.log(nextStateLine);
-		nextStateLine.style.transform = 'scale(0.0,0.0)';
+		nextStateLine.style.visibility = 'hidden';
 		
 		setTimeout(function(){
 			stateList.append(nextStateLine);
-			setTimeout(function(){
-				nextStateLine.style.transform = 'scale(1,1)';
-			},100)
 		},i*100)
 	}
 }

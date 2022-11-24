@@ -41,15 +41,15 @@ body{
 	flex-direction: column;
 /*	flex: 1;*/
 	width: 100%;
-	/*min-height: 132px;*/
-	/*height: auto;*/
+	min-height: 132px;
+	height: auto;
 
 	font-size: 18px;
 	font-weight: 200;
 	color: #a7a7a7;
 
 	transition-property: all;
-	transition-duration: 400ms;	
+	transition-duration: 800ms;	
 }
 
 
