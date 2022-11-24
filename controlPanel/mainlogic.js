@@ -7,9 +7,7 @@ const sys = {
 const b1Buttons = document.querySelectorAll('.b1_button');
 const b1CheckBox = document.querySelectorAll('.b1_switch > input');
 // const b1States = document.querySelectorAll('.stateLine > input');
-// console.log(b1Buttons);
-// console.log(b1CheckBox);
-// console.log(b1States);
+
 
 // Присваивание EventListener кнопкам в цикле
 b1Buttons.forEach(b1_button => {
@@ -26,7 +24,7 @@ function btnMouseEnter(event){
 	this.style.borderColor="#33d0ff";
 	this.style.boxShadow = "inset 0px -2px 20px 10px #161616";
 	// console.log(event.target.children[0]);
-	event.target.children[0].style.stroke="#33d0ff";	
+	event.target.children[1].style.stroke="#33d0ff";	
 }
 
 function btnMouseLeave(event){
@@ -35,12 +33,22 @@ function btnMouseLeave(event){
 	this.style.color="";
 	this.style.borderColor="";
 	this.style.boxShadow = "";
-	event.target.children[0].style.stroke="";	
+	event.target.children[1].style.stroke="";	
 }
 
 
 function btnClick(event){
-
+	if (event.target.id=="btnState"){
+	let stateListSize = document.querySelectorAll('.stateLine > input').length
+		if(stateListSize<=3){
+			openStateList();
+			console.log(event);
+			event.target.children[0].innerHTML = 'Get less'	
+		}
+		else{
+			closeStateList();
+		}			
+	}	
 }
 
 //Обработка чекбоксов
@@ -69,7 +77,6 @@ function checkBoxChange(){
 
 // Логика отображения статусов и их генерация
 // Коллекция всех имеющихся статусов (в идеале вероятно подтягивать с бд сервера)
-// not used now
 
 const mainState = [
 	{id:'b1_val0', desc:'System status',	   name:'val0'},
@@ -92,17 +99,37 @@ mainState.forEach((item,index) => {
 })
 
 console.log(stateLines);
-const stateList = document.getElementById('stateList');
 
-//Первоначальное отображение 3-x статусов
+// Заполнение stateList
+// Первоначальное отображение 3-x статусов
 for (let i=0; i<=2; i++){
+	let stateList = document.getElementById('stateList');
 	let nextStateLine = stateLines.get(i);
-	stateList.append(nextStateLine);
-	console.log(nextStateLine);
+	stateList.append(nextStateLine);	
 }
 
-//При раскрытии списка
-function 
+
+//При раскрытии списка статусов
+function openStateList(){
+	let stateListSize = document.querySelectorAll('.stateLine > input').length;
+	
+	for(let i=stateListSize; i<=stateLines.size-1; i++){		
+		let nextStateLine = stateLines.get(i);
+		// console.log(nextStateLine);
+		nextStateLine.style.transform = 'scale(0.0,0.0)';
+		
+		setTimeout(function(){
+			stateList.append(nextStateLine);
+			setTimeout(function(){
+				nextStateLine.style.transform = 'scale(1,1)';
+			},100)
+		},i*100)
+	}
+}
+
+function closeStateList(){
+
+}
 
 const b1States = document.querySelectorAll('.stateLine > input');
 
@@ -112,7 +139,7 @@ const states = new Map;
 		  .set(b1CheckBox[1].id, b1States[1])
 		  .set(b1CheckBox[2].id, b1States[2])
 
-//Первоначальная проверка
+//Первоначальная проверка 
 states.forEach((value, key) => setValue(key));
 
 

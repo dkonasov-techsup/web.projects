@@ -11,6 +11,7 @@ body{
 	height: auto;
 	margin-top: 20px;
 	font-family: 'Montserrat', sans-serif;
+
 }
 
 .stat1block{
@@ -40,12 +41,15 @@ body{
 	flex-direction: column;
 /*	flex: 1;*/
 	width: 100%;
-	min-height: 132px;
-	height: auto;
+	/*min-height: 132px;*/
+	/*height: auto;*/
 
 	font-size: 18px;
 	font-weight: 200;
 	color: #a7a7a7;
+
+	transition-property: all;
+	transition-duration: 400ms;	
 }
 
 
@@ -71,6 +75,9 @@ body{
 	font-size: 18px;
 	font-weight: 200;	 
 	color: #a7a7a7;
+
+	transition-property: color,border-color,box-shadow;
+	transition-duration: 500ms;
 }
 .b1_button img{
 	height: 16px;
@@ -85,12 +92,9 @@ body{
 	transition-duration: 500ms;
 }
 
-/*Параметры анимации для b1_button*/
-.b1_button{
-	transition-property: color,border-color,box-shadow;
-	transition-duration: 500ms;
-}
+.b1_button span{
 
+}
 
 /*Параметры cтрок b1_option*/
 .b1_optionLine{
@@ -109,7 +113,10 @@ body{
 	justify-content: space-between;
 	align-items: center;
 
-	margin: 8px 0px 8px 0px;	
+	margin: 8px 0px 8px 0px;
+
+	transition-property: all;
+	transition-duration: 600ms;	
 }
 
 .stateLine input{
