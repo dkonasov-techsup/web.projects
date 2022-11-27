@@ -84,7 +84,7 @@ const mainState = [
 	{id:'b1_val2', desc:'2-st module status:', name:'val2'},
 	{id:'b1_val3', desc:'3-st module status:', name:'val3'},
 	{id:'b1_val4', desc:'4-st module status:', name:'val4'},
-	{id:'b1_val5', desc:'5-st module status:', name:'val5'}
+	{id:'b1_val5', desc:'5-st module status:', name:'val5'},
 ]
 
 //Генерация div-элементов для статусов и заполнение коллекции
@@ -110,18 +110,30 @@ for (let i=0; i<=2; i++){
 
 
 //При раскрытии списка статусов
-function openStateList(){
-	let stateListSize = document.querySelectorAll('.stateLine > input').length;
+function openStateList(){	
+	let sLineStyle = getComputedStyle(stateList.children[0]);
+	let sLineMargins = parseInt(sLineStyle.marginTop)+parseInt(sLineStyle.marginBottom);
+	let sLineHeight = parseInt(sLineStyle.height)+(sLineMargins);	
 	
+	console.log(sLineHeight);
+
+	let stateListSize = document.querySelectorAll('.stateLine > input').length;
+
 	for(let i=stateListSize; i<=stateLines.size-1; i++){		
 		let nextStateLine = stateLines.get(i);
-		// console.log(nextStateLine);
-		nextStateLine.style.visibility = 'hidden';
+
+		nextStateLine.style.opacity = '0';
 		
 		setTimeout(function(){
-			stateList.append(nextStateLine);
-		},i*100)
-	}
+			let stateLine = document.getElementById('stateList');
+			console.log(i);			
+			stateList.append(nextStateLine);		
+		},i*40)
+
+		setTimeout(function(){
+			nextStateLine.style.opacity = '';
+		},i*60)		
+	}	
 }
 
 function closeStateList(){
