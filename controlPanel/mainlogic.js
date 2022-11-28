@@ -78,39 +78,65 @@ function checkBoxChange(){
 // Логика отображения статусов и их генерация
 // Коллекция всех имеющихся статусов (в идеале вероятно подтягивать с бд сервера)
 
-const mainState = [
-	{id:'b1_val0', desc:'System status',	   name:'val0'},
-	{id:'b1_val1', desc:'1-st module status:', name:'val1'},
-	{id:'b1_val2', desc:'2-st module status:', name:'val2'},
-	{id:'b1_val3', desc:'3-st module status:', name:'val3'},
-	{id:'b1_val4', desc:'4-st module status:', name:'val4'},
-	{id:'b1_val5', desc:'5-st module status:', name:'val5'},
-]
-
 //Генерация div-элементов для статусов и заполнение коллекции
-const stateLines = new Map()
-mainState.forEach((item,index) => {
+// const stateLines = new Map()
+// mainState.forEach((item,index) => {
 
-	let newStateLine = document.createElement('div');
-	newStateLine.classList = "stateLine";
-	let body = (`<label for="${item.name}">${item.desc}</label><input type = "text" name = "${item.name}" id = "${item.id}" readonly>`);
-	newStateLine.insertAdjacentHTML('afterbegin', body);
-	stateLines.set(index, newStateLine);
-})
+// 	let newStateLine = document.createElement('div');
+// 	newStateLine.classList = "stateLine";
+// 	let body = (`<label for="${item.name}">${item.desc}</label><input type = "text" name = "${item.name}" id = "${item.id}" readonly>`);
+// 	newStateLine.insertAdjacentHTML('afterbegin', body);
+// 	stateLines.set(index, newStateLine);
+// })
 
-console.log(stateLines);
+// console.log(stateLines);
 
 // Заполнение stateList
-// Первоначальное отображение 3-x статусов
-for (let i=0; i<=2; i++){
-	let stateList = document.getElementById('stateList');
-	let nextStateLine = stateLines.get(i);
-	stateList.append(nextStateLine);	
+
+//Class StateList наследумый от PullList(перенести) ON TEST
+class PullList{
+
+	constructor(options){
+		this.listId = options.listId		
+		this.flag = options.flag
+	}
+	// Первоначальное отображение 3-x элементов
+	show(){
+		for (let i=0; i<=2; i++){
+		let stateList = document.getElementById('stateList');
+		let nextStateLine = stateLines.get(i);
+		stateList.append(nextStateLine);
+		}
+	}	
+	expand(){
+		console.log('iamHere')
+	}
+	collapse(){
+
+	}
 }
+
+class StateList extends PullList{
+
+	static mainState = [
+		{id:'b1_val0', desc:'System status',	   name:'val0'},
+		{id:'b1_val1', desc:'1-st module status:', name:'val1'},
+		{id:'b1_val2', desc:'2-st module status:', name:'val2'},
+		{id:'b1_val3', desc:'3-st module status:', name:'val3'},
+		{id:'b1_val4', desc:'4-st module status:', name:'val4'},
+		{id:'b1_val5', desc:'5-st module status:', name:'val5'},
+	]
+
+}
+
+const stateList = new StateList({
+	listId:'stateId',
+	flag: true,
+})
 
 
 //При раскрытии списка статусов
-function openStateList(){	
+function openStateList(){		
 	let sLineStyle = getComputedStyle(stateList.children[0]);
 	let sLineMargins = parseInt(sLineStyle.marginTop)+parseInt(sLineStyle.marginBottom);
 	let sLineHeight = parseInt(sLineStyle.height)+(sLineMargins);	
@@ -149,7 +175,7 @@ const states = new Map;
 		  .set(b1CheckBox[2].id, b1States[2])
 
 //Первоначальная проверка 
-states.forEach((value, key) => setValue(key));
+// states.forEach((value, key) => setValue(key)); -- uncomment
 
 
 function setValue(id){
