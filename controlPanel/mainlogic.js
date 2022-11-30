@@ -102,6 +102,19 @@ console.log(stateLines);
 
 // Заполнение stateList
 // Первоначальное отображение 3-x статусов
+class StateList{
+
+	constructor(options){
+		this.status = options.status
+		// this.$el.style = document.querySelector(options)
+	}
+
+	log(){
+		console.log('this')
+	}
+
+}
+
 for (let i=0; i<=2; i++){
 	let stateList = document.getElementById('stateList');
 	let nextStateLine = stateLines.get(i);
@@ -110,13 +123,13 @@ for (let i=0; i<=2; i++){
 
 
 //При раскрытии списка статусов
-function openStateList(){	
+function openStateList(){
+
 	let sLineStyle = getComputedStyle(stateList.children[0]);
 	let sLineMargins = parseInt(sLineStyle.marginTop)+parseInt(sLineStyle.marginBottom);
 	let sLineHeight = parseInt(sLineStyle.height)+(sLineMargins);	
 	
-	console.log(sLineHeight);
-
+	// console.log(sLineHeight);
 	let stateListSize = document.querySelectorAll('.stateLine > input').length;
 
 	for(let i=stateListSize; i<=stateLines.size-1; i++){		
@@ -136,9 +149,6 @@ function openStateList(){
 	}	
 }
 
-function closeStateList(){
-
-}
 
 const b1States = document.querySelectorAll('.stateLine > input');
 
