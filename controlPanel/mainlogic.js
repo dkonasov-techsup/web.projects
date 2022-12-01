@@ -38,15 +38,16 @@ function btnMouseLeave(event){
 
 
 function btnClick(event){
-	if (event.target.id=="btnState"){
-	let stateListSize = document.querySelectorAll('.stateLine > input').length
-		if(stateListSize<=3){
-			openStateList();
-			console.log(event);
+	if (event.target.id == "btnState"){
+
+		if(StateList.flag == false){					
+			const openStateList = new StateList();
+			openStateList.open();
 			event.target.children[0].innerHTML = 'Get less'	
 		}
 		else{
-			closeStateList();
+			const closeStateList = new StateList();
+			closeStateList.close();
 		}			
 	}	
 }
@@ -100,55 +101,51 @@ mainState.forEach((item,index) => {
 
 console.log(stateLines);
 
-// Заполнение stateList
+
 // Первоначальное отображение 3-x статусов
-class StateList{
-
-	constructor(options){
-		this.status = options.status
-		// this.$el.style = document.querySelector(options)
-	}
-
-	log(){
-		console.log('this')
-	}
-
-}
-
 for (let i=0; i<=2; i++){
 	let stateList = document.getElementById('stateList');
 	let nextStateLine = stateLines.get(i);
 	stateList.append(nextStateLine);	
 }
 
+// Заполнение stateList
 
-//При раскрытии списка статусов
-function openStateList(){
+class StateList{
 
-	let sLineStyle = getComputedStyle(stateList.children[0]);
-	let sLineMargins = parseInt(sLineStyle.marginTop)+parseInt(sLineStyle.marginBottom);
-	let sLineHeight = parseInt(sLineStyle.height)+(sLineMargins);	
-	
-	// console.log(sLineHeight);
-	let stateListSize = document.querySelectorAll('.stateLine > input').length;
+	static flag = false;	
+	// constructor(flag){
+	// 	this.flag = flag;
+	// 	// this.$el = document.querySelector(options)
+	// }
+	open(){
+		StateList.flag = true;
+		console.log('open');
+		let sLineStyle = getComputedStyle(stateList.children[0]);	
+		let sLineMargins = parseInt(sLineStyle.marginTop)+parseInt(sLineStyle.marginBottom);
+		let sLineHeight = parseInt(sLineStyle.height)+(sLineMargins);
+		let stateListSize = document.querySelectorAll('.stateLine > input').length;
+		for(let i=stateListSize; i<=stateLines.size-1; i++){		
+			let nextStateLine = stateLines.get(i);
 
-	for(let i=stateListSize; i<=stateLines.size-1; i++){		
-		let nextStateLine = stateLines.get(i);
+			nextStateLine.style.opacity = '0';
+			
+			setTimeout(function(){
+				let stateLine = document.getElementById('stateList');
+				// console.log(i);			
+				stateList.append(nextStateLine);		
+			},i*40)
 
-		nextStateLine.style.opacity = '0';
-		
-		setTimeout(function(){
-			let stateLine = document.getElementById('stateList');
-			console.log(i);			
-			stateList.append(nextStateLine);		
-		},i*40)
-
-		setTimeout(function(){
-			nextStateLine.style.opacity = '';
-		},i*60)		
-	}	
+			setTimeout(function(){
+				nextStateLine.style.opacity = '';
+			},i*70)		
+		}	
+	}
+	close(){
+		StateList.flag = false;
+		console.log('close');
+	}
 }
-
 
 const b1States = document.querySelectorAll('.stateLine > input');
 
