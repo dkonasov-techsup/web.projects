@@ -40,8 +40,10 @@ function btnMouseLeave(event){
 function btnClick(event){
 	if (event.target.id == "btnState"){
 
-		if(StateList.flag == false){					
-			const openStateList = new StateList();
+		if(StateList.flag == false){
+			let element = document.getElementById('stateList');
+			console.log(element);					
+			const openStateList = new StateList(element);
 			openStateList.open();
 			event.target.children[0].innerHTML = 'Get less'	
 		}
@@ -91,39 +93,34 @@ const mainState = [
 //Генерация div-элементов для статусов и заполнение коллекции
 const stateLines = new Map()
 mainState.forEach((item,index) => {
-
 	let newStateLine = document.createElement('div');
 	newStateLine.classList = "stateLine";
 	let body = (`<label for="${item.name}">${item.desc}</label><input type = "text" name = "${item.name}" id = "${item.id}" readonly>`);
 	newStateLine.insertAdjacentHTML('afterbegin', body);
-	stateLines.set(index, newStateLine);
+	stateLines.set(index, newStateLine);	
 })
 
-console.log(stateLines);
-
-
-// Первоначальное отображение 3-x статусов
-for (let i=0; i<=2; i++){
-	let stateList = document.getElementById('stateList');
-	let nextStateLine = stateLines.get(i);
-	stateList.append(nextStateLine);	
-}
-
-// Заполнение stateList
-
 class StateList{
-
 	static flag = false;	
-	// constructor(flag){
-	// 	this.flag = flag;
-	// 	// this.$el = document.querySelector(options)
-	// }
+	constructor(element){
+		// this.flag = flag;
+		this.$el = document.getElementById(element)
+	}
+	init(){
+		for (let i=0; i<=2; i++){
+			let stateList = document.getElementById('stateList');
+			let nextStateLine = stateLines.get(i);
+			stateList.append(nextStateLine);	
+		}
+	}
 	open(){
 		StateList.flag = true;
-		console.log('open');
-		let sLineStyle = getComputedStyle(stateList.children[0]);	
+		console.log(this.$el);
+		let sLineStyle = getComputedStyle(stateList.children[0]);
+
 		let sLineMargins = parseInt(sLineStyle.marginTop)+parseInt(sLineStyle.marginBottom);
 		let sLineHeight = parseInt(sLineStyle.height)+(sLineMargins);
+
 		let stateListSize = document.querySelectorAll('.stateLine > input').length;
 		for(let i=stateListSize; i<=stateLines.size-1; i++){		
 			let nextStateLine = stateLines.get(i);
@@ -144,8 +141,15 @@ class StateList{
 	close(){
 		StateList.flag = false;
 		console.log('close');
+
+		let stateListSize = document.querySelectorAll('.stateLine > input').length;
+		
 	}
 }
+// Первоначальное отображение 3-x статусов
+const StateListInit = new StateList()
+StateListInit.init()
+
 
 const b1States = document.querySelectorAll('.stateLine > input');
 
