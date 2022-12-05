@@ -90,60 +90,80 @@ const mainState = [
 	{id:'b1_val5', desc:'5-st module status:', name:'val5'},
 ]
 
-//Генерация div-элементов для статусов и заполнение коллекции
 const stateLines = new Map()
-mainState.forEach((item,index) => {
-	let newStateLine = document.createElement('div');
-	newStateLine.classList = "stateLine";
-	let body = (`<label for="${item.name}">${item.desc}</label><input type = "text" name = "${item.name}" id = "${item.id}" readonly>`);
-	newStateLine.insertAdjacentHTML('afterbegin', body);
-	stateLines.set(index, newStateLine);	
-})
 
 class StateList{
-	static flag = false;	
-	constructor(element){
-		// this.flag = flag;
-		this.$el = document.getElementById(element)
+	static flag = false;
+
+	constructor(){
+		// this.stateLines = new Map()
 	}
+
 	init(){
+		//Генерация div-элементов для статусов и заполнение коллекции
+		// let stateLines = new Map()
+		mainState.forEach((item,index) => {
+			let newStateLine = document.createElement('div');
+			newStateLine.classList = "stateLine";
+			let htmlStructure = (`<label for="${item.name}">${item.desc}</label><input type = "text" name = "${item.name}" id = "${item.id}" readonly>`);
+			newStateLine.insertAdjacentHTML('afterbegin', htmlStructure);
+			stateLines.set(index, newStateLine);	
+		})
+
 		for (let i=0; i<=2; i++){
 			let stateList = document.getElementById('stateList');
 			let nextStateLine = stateLines.get(i);
 			stateList.append(nextStateLine);	
 		}
+		console.log(stateLines);
+
 	}
 	open(){
 		StateList.flag = true;
-		console.log(this.$el);
+		
 		let sLineStyle = getComputedStyle(stateList.children[0]);
-
 		let sLineMargins = parseInt(sLineStyle.marginTop)+parseInt(sLineStyle.marginBottom);
-		let sLineHeight = parseInt(sLineStyle.height)+(sLineMargins);
-
-		let stateListSize = document.querySelectorAll('.stateLine > input').length;
-		for(let i=stateListSize; i<=stateLines.size-1; i++){		
-			let nextStateLine = stateLines.get(i);
-
-			nextStateLine.style.opacity = '0';
-			
-			setTimeout(function(){
-				let stateLine = document.getElementById('stateList');
-				// console.log(i);			
-				stateList.append(nextStateLine);		
-			},i*40)
-
-			setTimeout(function(){
-				nextStateLine.style.opacity = '';
-			},i*70)		
-		}	
-	}
-	close(){
-		StateList.flag = false;
-		console.log('close');
+		let sLineHeight = parseInt(sLineStyle.height)+(sLineMargins);	
 
 		let stateListSize = document.querySelectorAll('.stateLine > input').length;
 		
+
+		for(let i=stateListSize; i<=mainState.length-1; i++){			
+
+			let nextStateLine = stateLines.get(i);
+			console.log(nextStateLine);
+
+			nextStateLine.style.opacity = '0';			
+			setTimeout(function(){
+				let stateLine = document.getElementById('stateList');						
+				stateList.append(nextStateLine);		
+			},i*30)
+
+			setTimeout(function(){
+				nextStateLine.style.opacity = '';
+			},i*60)		
+		}	
+	}
+	
+	close(){
+		let stateListSize = document.querySelectorAll('.stateLine > input').length;
+		StateList.flag = false;
+		console.log('close');		
+
+		for(let i=stateListSize; i>=3; i--){
+		
+			let nextStateLine = stateLines.get(i);
+			console.log(i);			
+			setTimeout(function(){							
+				nextStateLine.style.opacity = '0';	
+			},40)
+
+			setTimeout(function(){
+				nextStateLine.remove();
+
+			},70)		
+		
+		}
 	}
 }
 // Первоначальное отображение 3-x статусов
