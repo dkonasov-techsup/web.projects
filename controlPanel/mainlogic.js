@@ -87,7 +87,7 @@ const mainState = [
 	{id:'b1_val2', desc:'2-st module status:', name:'val2'},
 	{id:'b1_val3', desc:'3-st module status:', name:'val3'},
 	{id:'b1_val4', desc:'4-st module status:', name:'val4'},
-	{id:'b1_val5', desc:'5-st module status:', name:'val5'},
+	{id:'b1_val5', desc:'5-st module status:', name:'val5'},	
 ]
 
 const stateLines = new Map()
@@ -114,8 +114,7 @@ class StateList{
 			let stateList = document.getElementById('stateList');
 			let nextStateLine = stateLines.get(i);
 			stateList.append(nextStateLine);	
-		}
-		console.log(stateLines);
+		}		
 
 	}
 	open(){
@@ -137,35 +136,35 @@ class StateList{
 			setTimeout(function(){
 				let stateLine = document.getElementById('stateList');						
 				stateList.append(nextStateLine);		
-			},i*30)
+			},i*25)
 
 			setTimeout(function(){
 				nextStateLine.style.opacity = '';
-			},i*60)		
+			},i*30)		
 		}	
 	}
 	
 	close(){
-		let stateListSize = document.querySelectorAll('.stateLine > input').length;
 		StateList.flag = false;
-		console.log('close');		
-
-		for(let i=stateListSize; i>=3; i--){
+		let stateListSize = document.querySelectorAll('.stateLine > input').length;
 		
-			let nextStateLine = stateLines.get(i);
-			console.log(i);			
+		console.log('close');	
+
+		for(let i=stateListSize-1; i>=3; i--){
+		
+			let nextStateLine = stateLines.get(i);			
+
 			setTimeout(function(){							
 				nextStateLine.style.opacity = '0';	
-			},40)
+			},(stateListSize-i)*25)
 
 			setTimeout(function(){
 				nextStateLine.remove();
-
-			},70)		
-		
+			},(stateListSize-i)*30)			
 		}
 	}
 }
+
 // Первоначальное отображение 3-x статусов
 const StateListInit = new StateList()
 StateListInit.init()
