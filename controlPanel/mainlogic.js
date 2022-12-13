@@ -43,12 +43,12 @@ function btnClick(event){
 		if(StateList.flag == false){
 			let element = document.getElementById('stateList');
 			console.log(element);					
-			const openStateList = new StateList(element);
+			const openStateList = new StateList({name:element.name});
 			openStateList.open();
 			event.target.children[0].innerHTML = 'Get less'	
 		}
-		else{
-			const closeStateList = new StateList();
+		else{			
+			const closeStateList = new StateList({name:element.name});
 			closeStateList.close();
 		}			
 	}	
@@ -95,8 +95,10 @@ const stateLines = new Map()
 class StateList{
 	static flag = false;
 
-	constructor(){
+	constructor(options){
 		// this.stateLines = new Map()
+		// this.mainStateFlag = false;
+		this.name = options.name;
 	}
 
 	init(){
@@ -119,6 +121,9 @@ class StateList{
 	}
 	open(){
 		StateList.flag = true;
+		// this.mainStateFlag = true;
+
+		console.log(this.name);
 		
 		let sLineStyle = getComputedStyle(stateList.children[0]);
 		let sLineMargins = parseInt(sLineStyle.marginTop)+parseInt(sLineStyle.marginBottom);
@@ -146,6 +151,8 @@ class StateList{
 	
 	close(){
 		StateList.flag = false;
+		// this.mainStateFlag = false;
+
 		let stateListSize = document.querySelectorAll('.stateLine > input').length;
 		
 		console.log('close');	
@@ -166,8 +173,8 @@ class StateList{
 }
 
 // Первоначальное отображение 3-x статусов
-const StateListInit = new StateList()
-StateListInit.init()
+const StateList1Init = new StateList({name:'x'})
+StateList1Init.init()
 
 
 const b1States = document.querySelectorAll('.stateLine > input');
