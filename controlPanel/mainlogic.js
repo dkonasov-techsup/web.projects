@@ -39,17 +39,12 @@ function btnMouseLeave(event){
 
 function btnClick(event){
 	if (event.target.id == "btnState"){
-
+		// const StateList1 = new StateList({}); инициализация StateList1 ниже
 		if(StateList.flag == false){
-			let element = document.getElementById('stateList');
-			console.log(element);					
-			const openStateList = new StateList({name:element.name});
-			openStateList.open();
-			event.target.children[0].innerHTML = 'Get less'	
+			StateList1.open();			
 		}
-		else{			
-			const closeStateList = new StateList({name:element.name});
-			closeStateList.close();
+		else{
+			StateList1.close();
 		}			
 	}	
 }
@@ -120,22 +115,24 @@ class StateList{
 
 	}
 	open(){
-		StateList.flag = true;
-		// this.mainStateFlag = true;
+		StateList.flag = true;		
 
-		console.log(this.name);
+		console.log(event.target);
 		
-		let sLineStyle = getComputedStyle(stateList.children[0]);
-		let sLineMargins = parseInt(sLineStyle.marginTop)+parseInt(sLineStyle.marginBottom);
-		let sLineHeight = parseInt(sLineStyle.height)+(sLineMargins);	
+		// Если требуется вычисление общей высоты блока списка
+		// let sLineStyle = getComputedStyle(stateList.children[0]);
+		// let sLineMargins = parseInt(sLineStyle.marginTop)+parseInt(sLineStyle.marginBottom);
+		// let sLineHeight = parseInt(sLineStyle.height)+(sLineMargins);	
+
+		setTimeout(function(){
+			event.target.children[0].innerHTML = 'Get less';
+		},40)	
 
 		let stateListSize = document.querySelectorAll('.stateLine > input').length;
-		
-
 		for(let i=stateListSize; i<=mainState.length-1; i++){			
 
 			let nextStateLine = stateLines.get(i);
-			console.log(nextStateLine);
+			// console.log(nextStateLine);
 
 			nextStateLine.style.opacity = '0';			
 			setTimeout(function(){
@@ -150,12 +147,11 @@ class StateList{
 	}
 	
 	close(){
-		StateList.flag = false;
-		// this.mainStateFlag = false;
+		StateList.flag = false;		
 
 		let stateListSize = document.querySelectorAll('.stateLine > input').length;
 		
-		console.log('close');	
+		console.log(event);	
 
 		for(let i=stateListSize-1; i>=3; i--){
 		
@@ -172,9 +168,9 @@ class StateList{
 	}
 }
 
-// Первоначальное отображение 3-x статусов
-const StateList1Init = new StateList({name:'x'})
-StateList1Init.init()
+// Инициализация StateList1
+const StateList1 = new StateList({})
+StateList1.init()
 
 
 const b1States = document.querySelectorAll('.stateLine > input');
