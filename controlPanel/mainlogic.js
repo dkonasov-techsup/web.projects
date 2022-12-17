@@ -91,9 +91,7 @@ class StateList{
 	static flag = false;
 
 	constructor(options){
-		// this.stateLines = new Map()
-		// this.mainStateFlag = false;
-		this.name = options.name;
+
 	}
 
 	init(){
@@ -115,24 +113,17 @@ class StateList{
 
 	}
 	open(){
-		StateList.flag = true;		
+		StateList.flag = true;
 
-		console.log(event.target);
-		
-		// Если требуется вычисление общей высоты блока списка
-		// let sLineStyle = getComputedStyle(stateList.children[0]);
-		// let sLineMargins = parseInt(sLineStyle.marginTop)+parseInt(sLineStyle.marginBottom);
-		// let sLineHeight = parseInt(sLineStyle.height)+(sLineMargins);	
-
+		let target = event.target.children[0];
 		setTimeout(function(){
-			event.target.children[0].innerHTML = 'Get less';
-		},40)	
+			target.innerHTML = 'Get less';
+		},80)	
 
 		let stateListSize = document.querySelectorAll('.stateLine > input').length;
 		for(let i=stateListSize; i<=mainState.length-1; i++){			
 
 			let nextStateLine = stateLines.get(i);
-			// console.log(nextStateLine);
 
 			nextStateLine.style.opacity = '0';			
 			setTimeout(function(){
@@ -147,12 +138,14 @@ class StateList{
 	}
 	
 	close(){
-		StateList.flag = false;		
+		StateList.flag = false;
+
+		let target = event.target.children[0];
+		setTimeout(function(){
+			target.innerHTML = 'Get more';
+		},80)		
 
 		let stateListSize = document.querySelectorAll('.stateLine > input').length;
-		
-		console.log(event);	
-
 		for(let i=stateListSize-1; i>=3; i--){
 		
 			let nextStateLine = stateLines.get(i);			
