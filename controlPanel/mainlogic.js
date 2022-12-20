@@ -77,12 +77,12 @@ function checkBoxChange(){
 // Коллекция всех имеющихся статусов (в идеале вероятно подтягивать с бд сервера)
 
 const mainState = [
-	{id:'b1_val0', desc:'System status',	   name:'val0'},
-	{id:'b1_val1', desc:'1-st module status:', name:'val1'},
-	{id:'b1_val2', desc:'2-st module status:', name:'val2'},
-	{id:'b1_val3', desc:'3-st module status:', name:'val3'},
-	{id:'b1_val4', desc:'4-st module status:', name:'val4'},
-	{id:'b1_val5', desc:'5-st module status:', name:'val5'},	
+	{id:'b1_val0', desc:'System status', name:'val0'},
+	{id:'b1_val1', desc:'1-st module', name:'val1'},
+	{id:'b1_val2', desc:'2-st module', name:'val2'},
+	{id:'b1_val3', desc:'3-st module', name:'val3'},
+	{id:'b1_val4', desc:'4-st module', name:'val4'},
+	{id:'b1_val5', desc:'5-st module', name:'val5'},	
 ]
 
 const stateLines = new Map()
@@ -94,10 +94,10 @@ class StateList{
 
 	}
 
-	init(){
+	init(list){
 		//Генерация div-элементов для статусов и заполнение коллекции
 		// let stateLines = new Map()
-		mainState.forEach((item,index) => {
+		list.forEach((item,index) => {
 			let newStateLine = document.createElement('div');
 			newStateLine.classList = "stateLine";
 			let htmlStructure = (`<label for="${item.name}">${item.desc}</label><input type = "text" name = "${item.name}" id = "${item.id}" readonly>`);
@@ -112,6 +112,7 @@ class StateList{
 		}		
 
 	}
+	
 	open(){
 		StateList.flag = true;
 
@@ -163,7 +164,7 @@ class StateList{
 
 // Инициализация StateList1
 const StateList1 = new StateList({})
-StateList1.init()
+StateList1.init(mainState)
 
 
 const b1States = document.querySelectorAll('.stateLine > input');
