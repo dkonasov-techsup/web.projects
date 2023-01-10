@@ -77,7 +77,7 @@ function checkBoxChange(){
 // Коллекция всех имеющихся статусов (в идеале вероятно подтягивать с бд сервера)
 
 const mainState = [
-	{id:'b1_val0', desc:'System status', name:'val0'},
+	{id:'b1_val0', desc:'System', name:'val0'},
 	{id:'b1_val1', desc:'1-st module', name:'val1'},
 	{id:'b1_val2', desc:'2-st module', name:'val2'},
 	{id:'b1_val3', desc:'3-st module', name:'val3'},
@@ -109,8 +109,7 @@ class StateList{
 			let stateList = document.getElementById('stateList');
 			let nextStateLine = stateLines.get(i);
 			stateList.append(nextStateLine);	
-		}		
-
+		}
 	}
 	
 	open(){

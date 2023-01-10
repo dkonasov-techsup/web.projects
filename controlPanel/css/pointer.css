@@ -1,0 +1,32 @@
+#pointer{
+	height: 300px;
+	padding: 0 28px;
+}
+
+.pointer_workspace{
+	/*display: ;*/
+	position: relative;
+	border-radius: 18px;
+	background-color: var(--background-deep-dark);
+	height: 100%;
+
+	cursor: crosshair;
+}
+
+
+.rulerX{
+	position: absolute;
+	display: block;
+	pointer-events: none;
+	height: inherit;
+	width: 1px;
+	background-color: var(--border-gray);
+}
+.rulerY{
+	/*position: absolute;*/
+	display: block;
+	pointer-events: none;
+	width: inherit;
+	height: 1px;
+	background-color: var(--border-gray);
+}

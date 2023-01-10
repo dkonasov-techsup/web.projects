@@ -3,82 +3,129 @@
 <head>
 	<title>testPage</title>
 	<link rel="stylesheet" href= "css/maincss.css">
-	<long rel="stylesheet" href= "css/sidebarMenu.css">
+	<link rel="stylesheet" href= "css/sidebar.css">
+	<link rel="stylesheet" href= "css/toolbar.css">
+	<link rel="stylesheet" href= "css/pointer.css">
+	<!-- <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"> -->
+
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200">
+
 	<link rel="preconnect" href="https://fonts.googleapis.com">
-	<!-- <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin> -->
 	<link href="https://fonts.googleapis.com/css2?family=Montserrat+Alternates:wght@700&family=Montserrat:wght@300;400;500;700&display=swap" rel="stylesheet">
 	
 </head>
-<body>
-	<div class = "sidebarMenu">
+<body>	
+	
+	<div class="page_wrapper">
+
+		<div class="toolbar">
+		</div>
+
+		<div class="page">
+
+			<div class="sidebar">
+				<button class="sidebar_toggle material-symbols-outlined" onclick="sidebar_toggle()"></button>
+				<div class="sidebar_inner">
+					<div class="sidebar_content">
+						<div class="sidebar_section">
+							<span class="sidebar_section_title">Navigation</span>
+							<nav class="sidebar_navigation">
+								<ul class="sidebar_navigation_links">
+									<li class="sidebar_navigation_link">
+										<a class="sidebar_link" href="index.html">Control panel</a>
+									</li>
+									<li class="sidebar_navigation_link">
+										<a class="sidebar_link" href="calendar.html">Calendar</a>
+									</li>
+								</ul>
+							</nav>
+						</div>
+					</div>
+				</div>
+			</div>		
+
+			<div class="page_inner">	
+
+				<div id="stat1">
+					<div id="s1block1" class="stat1block">
+						<div class= "b1_title">State</div>
+						<div class= "b1_content" id= "stateList">
+						</div>
+						<button class= "b1_button" id="btnState">
+							<span>Get more</span>
+							<svg class="btnIcon" viewBox="0 0 379 379" fill="none" xmlns="http://www.w3.org/2000/svg">
+								<path d="M41 316H337.5" stroke-width="24" stroke-linecap="square"/>
+								<path d="M41 190H337.5" stroke-width="24" stroke-linecap="square"/>
+								<path d="M41 57H337.5"  stroke-width="24" stroke-linecap="square"/>
+							</svg>
+						</button>
+					</div>
+
+					<div id="s1block2" class="stat1block">
+						<div class= "b1_title">Options</div>
+						<div class= "b1_content">
+
+							<div class= "b1_optionLine"> System
+							  <label class="b1_switch" for="b1_checkbox1">
+							    <input type="checkbox" id="b1_checkbox1" checked/>
+							    <div class="b1_slider"></div>
+							  </label>
+							</div>
+							<div class= "b1_optionLine"> Option 2
+							  <label class="b1_switch" for="b1_checkbox2">
+							    <input type="checkbox" id="b1_checkbox2"/>
+							    <div class="b1_slider"></div>
+							  </label>
+							</div>
+							<div class= "b1_optionLine"> Option 3
+							  <label class="b1_switch" for="b1_checkbox3">
+							    <input type="checkbox" id="b1_checkbox3"/>
+							    <div class="b1_slider"></div>
+							  </label>
+							</div>
+
+						</div>
+						<button class="b1_button" id="btnOption">
+							<span>Get more</span>
+							<svg class="btnIcon" viewBox="0 0 379 379" fill="none" xmlns="http://www.w3.org/2000/svg">
+								<path d="M41 316H337.5" stroke-width="24" stroke-linecap="square"/>
+								<path d="M41 190H337.5" stroke-width="24" stroke-linecap="square"/>
+								<path d="M41 57H337.5"  stroke-width="24" stroke-linecap="square"/>
+							</svg>
+						</button>
+					</div>
+
+					<div id="s1block3" class="stat1block">
+						<div class= "b1_title">Data</div>
+						<div class= "b1_content">
+							<textarea id= "b1_textarea"></textarea>
+						</div>
+						<button class="b1_button" id="btnData">
+							<span>Get more</span> 
+							<svg class="btnIcon" viewBox="0 0 379 379" fill="none" xmlns="http://www.w3.org/2000/svg">
+								<path d="M41 316H337.5" stroke-width="24" stroke-linecap="square"/>
+								<path d="M41 190H337.5" stroke-width="24" stroke-linecap="square"/>
+								<path d="M41 57H337.5"  stroke-width="24" stroke-linecap="square"/>
+							</svg>
+						</button>
+					</div>					
+				</div>
+
+				<div id="pointer">
+
+					<div class="pointer_workspace">
+						<div class="rulerX"></div>
+						<div class="rulerY"></div>
+					</div>
+				</div>
+
+			</div>
+		</div>
 	</div>
-	<div id = "stat1">
-		<div id = "s1block1" class="stat1block">
-			<div class= "b1_title">State</div>
-			<div class= "b1_content" id= "stateList">
-			</div>
-			<button class= "b1_button" id="btnState">
-				<span>Get more</span>
-				<svg class="btnIcon" viewBox="0 0 379 379" fill="none" xmlns="http://www.w3.org/2000/svg">
-					<path d="M41 316H337.5" stroke-width="24" stroke-linecap="square"/>
-					<path d="M41 190H337.5" stroke-width="24" stroke-linecap="square"/>
-					<path d="M41 57H337.5"  stroke-width="24" stroke-linecap="square"/>
-				</svg>
-			</button>
-		</div>
-
-		<div id = "s1block2" class="stat1block">
-			<div class= "b1_title">Options</div>
-			<div class= "b1_content">
-
-				<div class= "b1_optionLine"> System
-				  <label class="b1_switch" for="b1_checkbox1">
-				    <input type="checkbox" id="b1_checkbox1" checked/>
-				    <div class="b1_slider"></div>
-				  </label>
-				</div>
-				<div class= "b1_optionLine"> Option 2
-				  <label class="b1_switch" for="b1_checkbox2">
-				    <input type="checkbox" id="b1_checkbox2"/>
-				    <div class="b1_slider"></div>
-				  </label>
-				</div>
-				<div class= "b1_optionLine"> Option 3
-				  <label class="b1_switch" for="b1_checkbox3">
-				    <input type="checkbox" id="b1_checkbox3"/>
-				    <div class="b1_slider"></div>
-				  </label>
-				</div>
-
-			</div>
-			<button class="b1_button" id="btnOption">
-				<span>Get more</span>
-				<svg class="btnIcon" viewBox="0 0 379 379" fill="none" xmlns="http://www.w3.org/2000/svg">
-					<path d="M41 316H337.5" stroke-width="24" stroke-linecap="square"/>
-					<path d="M41 190H337.5" stroke-width="24" stroke-linecap="square"/>
-					<path d="M41 57H337.5"  stroke-width="24" stroke-linecap="square"/>
-				</svg>
-			</button>
-		</div>
-
-		<div id = "s1block3" class="stat1block">
-			<div class= "b1_title">Data</div>
-			<div class= "b1_content">
-				<textarea id= "b1_textarea"></textarea>
-			</div>
-			<button class="b1_button" id="btnData">
-				<span>Get more</span> 
-				<svg class="btnIcon" viewBox="0 0 379 379" fill="none" xmlns="http://www.w3.org/2000/svg">
-					<path d="M41 316H337.5" stroke-width="24" stroke-linecap="square"/>
-					<path d="M41 190H337.5" stroke-width="24" stroke-linecap="square"/>
-					<path d="M41 57H337.5"  stroke-width="24" stroke-linecap="square"/>
-				</svg>
-			</button>
-		</div>
-	</div>
-
 
 <script type="text/javascript" src="navigation.js"></script>
-<script type="text/javascript" src="mainlogic.js"></script>
+
+<script type="text/javascript" src="stat1logic.js"></script>
+<script type="text/javascript" src="pointer.js"></script>
 </body>
 </html>

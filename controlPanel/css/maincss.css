@@ -1,7 +1,23 @@
 body{
 	background-color:#202020;
 	margin: 0px;
+	height: 100%;
+	font: 14px 'Montserrat', Segoe UI;
+	color: var(--text-light-gray);
 }
+
+
+.page_wrapper{
+	position: relative;
+	height: 100%;
+}
+
+.page_inner{
+	margin: 0;
+	padding: 20px 120px 0px 120px;
+	height: 1800px;
+}
+
 
 #stat1{
 	display: flex;
@@ -10,9 +26,6 @@ body{
 	justify-content: center;
 	width: 100%;
 	height: auto;
-	margin-top: 20px;
-	font-family: 'Montserrat', sans-serif;
-
 }
 
 .stat1block{
@@ -20,8 +33,8 @@ body{
 	flex: 1;
 	flex-direction: column;	
 	height: auto;
-	width: 28%;
-	padding: 0px 40px 0px 40px;
+	min-width: 186px;
+	padding:  0px 28px 28px 28px;
 	text-align: left;
 }
 
@@ -30,12 +43,11 @@ body{
 	flex-direction: column;
 	justify-content: center;
 	width: 100%;
-	height: 80px;
-	margin: 20px 0px 20px 0px;
 
-	font-size: 40px;
-	font-weight: 700;
-	color: #e8e8e8;
+	margin: 0px 0px 10px 0px;
+
+	font-size: 36px;
+	font-weight: 700;	
 }
 
 .b1_content{
@@ -48,7 +60,6 @@ body{
 
 	font-size: 18px;
 	font-weight: 200;
-	color: #a7a7a7;
 
 	transition-property: all;
 	transition-duration: 200ms;	
@@ -62,13 +73,13 @@ body{
 	justify-content: center;
 	align-items: center;
 	width: 100%;
-	height: 60px;
-	margin-top: 40px;
+	height: 50px;
+	margin-top: 20px;
 	padding: 0px;
 
 	border-style: solid;
 	border-width: 1px;
-	border-color: #a7a7a7;
+	border-color: var(--border-light-gray);
 	border-radius: 18px;
 	text-align: center;
 	background-color:#202020;		
@@ -76,7 +87,7 @@ body{
 	font-family: 'Montserrat', sans-serif;
 	font-size: 18px;
 	font-weight: 200;	 
-	color: #a7a7a7;
+	color: var(--text-light-gray);
 
 	transition-property: color,border-color,box-shadow;
 	transition-duration: 500ms;
@@ -87,7 +98,7 @@ body{
 }
 .b1_button svg{
 	padding-left: 12px;
- 	stroke:#a7a7a7;
+ 	stroke: var(--border-light-gray);
  	width: 17px; 
  	height: 17px;
  	transition-property: stroke;
@@ -103,7 +114,7 @@ body{
 	display: flex;
 	flex-direction: row;
 	justify-content: space-between;
-	margin: 8px 0px 8px 0px;
+	margin: 6px 0px 6px 0px;
 	align-items: center;
 }
 
@@ -115,7 +126,7 @@ body{
 	justify-content: space-between;
 	align-items: center;
 
-	margin: 8px 0px 8px 0px;
+	margin: 6px 0px 6px 0px;
 
 	transition-property: all;
 	transition-duration:200ms;	
@@ -160,7 +171,7 @@ body{
   cursor: pointer;
   width: 100%;
   border-radius: 20px;
-  background-color:#121212;
+  background-color: var(--background-deep-dark);
   box-shadow: 0px 0px 12px 0px #5c5c5c;
   transition: .4s;
 }
@@ -195,7 +206,7 @@ input:checked + .b1_slider:before {
 	border: none;
 	border-radius: 18px;
 
-	background-color: #161616;
+	background-color: var(--background-deep-dark);
 	font-family: 'Montserrat', sans-serif;
 	font-size: 12px;
 	color: #a7a7a7;
@@ -241,4 +252,16 @@ input:checked + .b1_slider:before {
 
 	/*transition: opacity 800ms 0ms;*/
 	transition: box-shadow, 800ms 0ms;
+}
+
+
+:root{
+	--background-deep-dark: #121212;
+
+	--border-light-gray: #808080;
+	--border-gray: #424242;	
+	--sidebar-gray: #282828;
+
+	--text-light-gray: #e8e8e8;
+	--text-dark-accent: #808080;
 }
