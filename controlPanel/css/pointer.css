@@ -6,27 +6,50 @@
 .pointer_workspace{
 	/*display: ;*/
 	position: relative;
+	clip-path: inset(0 0 0 0 round 18px);
 	border-radius: 18px;
 	background-color: var(--background-deep-dark);
 	height: 100%;
+	cursor: none;
+}
 
-	cursor: crosshair;
+.pointer_info{
+	position: absolute;
+	pointer-events: none;
+	top:0;
+	left: 0;
+	height: 100%;
+	width: 200px;
+	font-size: 14px;
+	line-height: 12px;
+	color: var(--text-dark-accent);
+}
+
+.pointer_info_container{	
+	padding: 10px 10px;
 }
 
 
+.pointer_info_container .value{
+	padding-left: 10px;
+}
+
+
+
+
 .rulerX{
-	position: absolute;
-	display: block;
+	display: none;
+	position: absolute;	
 	pointer-events: none;
 	height: inherit;
 	width: 1px;
 	background-color: var(--border-gray);
 }
 .rulerY{
-	/*position: absolute;*/
-	display: block;
+	display: none;
+	position: absolute;	
 	pointer-events: none;
-	width: inherit;
+	width: 100%;
 	height: 1px;
 	background-color: var(--border-gray);
 }
