@@ -18,7 +18,8 @@ function pointerActive(event){
 	if(event.type == "mouseleave"){
 		rulersHide();
 	}
-	rulersTracking(event);	
+	rulersTracking(event);
+	console.log(event.type);	
 }
 
 
@@ -30,7 +31,8 @@ function rulersShow(){
 function rulersHide(){	
 	rulerX.style.display = "none";
 	rulerY.style.display = "none";
-	// positionCell.textContent = "0 dfsdf";
+
+	positionCell.textContent = 0;
 	console.log(positionCell.textContent)
 }
 
@@ -47,5 +49,6 @@ function rulersTracking(event){
 	rulerX.style.left = coords[0] + "px";
 	rulerY.style.top = coords[1] + "px";		
 
-	positionCell.textContent = "x: "+coords[0]+" y: "+coords[1];
+	positionCell.textContent = coords[0]+" : "+coords[1];
+	console.log(positionCell.textContent);
 }
