@@ -1,5 +1,6 @@
 #pointer{
 
+	position: relative;
 	overflow: overlay;
 	clip-path: inset(0 0 0 0 round 18px);
 	margin: 0 28px;
@@ -9,21 +10,13 @@
 
 }
 
-#pointer::-webkit-scrollbar:horizontal{
-	background-color: var(--background-deep-dark);
-	width: 6px;
-}
+/*Scrollbar?*/
 
-#pointer::-webkit-scrollbar-thumb{
-	background-color: var(--border-gray);
-	width: 4px;
-	height: 4px;
-}
 
 
 .pointer_workspace{
 	/*display: ;*/
-	position: relative;
+	position: absolute;
 	width: 3000px;
 	height: 100%;
 	border-radius: 18px;
@@ -34,11 +27,10 @@
 }
 
 .pointer_info{
-	position: absolute;
+	position: sticky;
 	pointer-events: none;
 	top:0;
 	left: 0;
-	height: 100%;
 	width: 200px;
 	font-size: 14px;
 	line-height: 12px;
