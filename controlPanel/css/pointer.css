@@ -1,15 +1,35 @@
 #pointer{
+
+	overflow: overlay;
+	clip-path: inset(0 0 0 0 round 18px);
+	margin: 0 28px;
 	height: 300px;
-	padding: 0 28px;
+	background-color: var(--background-deep-dark);
+	scrollbar-width: 4px;
+
 }
+
+#pointer::-webkit-scrollbar:horizontal{
+	background-color: var(--background-deep-dark);
+	width: 6px;
+}
+
+#pointer::-webkit-scrollbar-thumb{
+	background-color: var(--border-gray);
+	width: 4px;
+	height: 4px;
+}
+
 
 .pointer_workspace{
 	/*display: ;*/
 	position: relative;
-	clip-path: inset(0 0 0 0 round 18px);
+	width: 3000px;
+	height: 100%;
 	border-radius: 18px;
 	background-color: var(--background-deep-dark);
-	height: 100%;
+	
+	clip-path: inset(0 0 0 0 round 18px);
 	cursor: none;
 }
 
@@ -29,12 +49,9 @@
 	padding: 10px 10px;
 }
 
-
 .pointer_info_container .value{
 	padding-left: 10px;
 }
-
-
 
 
 .rulerX{

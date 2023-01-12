@@ -11,7 +11,6 @@ const rulerY = document.querySelector('.rulerY');
 const positionCell = document.querySelector('.posValue');
 
 function pointerActive(event){
-
 	if(event.type == "mouseenter"){
 		rulersShow();
 	}
@@ -31,9 +30,6 @@ function rulersShow(){
 function rulersHide(){	
 	rulerX.style.display = "none";
 	rulerY.style.display = "none";
-
-	positionCell.textContent = 0;
-	console.log(positionCell.textContent)
 }
 
 function getPosition(event){
@@ -43,12 +39,17 @@ function getPosition(event){
 	return [x,y];
 }
 
+function setPosition(event,coords){
+	positionCell.textContent = coords[0]+" : "+coords[1];
+	if(event.type == "mouseleave"){
+		positionCell.textContent = 0 + " : " + 0;
+	}
+}
+
 function rulersTracking(event){
 	let coords = getPosition(event)		
 
 	rulerX.style.left = coords[0] + "px";
-	rulerY.style.top = coords[1] + "px";		
-
-	positionCell.textContent = coords[0]+" : "+coords[1];
-	console.log(positionCell.textContent);
+	rulerY.style.top = coords[1] + "px";	
+	setPosition(event,coords)
 }
