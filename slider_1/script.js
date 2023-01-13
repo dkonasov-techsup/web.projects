@@ -1,45 +1,40 @@
 "use strict"
 
-let sContainers = document.querySelectorAll(".slideshow-container")
-let slide = document.getElementsByClassName('slide')
-
-
-
-console.log(slide)
-console.log(sContainers)
-// console.log(sContainerDiv)
-
+let slideshowList = document.querySelectorAll(".slideshow-container")
 
 //добавление переключателей
 
+function addBtns(slideshowList){	
 
-function addBtns(contList){
-	console.log(contList)
-
-	contList.forEach((item,index) =>{
-		item.insertAdjacentHTML('afterbegin','<a class="prev" onclick="plusSlides(-1)">&#10094</a> <a class="prev" onclick="plusSlides(1)">&#10095</a>')
+	slideshowList.forEach((item,index) =>{
+		item.insertAdjacentHTML('beforeend','<a class="prev" onclick="plusSlides(-1)">&#10094</a> <a class="next" onclick="plusSlides(1)">&#10095</a>')
 	})
 }
 
-addBtns(sContainers)
+addBtns(slideshowList)
 
 
-function addDots(contList){	
+function addDots(slideshowList){	
 
-	contList.forEach((item,index)=>{
-		// Узнаём кол-о элментов в колллекции минус 2 элемента(кнопки) отвечающих за навигацию!
-		let contSize = (item.children.length - 2);
+	for (let item of slideshowList){
+		let slides = item.getElementsByClassName('slide');
+		// console.log(slides.length);
 
-		console.log(contSize);
-		item.insertAdjacentHTML('afterend','<div> <span class="dot" onclick="currentSlide()"></span> </div>')
-	})	
+		let dots = document.createElement('div')
+		dots.className = "dots";		
+
+			for	(let i = 1; i <= slides.length; i++){
+				console.log(i);
+				let dot = '<span class="dot" onclick="currentSlide('+ i +')"></span>';						
+				dots.insertAdjacentHTML('beforeend', dot);
+			}
+
+		item.append(dots);	
+	}
 }
 
 
-addDots(sContainers)
-
-
-
+addDots(slideshowList)
 
 
 class Slideshow{
