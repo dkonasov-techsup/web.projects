@@ -90,7 +90,7 @@ body{
 	color: var(--text-light-gray);
 
 	transition-property: color,border-color,box-shadow;
-	transition-duration: 500ms;
+	transition-duration: 200ms;
 }
 .b1_button img{
 	height: 16px;

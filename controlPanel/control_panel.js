@@ -63,7 +63,7 @@ b1CheckBox.forEach(input =>{
 function checkBoxChecked(input){
 	return (input.checked) ? true : false;
 }
-console.log(checkBoxState);	
+// console.log(checkBoxState);	
 
 
 //обработчик события 'change'

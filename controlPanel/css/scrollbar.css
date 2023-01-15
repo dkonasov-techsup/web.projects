@@ -1,0 +1,24 @@
+.scrollbar{
+	position: absolute;
+	bottom: 10px;
+	width: 100%;
+	height: 5px;
+	background-color: transparent;
+	cursor: pointer;
+}
+
+.scrollbar_track{	
+	
+	height: 5px;
+	margin: 0px 20px;
+	border-radius: 5px;
+	background-color: #77777711;	
+}
+
+.scrollbar_thumb{
+	position: absolute;	
+	width: 20px;
+	height: 5px;
+	border-radius: 5px;
+	background-color: #77777740;	
+}

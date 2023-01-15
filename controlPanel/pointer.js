@@ -18,7 +18,7 @@ function pointerActive(event){
 		rulersHide();
 	}
 	rulersTracking(event);
-	console.log(event.type);	
+	// console.log(event.type);	
 }
 
 
