@@ -4,6 +4,8 @@ body{
 	height: 100%;
 	font: 14px 'Montserrat', Segoe UI;
 	color: var(--text-light-gray);
+
+	user-select: none;
 }
 
 
