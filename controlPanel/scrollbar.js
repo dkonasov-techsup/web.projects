@@ -50,6 +50,17 @@ function startScroll(event){
 
 	function moveThumb(event){
 
+		let thumbPos = Number(activeThumb.style.left);
+		console.log(thumbPos);
+
+		// if (thumbPos <= 20){
+		// 	return false;
+		// 	// stopThumb();
+		// }
+
+		console.log(activeThumb.style.left);
+
+
 		let track = activeTrack.getBoundingClientRect()
 
 		activeThumb.style.left = ((event.clientX - track.left) + activeThumb.offsetWidth / 2) + "px";
@@ -61,7 +72,7 @@ function startScroll(event){
 		console.log('stopScroll');
 		document.removeEventListener('mousemove', moveThumb);
 		document.removeEventListener('mouseup', stopThumb);
-		console.log(activeThumb);
+		
 	}
 
 }
