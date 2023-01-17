@@ -2,16 +2,42 @@
 	"use strict"
 
 	class ScrollBar{
-		constructor(container){			
+		constructor(container){
+			this.viewport = container;
+			this.scrollable = container.querySelector('.scrolable');
+			this.init();		
+		}
+		init(){
+			this.viewportWidth = this.viewport.offsetWidth;
+			this.scrollableWidth = this.scrollable.scrollWidth;
+
+			if (this.viewportWidth >= this.scrollableWidth) return;
+
+			this.maxScroll = this.viewport.clientWidth - this.scrollableWidth;
+			this.ratio = this.viewportWidth / this.scrollableWidth;
+
+			this.createScrollbar();
+			this.registerEventsHandler();			
+		}
+
+		createScrollbar(){
+
+		}
+
+		registerEventsHandler(){
+			
 		}
 
 	}
 
-	
+	const containers  = document.querySelectorAll('.viewport');
+	for(let container of containers){
+		const scrollbar = new ScrollBar(container);
+	}
 	
 	// Заполняем массив с блоками имеющими внутри прокручиваемый дочерний элемент
 
-	// const scrList = document.querySelectorAll('.scrolable');
+	// const containers  = document.querySelectorAll('.scrolable');
 	// const contList = [];
 
 	// function getContainer(scrList){	
