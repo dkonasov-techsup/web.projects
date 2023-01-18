@@ -2,6 +2,9 @@
 	"use strict"
 
 	class ScrollBar{
+
+		static #thumb_width_min = 20;
+
 		constructor(container){
 			this.viewport = container;
 			this.scrollable = container.querySelector('.scrolable');
@@ -21,7 +24,15 @@
 		}
 
 		createScrollbar(){
+			// Создаём скролбар и добавляем его в контейнер
+			const scrollbar = '<div class="scrollbar"><div class="scrollbar_track"><div class="scrollbar_thumb"></div></div></div>'
+			this.viewport.insertAdjacentHTML('beforeend', scrollbar);
 
+			// Получаем объект ползунка. Вычисляем и устанавливаем его ширину
+			this.thumb = this.viewport.querySelector('.scrollbar_thumb');
+			this.thumbWidth = parseInt(this.ratio * this.viewportWidth);
+			this.thumbWidth = (this.thumbWidth <= ScrollBar.#thumb_width_min) ? ScrollBar.#thumb_width_min : this.thumbWidth;
+			this.thumb.style.width = this.thumbWidth = 'px';
 		}
 
 		registerEventsHandler(){

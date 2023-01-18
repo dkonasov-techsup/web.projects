@@ -17,7 +17,7 @@
 
 .scrollbar_thumb{
 	position: absolute;	
-	width: 20px;
+	/*width: 20px;*/
 	height: 4px;
 	border-radius: 4px;
 	background-color: #77777740;	
