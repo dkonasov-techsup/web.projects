@@ -31,11 +31,21 @@
 			// Получаем объект ползунка. Вычисляем и устанавливаем его ширину
 			this.thumb = this.viewport.querySelector('.scrollbar_thumb');
 			this.thumbWidth = parseInt(this.ratio * this.viewportWidth);
+
+			// console.log(ScrollBar.#thumb_width_min);
+
 			this.thumbWidth = (this.thumbWidth <= ScrollBar.#thumb_width_min) ? ScrollBar.#thumb_width_min : this.thumbWidth;
-			this.thumb.style.width = this.thumbWidth = 'px';
+			this.thumb.style.width = this.thumbWidth + 'px';
+			console.log(this.thumb.style.width);
 		}
 
 		registerEventsHandler(){
+			// this.viewport.addEventListener('scroll',()=>{
+			// 	console.log('scroll');
+			// 	this.scrollable.style.left = (this.viewport.scrollLeft * this.ratio) + 'px';
+			// });
+
+
 			
 		}
 
@@ -45,30 +55,6 @@
 	for(let container of containers){
 		const scrollbar = new ScrollBar(container);
 	}
-	
-	// Заполняем массив с блоками имеющими внутри прокручиваемый дочерний элемент
-
-	// const containers  = document.querySelectorAll('.scrolable');
-	// const contList = [];
-
-	// function getContainer(scrList){	
-	// 	scrList.forEach((item,index)=>{
-	// 		contList[index] = item.parentNode;		
-	// 	})
-	// }
-	// getContainer(scrList)
-
-
-	// // Добавляем контейнер с скролбаром
-	// function addScrollbar(contList){
-	// 	const scrollbar = '<div class="scrollbar"><div class="scrollbar_track"><div class="scrollbar_thumb"></div></div></div>'
-	// 	for(const cont of contList){
-	// 		console.log(cont);
-	// 		cont.insertAdjacentHTML('beforeend', scrollbar);
-	// 	}
-	// }
-	// addScrollbar(contList)
-
 
 	// // Отслеживаем нажатие на scrollbar_thumb
 	// const thumbs = document.querySelectorAll('.scrollbar_thumb');
