@@ -40,13 +40,19 @@
 		}
 
 		registerEventsHandler(){
+			// Разделить горизонтальный и верт. скролл?
+
 			// this.viewport.addEventListener('scroll',()=>{
 			// 	console.log('scroll');
 			// 	this.scrollable.style.left = (this.viewport.scrollLeft * this.ratio) + 'px';
 			// });
 
+			this.thumb.addEventListener('mousedown', event =>{
+				console.log(event);				
+			})
+			this.pressed = true;
 
-			
+			document.addEventListener('mousemove', )
 		}
 
 	}
