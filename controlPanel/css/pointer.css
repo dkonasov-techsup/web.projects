@@ -1,7 +1,7 @@
 #pointer{
 
 	position: relative;
-	overflow: hidden;
+	overflow: overlay;	
 	clip-path: inset(0 0 0 0 round 18px);
 	margin: 0px 28px 28px 28px;
 	height: 300px;

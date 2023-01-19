@@ -1,3 +1,16 @@
+.viewport{
+	overflow: overlay;
+}
+
+
+.viewport::-webkit-scrollbar{	
+	display: none;
+}
+
+.viewport_сontent{
+	height: 100%;
+}
+
 .scrollbar{
 	position: absolute;
 	bottom: 10px;
