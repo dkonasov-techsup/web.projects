@@ -7,6 +7,7 @@
 
 		constructor(container){
 			this.viewport = container;
+			this.viewportContent = container.querySelector('.viewport_сontent');
 			this.scrollable = container.querySelector('.scrolable');
 			this.init();		
 		}
@@ -41,18 +42,20 @@
 
 		registerEventsHandler(){
 			// Разделить горизонтальный и верт. скролл?
+			// Thumb выезжает за границы сколбара
+			this.viewportContent.addEventListener('scroll',()=>{
+				console.log('scroll');
+				this.thumb.style.left = (this.viewportContent.scrollLeft * this.ratio) + 'px';
+			});
 
-			// this.viewport.addEventListener('scroll',()=>{
-			// 	console.log('scroll');
-			// 	this.scrollable.style.left = (this.viewport.scrollLeft * this.ratio) + 'px';
-			// });
+			// console.log(this.viewportContent);
 
 			this.thumb.addEventListener('mousedown', event =>{
 				console.log(event);				
 			})
 			this.pressed = true;
 
-			document.addEventListener('mousemove', )
+			// document.addEventListener('mousemove', )
 		}
 
 	}
