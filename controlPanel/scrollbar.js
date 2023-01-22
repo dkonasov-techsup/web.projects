@@ -50,14 +50,18 @@
 
 			// console.log(this.viewportContent);
 
-			this.thumb.addEventListener('mousedown', event =>{
-				console.log(event);				
-			})
+			this.thumb.addEventListener('mousedown', e);
 			this.pressed = true;
 
 			// document.addEventListener('mousemove', )
 		}
 
+		scroll(thumb){
+			console.log(this);
+
+			// document.addEventListener('mousemove', )
+			document.addEventListener('mouseup', stopThumb);
+		}
 	}
 
 	const containers  = document.querySelectorAll('.viewport');
