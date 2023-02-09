@@ -1,0 +1,13 @@
+{
+	"Headers":
+	{
+		"Header1":"Стабильные",
+		"Header2":"Тестовые",
+		"Header3":"Архив"
+	},
+	"Content1":
+	{
+		"ObjName":"Mini",
+		"Content":"Content"
+	}
+}
