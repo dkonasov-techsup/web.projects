@@ -1,9 +1,9 @@
 {
 	"Mini":
 	{
-		"Header1":"Стабильные",
-		"Header2":"Тестовые",
-		"Header3":"Архив"
+		"Header1":"<div class = chapName> Стабильные </div>",
+		"Header2":"<div class = chapName> Тестовые </div>",
+		"Header3":"<div class = chapName> Архив </div>"
 	},
 	"Content1":
 	{
