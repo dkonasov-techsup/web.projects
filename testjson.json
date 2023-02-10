@@ -4,20 +4,6 @@
 		"Header1":"<div class = chapName> Стабильные </div>",
 		"Header2":"<div class = chapName> Тестовые </div>",
 		"Header3":"<div class = chapName> Архив </div>"
-	},
-	"Content1":
-	{
-		"ObjName":"Mini",
-		"Content":"Content"
-	},
-	"Content2":
-	{
-		"ObjName":"Base",
-		"Content":"Content"
-	},
-	"Content3":
-	{
-		"ObjName":"Max",
-		"Content":"Content"
 	}
+
 }
