@@ -1,5 +1,5 @@
 {
-	"Headers":
+	"Mini":
 	{
 		"Header1":"Стабильные",
 		"Header2":"Тестовые",
@@ -8,6 +8,16 @@
 	"Content1":
 	{
 		"ObjName":"Mini",
+		"Content":"Content"
+	},
+	"Content2":
+	{
+		"ObjName":"Base",
+		"Content":"Content"
+	},
+	"Content3":
+	{
+		"ObjName":"Max",
 		"Content":"Content"
 	}
 }
