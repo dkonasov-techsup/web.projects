@@ -1,0 +1,18 @@
+.block_container{
+	position: relative;
+	border: solid 1px red;
+	width: fit-content;
+}
+
+.block_container span{
+	position: absolute;
+	top: 10px;
+}
+
+.block_container input{
+	position: absolute;
+	resize:horizontal;
+	left: 50px;
+	
+	top: 10px;
+}
