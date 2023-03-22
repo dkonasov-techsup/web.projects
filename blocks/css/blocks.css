@@ -21,35 +21,3 @@
 }
 
 /*---------------------------*/
-.fluidInput {
-	position: absolute;
-    display         : inline-block;
-    vertical-align  : top;
-
-    min-width       : 40px;
-    height          : 30px;
-
-    font-family     : Segoe-UI, sans-serif;
-    font-size       : 12px;
-    line-height     : 1.5em;
-
-    padding         : 2px;
-    border          : 0px;
-    cursor          : text;
-}
-
-
-.fluidInput * {
-    display         : inline;
-}
-
-
-.fluidInput br  {
-    display         : none;
-}
-
-
-.fluidInput:empty:before {
-    content         : attr(data-placeholder);
-    color           : #ccc;
-}

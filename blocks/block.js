@@ -88,21 +88,15 @@ function queryForResize(){
 
 addInputArea()
 function addInputArea(){
-	// let input = document.createElement('input');
-	// // input.setAttribute("type","number");
-	// input.className = "brickInput";
-	// input.style.width = 30+"px";
-	// input.style.left = 87+"px";
-	// input.style.top = 8+"px";
-	// blockMove.append(input);
-	// input.addEventListener('keyup', queryForResize);
-	let fluidInput = document.createElement('div');
-	fluidInput.className = "fluidInput";
-	blockMove.append(fluidInput);
-	fluidInput.setAttribute("contenteditable","true");
-	fluidInput.style.width = 30+"px";
-	fluidInput.style.left = 87+"px";
-	fluidInput.style.top = 8+"px";
+	let input = document.createElement('input');
+	// input.setAttribute("type","number");
+	input.className = "brickInput";
+	input.style.width = 30+"px";
+	input.style.left = 87+"px";
+	input.style.top = 8+"px";
+	blockMove.append(input);
+	input.addEventListener('keyup', queryForResize);
+
 }
 
 
