@@ -22,3 +22,4 @@ function stickSidebar(){
 		sidebar.style.top = 0 + "px";
 	} 
 }
+

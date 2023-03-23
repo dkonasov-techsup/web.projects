@@ -8,16 +8,18 @@ class Blocks{
 }
 
 let blockMove = document.getElementById('block_move');
-console.log(blockMove);
+
+//regEventsHandler
+blockMove.addEventListener('input', queryForResize);
 
 const textPadding = 16;
-const inputBlockWidth = 40;
+const inputBlockWidth = 36;
 const xmlns = "http://www.w3.org/2000/svg";
 
 drawSVG()
 
 function drawSVG(){
-	// let svgWidth = drawText(svgBody);
+	
 	let svgBody = document.createElementNS(xmlns, "svg");
 	
 	svgBody.setAttributeNS(null,"height","60");
@@ -26,7 +28,8 @@ function drawSVG(){
 
 	let text1width = drawText(svgBody,'move',0);	
 	let endPoint = drawKeyBlock(svgBody,text1width);
-	endPoint = drawInputBlock(svgBody,endPoint);
+	addInputArea(endPoint);
+	endPoint = drawInputBlock(svgBody,endPoint);	
 	let text2width = drawText(svgBody,'forward',endPoint);
 	endPoint = drawDescBlock(svgBody,text2width,endPoint);
 
@@ -60,11 +63,13 @@ function drawKeyBlock(obj,textWidth){
 	return(endPoint);
 }
 
-function drawInputBlock(obj,startPoint){	
+function drawInputBlock(obj,startPoint){
+	// addInputArea(startPoint);	
 	let inputBlock = document.createElementNS(xmlns, "path");
 	let endPoint = (startPoint+inputBlockWidth);
-	inputBlock.setAttributeNS(null, "d", ("M"+startPoint+" 0 H"+endPoint+" V50 H"+startPoint+"Z"));
+	inputBlock.setAttributeNS(null,"d", ("M"+startPoint+" 0 H"+endPoint+" V50 H"+startPoint+"Z"));
 	inputBlock.setAttributeNS(null,"fill","gray");
+	inputBlock.setAttributeNS(null,"id","input_block");
 	obj.prepend(inputBlock);
 	return(endPoint);
 }
@@ -79,24 +84,37 @@ function drawDescBlock(obj,textWidth,startPoint){
 }
 
 
-
 function queryForResize(){
-	console.log('try');
-	// this.style.width = 0; this.style.width = this.scrollWidth + 'px'; ?
+	// resize inputArea
+	let inputEl = this.querySelector('.input_area');
+	let spanEl = this.querySelector('.measure_span');
+	spanEl.textContent = inputEl.value;	
+	inputEl.style.width = spanEl.offsetWidth + 'px';
 
+	// resize inputBlock
+	let svg = this.querySelector('svg');
+	console.log(svg);
+	let inputBlock = this.querySelector('#input_block');
+	let path = inputBlock.getAttribute('d');
+	drawInputBlock(svg,)
 }
 
-addInputArea()
-function addInputArea(){
-	let input = document.createElement('input');
-	// input.setAttribute("type","number");
-	input.className = "brickInput";
-	input.style.width = 30+"px";
-	input.style.left = 87+"px";
-	input.style.top = 8+"px";
-	blockMove.append(input);
-	input.addEventListener('keyup', queryForResize);
 
+function addInputArea(startPoint){
+	let input = document.createElement('input');
+	let measureSpan = document.createElement('span');
+	input.className = "input_area";
+	measureSpan.className = "measure_span";
+	input.setAttribute("type","text");
+	input.setAttribute("maxlength","5"); //for HTML5
+	// input.setAttribute("oninput","this.style.width=this.value.length+1+'ch'");
+			
+	blockMove.append(input);
+	blockMove.append(measureSpan);
+	// let inputWidth = parseFloat(window.getComputedStyle(input, null).getPropertyValue('width'));	
+	// let inputPadding = parseFloat(window.getComputedStyle(input, null).getPropertyValue('padding-left'));
+	input.style.top = measureSpan.style.top = 7+"px";
+	input.style.left = measureSpan.style.left = startPoint+"px";	
 }
 
 
