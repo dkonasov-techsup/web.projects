@@ -28,10 +28,10 @@ function drawSVG(){
 
 	let text1width = drawText(svgBody,'move',0);	
 	let endPoint = drawKeyBlock(svgBody,text1width);
-	addInputArea(endPoint);
-	endPoint = drawInputBlock(svgBody,endPoint);	
+	let inputWidth = addInputArea(endPoint);
+	endPoint = drawInputBlock(svgBody,inputWidth);	
 	let text2width = drawText(svgBody,'forward',endPoint);
-	endPoint = drawDescBlock(svgBody,text2width,endPoint);
+	// endPoint = drawDescBlock(svgBody,text2width,endPoint);
 
 	svgBody.setAttributeNS(null,"width",endPoint);
 }
@@ -59,17 +59,27 @@ function drawKeyBlock(obj,textWidth){
 	let endPoint = (textPadding*2)+textWidth;
 	let keyBlock = document.createElementNS(xmlns, "path");
 	keyBlock.setAttributeNS(null, "d", ("M0 0 H30 L40 10 H60 L70 0 H"+endPoint+" V50 H70 L60 60 H40 L30 50 H0 Z"));
+	keyBlock.setAttributeNS(null,"id","key_block");
 	obj.prepend(keyBlock);
 	return(endPoint);
 }
 
-function drawInputBlock(obj,startPoint){
-	// addInputArea(startPoint);	
-	let inputBlock = document.createElementNS(xmlns, "path");
-	let endPoint = (startPoint+inputBlockWidth);
+function drawInputBlock(obj,inputWidth){
+	let previous = obj.querySelector('#key_block');
+	let startPoint = parseInt(previous.getBBox().width);	
+	let endPoint = (startPoint+inputWidth);
+	// console.log(endPoint);
+	if (obj.querySelector('#input_block')==null){
+		let inputBlock = document.createElementNS(xmlns, "path");
+	}
+	else{
+		console.log('not null');
+	}	
+	let inputBlock = document.createElementNS(xmlns, "path");	
 	inputBlock.setAttributeNS(null,"d", ("M"+startPoint+" 0 H"+endPoint+" V50 H"+startPoint+"Z"));
-	inputBlock.setAttributeNS(null,"fill","gray");
 	inputBlock.setAttributeNS(null,"id","input_block");
+	inputBlock.setAttributeNS(null,"fill","gray");
+	
 	obj.prepend(inputBlock);
 	return(endPoint);
 }
@@ -89,14 +99,15 @@ function queryForResize(){
 	let inputEl = this.querySelector('.input_area');
 	let spanEl = this.querySelector('.measure_span');
 	spanEl.textContent = inputEl.value;	
-	inputEl.style.width = spanEl.offsetWidth + 'px';
+	let inputWidth = inputEl.style.width = spanEl.offsetWidth + 'px';
 
 	// resize inputBlock
-	let svg = this.querySelector('svg');
-	console.log(svg);
-	let inputBlock = this.querySelector('#input_block');
-	let path = inputBlock.getAttribute('d');
-	drawInputBlock(svg,)
+	let svg = this.querySelector('svg');	
+	// let inputBlock = this.querySelector('#input_block');
+	// let path = inputBlock.getAttribute('d');
+	inputWidth = parseInt(inputEl.style.width);
+	drawInputBlock(svg,inputWidth)
+	
 }
 
 
@@ -107,14 +118,16 @@ function addInputArea(startPoint){
 	measureSpan.className = "measure_span";
 	input.setAttribute("type","text");
 	input.setAttribute("maxlength","5"); //for HTML5
-	// input.setAttribute("oninput","this.style.width=this.value.length+1+'ch'");
-			
+				
 	blockMove.append(input);
 	blockMove.append(measureSpan);
-	// let inputWidth = parseFloat(window.getComputedStyle(input, null).getPropertyValue('width'));	
-	// let inputPadding = parseFloat(window.getComputedStyle(input, null).getPropertyValue('padding-left'));
+
 	input.style.top = measureSpan.style.top = 7+"px";
-	input.style.left = measureSpan.style.left = startPoint+"px";	
+	input.style.left = measureSpan.style.left = startPoint+"px";
+	let inputWidth = parseFloat(window.getComputedStyle(input, null).getPropertyValue('width'));	
+	// let inputPadding = parseFloat(window.getComputedStyle(input, null).getPropertyValue('padding-left'));
+
+	return inputWidth;	
 }
 
 
