@@ -31,11 +31,10 @@ function drawSVG(){
 	let inputWidth = addInputArea(endPoint);
 	endPoint = drawInputBlock(svgBody,inputWidth);	
 	let text2width = drawText(svgBody,'forward',endPoint);
-	// endPoint = drawDescBlock(svgBody,text2width,endPoint);
+	endPoint = drawDescBlock(svgBody,text2width,endPoint);
 
 	svgBody.setAttributeNS(null,"width",endPoint);
 }
-
 
 function drawText(obj,textVal,startPoint){
 	let xPos = startPoint+textPadding;
@@ -69,13 +68,14 @@ function drawInputBlock(obj,inputWidth){
 	let startPoint = parseInt(previous.getBBox().width);	
 	let endPoint = (startPoint+inputWidth);
 	// console.log(endPoint);
+	let inputBlock;
 	if (obj.querySelector('#input_block')==null){
-		let inputBlock = document.createElementNS(xmlns, "path");
+		inputBlock = document.createElementNS(xmlns, "path");
 	}
 	else{
-		console.log('not null');
-	}	
-	let inputBlock = document.createElementNS(xmlns, "path");	
+		obj.querySelector('#input_block').remove();
+		inputBlock = document.createElementNS(xmlns, "path");
+	}		
 	inputBlock.setAttributeNS(null,"d", ("M"+startPoint+" 0 H"+endPoint+" V50 H"+startPoint+"Z"));
 	inputBlock.setAttributeNS(null,"id","input_block");
 	inputBlock.setAttributeNS(null,"fill","gray");
@@ -84,7 +84,8 @@ function drawInputBlock(obj,inputWidth){
 	return(endPoint);
 }
 
-function drawDescBlock(obj,textWidth,startPoint){		
+function drawDescBlock(obj,textWidth,startPoint){
+
 	let endPoint = startPoint+(textPadding*2)+textWidth;
 	let descBlock = document.createElementNS(xmlns, "path");	
 	descBlock.setAttributeNS(null, "d", ("M"+startPoint+" 0 H"+endPoint+" V50 H"+startPoint+"Z"));
@@ -95,19 +96,18 @@ function drawDescBlock(obj,textWidth,startPoint){
 
 
 function queryForResize(){
-	// resize inputArea
+	// resize InputArea
 	let inputEl = this.querySelector('.input_area');
 	let spanEl = this.querySelector('.measure_span');
 	spanEl.textContent = inputEl.value;	
 	let inputWidth = inputEl.style.width = spanEl.offsetWidth + 'px';
 
-	// resize inputBlock
-	let svg = this.querySelector('svg');	
-	// let inputBlock = this.querySelector('#input_block');
-	// let path = inputBlock.getAttribute('d');
+	// resize InputBlock
+	let svg = this.querySelector('svg');
 	inputWidth = parseInt(inputEl.style.width);
-	drawInputBlock(svg,inputWidth)
-	
+	drawInputBlock(svg,inputWidth);
+	// resize DescBlock
+
 }
 
 

@@ -6,13 +6,13 @@
 }
 
 .input_area{
-	width: 36px;
-	min-width: 36px;
+	width: 36px;	
 	border-width: 0px;
 	border-radius: 6px;
 }
 
 .input_area, .measure_span{
+	min-width: 36px;
 	position: absolute;
 	box-sizing: border-box;		
 	padding: 4px;
