@@ -1,126 +1,14 @@
 "use strict"
 
-
-
-class Block{
-
-	static textPadding = 18;	
-	static xmlns = "http://www.w3.org/2000/svg";
+class Blocks{
 	
-	constructor(wrapper){
-		this.wrapper = wrapper;		
-		this.init();
-	}
-	init(){
-		let svgBody = document.createElementNS(Block.xmlns, "svg");
-		this.wrapper.append(svgBody);		
-		let svgBodyWidth = this.drawKeyBlock(svgBody);
-
-		svgBody.setAttributeNS(null,"height","60");
-		svgBody.setAttributeNS(null,"fill","white");
-		svgBody.setAttributeNS(null,"width",svgBodyWidth);
-		return svgBody;		
-	}
-
-	drawText(obj,textVal,xPos){
-		xPos = xPos+Block.textPadding;
-		let textEl = document.createElementNS(Block.xmlns, "text");
-		let textNode = document.createTextNode(textVal);
-		textEl.appendChild(textNode);
-		textEl.setAttributeNS(null,"font-size","18");
-		textEl.setAttributeNS(null,"x",xPos);
-		textEl.setAttributeNS(null,"y","50%");
-		textEl.setAttributeNS(null,"fill","gray");
-		textEl.setAttributeNS(null,"font-weight","bold");
-		textEl.setAttributeNS(null,"font-family","Segoe UI")
-		textEl.setAttributeNS(null,"alignment-baseline","middle");
-
-		obj.append(textEl);
-		let textWidth = parseInt(textEl.getBBox().width)+(Block.textPadding*2);
-		return(textWidth);	
-	}
-
-	drawKeyBlock(obj){
-		let endPosX = this.drawText(obj, 'TAKE OFF', 0);
-		// console.log(endPosX);		
-		let keyBlock = document.createElementNS(Block.xmlns, "path");
-		keyBlock.setAttributeNS(null, "d", ("M0 0 H30 L40 10 H60 L70 0 H"+endPosX+" V50 H70 L60 60 H40 L30 50 H0 Z"));
-		keyBlock.setAttributeNS(null,"id","key_block");
-		obj.prepend(keyBlock);
-		return(endPosX);
-	}
-
-	regEventsHandler(){
-	}
-}
-
-
-class InputBlock extends Block{
-
-	static inputBlockWidth = 36;
-
-	init(){
-		let svgBody = super.init()
-		console.log(svgBody);
-		let endPosX = this.drawInputBlock(this.wrapper,svgBody);
-		// console.log(this)
-		
-	}
-
-	drawInputBlock(wrapper,stPosX){
-		//GET SVGBODY - GET ACT SIZE
-		let endPosX = this.addInputArea(stPosX,wrapper);
-		// let previous = obj.querySelector('#key_block');
-		// let startPoint = parseInt(previous.getBBox().width);	
-		// let endPosX = (stPosX+endPosX);
-		// console.log(endPoint);
-		let inputBlock;
-		// if (obj.querySelector('#input_block')==null){
-		// 	inputBlock = document.createElementNS(xmlns, "path");
-		// }
-		// else{
-		// 	obj.querySelector('#input_block').remove();
-		// 	inputBlock = document.createElementNS(xmlns, "path");
-		// }
-		inputBlock = document.createElementNS(Block.xmlns, "path");		
-		inputBlock.setAttributeNS(null,"d", ("M"+stPosX+" 0 H"+endPosX+" V50 H"+stPosX+"Z"));
-		inputBlock.setAttributeNS(null,"id","input_block");
-		inputBlock.setAttributeNS(null,"fill","gray");
-	
-		wrapper.prepend(inputBlock);
-		return(endPosX);
-	}
-
-	addInputArea(stPosX,wrapper){
-		let input = document.createElement('input');
-		let measureSpan = document.createElement('span');
-		input.className = "input_area";
-		measureSpan.className = "measure_span";
-		input.setAttribute("type","text");
-		input.setAttribute("maxlength","5"); //for HTML5
-					
-		wrapper.append(input);
-		wrapper.append(measureSpan);
-
-		input.style.top = measureSpan.style.top = 7+"px";
-		input.style.left = measureSpan.style.left = stPosX+"px";
-		let inputWidth = parseFloat(window.getComputedStyle(input, null).getPropertyValue('width'));	
-		
-		return inputWidth;	
-	}
-
-	drawDescBlock(){
+	constructor(target){
 
 	}
 }
-
-
-let blockDef = document.getElementById('block_def');
-let blockInput = document.getElementById('block_input');
-let block1 = new Block(blockDef);
-let block2 = new InputBlock(blockInput);
 
 let blockMove = document.getElementById('block_move');
+
 //regEventsHandler
 blockMove.addEventListener('input', queryForResize);
 
@@ -142,7 +30,7 @@ function drawSVG(){
 	let endPoint = drawKeyBlock(svgBody,text1width);
 	let inputWidth = addInputArea(endPoint);
 	endPoint = drawInputBlock(svgBody,inputWidth);	
-	// let text2width = drawText(svgBody,'forward',endPoint);
+	let text2width = drawText(svgBody,'forward',endPoint);
 	endPoint = drawDescBlock(svgBody,endPoint);
 
 	svgBody.setAttributeNS(null,"width",endPoint);

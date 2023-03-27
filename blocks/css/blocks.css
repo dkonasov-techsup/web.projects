@@ -3,6 +3,7 @@
 	/*border: solid 1px red;*/
 	width: fit-content;
 	display: flex;
+	margin: 10px;
 }
 
 .input_area{
