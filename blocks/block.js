@@ -8,22 +8,23 @@ class Block{
 	static xmlns = "http://www.w3.org/2000/svg";
 	
 	constructor(wrapper){
-		this.wrapper = wrapper;		
-		this.init();
-	}
-	init(){
-		let svgBody = document.createElementNS(Block.xmlns, "svg");
-		this.wrapper.append(svgBody);		
-		let svgBodyWidth = this.drawKeyBlock(svgBody);
-
-		svgBody.setAttributeNS(null,"height","60");
-		svgBody.setAttributeNS(null,"fill","white");
-		svgBody.setAttributeNS(null,"width",svgBodyWidth);
-		return svgBody;		
+		this.wrapper = wrapper;
+		this.svgBody = document.createElementNS(Block.xmlns, "svg");
+		
+		this.keyBlock = this.drawKeyBlock();
+		this.init();		
 	}
 
-	drawText(obj,textVal,xPos){
-		xPos = xPos+Block.textPadding;
+	init(){		
+		this.svgBody.setAttributeNS(null,"id","svg_body");
+		this.svgBody.setAttributeNS(null,"height","60");
+		this.svgBody.setAttributeNS(null,"fill","white");
+		this.svgBody.setAttributeNS(null,"width",200);
+		this.wrapper.append(this.svgBody);
+	}
+
+	drawText(textVal,xPos){
+		xPos += Block.textPadding;
 		let textEl = document.createElementNS(Block.xmlns, "text");
 		let textNode = document.createTextNode(textVal);
 		textEl.appendChild(textNode);
@@ -35,18 +36,18 @@ class Block{
 		textEl.setAttributeNS(null,"font-family","Segoe UI")
 		textEl.setAttributeNS(null,"alignment-baseline","middle");
 
-		obj.append(textEl);
+		this.svgBody.append(textEl);
 		let textWidth = parseInt(textEl.getBBox().width)+(Block.textPadding*2);
 		return(textWidth);	
 	}
 
-	drawKeyBlock(obj){
-		let endPosX = this.drawText(obj, 'TAKE OFF', 0);
-		// console.log(endPosX);		
+	drawKeyBlock(){
+		let endPosX = this.drawText('TAKE OFF', 0);
+			
 		let keyBlock = document.createElementNS(Block.xmlns, "path");
 		keyBlock.setAttributeNS(null, "d", ("M0 0 H30 L40 10 H60 L70 0 H"+endPosX+" V50 H70 L60 60 H40 L30 50 H0 Z"));
 		keyBlock.setAttributeNS(null,"id","key_block");
-		obj.prepend(keyBlock);
+		this.svgBody.prepend(keyBlock);
 		return(endPosX);
 	}
 
@@ -59,18 +60,32 @@ class InputBlock extends Block{
 
 	static inputBlockWidth = 36;
 
-	init(){
-		let svgBody = super.init()
-		console.log(svgBody);
-		let endPosX = this.drawInputBlock(this.wrapper,svgBody);
-		// console.log(this)
-		
+	drawSVGbody(){
+		let svgBody = super.drawSVGbody()
+		// console.log(svgBody);
+		let endPosX = this.drawInputBlock(svgBody);
+		// endPosX =  this.drawDescBlock(endPosX);
+		svgBody.setAttributeNS(null,"width",endPosX);
 	}
 
-	drawInputBlock(wrapper,stPosX){
-		//GET SVGBODY - GET ACT SIZE
-		let endPosX = this.addInputArea(stPosX,wrapper);
-		// let previous = obj.querySelector('#key_block');
+	drawKeyBlock(obj){
+		let endPosX = this.drawText(obj, 'INPUT BLOCK', 0);
+		// console.log(endPosX);		
+		let keyBlock = document.createElementNS(Block.xmlns, "path");
+		keyBlock.setAttributeNS(null, "d", ("M0 0 H30 L40 10 H60 L70 0 H"+endPosX+" V50 H70 L60 60 H40 L30 50 H0 Z"));
+		keyBlock.setAttributeNS(null,"id","key_block");
+		obj.prepend(keyBlock);
+		return(endPosX);
+	}
+
+	drawInputBlock(obj){
+		//GET SVGBODY - GET ACT SIZE		
+		let keyBlock = obj.querySelector('#key_block');
+		let stPosX = keyBlock.getBBox().width;
+
+		let endPosX = this.addInputArea(stPosX)+stPosX;
+		console.log(endPosX);
+
 		// let startPoint = parseInt(previous.getBBox().width);	
 		// let endPosX = (stPosX+endPosX);
 		// console.log(endPoint);
@@ -87,11 +102,12 @@ class InputBlock extends Block{
 		inputBlock.setAttributeNS(null,"id","input_block");
 		inputBlock.setAttributeNS(null,"fill","gray");
 	
-		wrapper.prepend(inputBlock);
+		obj.prepend(inputBlock);
 		return(endPosX);
 	}
 
-	addInputArea(stPosX,wrapper){
+	addInputArea(stPosX){
+		console.log(this.wrapper);
 		let input = document.createElement('input');
 		let measureSpan = document.createElement('span');
 		input.className = "input_area";
@@ -99,18 +115,33 @@ class InputBlock extends Block{
 		input.setAttribute("type","text");
 		input.setAttribute("maxlength","5"); //for HTML5
 					
-		wrapper.append(input);
-		wrapper.append(measureSpan);
+		this.wrapper.append(input);
+		this.wrapper.append(measureSpan);
 
 		input.style.top = measureSpan.style.top = 7+"px";
 		input.style.left = measureSpan.style.left = stPosX+"px";
-		let inputWidth = parseFloat(window.getComputedStyle(input, null).getPropertyValue('width'));	
+		let inputWidth = parseInt(window.getComputedStyle(input, null).getPropertyValue('width'));	
 		
 		return inputWidth;	
 	}
 
 	drawDescBlock(){
+		let blockX;	
+		if(obj.querySelector('#input_block')==null){
+			blockX = parseInt(obj.querySelector('#key_block').getBBox().width);
+		}
+		else{
+			blockX = parseInt(obj.querySelector('#key_block').getBBox().width + obj.querySelector('#input_block').getBBox().width);
+		}
 
+		let text2width = drawText(obj,'forward',blockX);
+		let endPoint = blockX+text2width;
+	
+		let descBlock = document.createElementNS(xmlns, "path");	
+		descBlock.setAttributeNS(null, "d", ("M"+startPoint+" 0 H"+endPoint+" V50 H"+startPoint+"Z"));
+		descBlock.setAttributeNS(null,"fill","white");
+		obj.prepend(descBlock);
+		return(endPoint);
 	}
 }
 
@@ -118,7 +149,8 @@ class InputBlock extends Block{
 let blockDef = document.getElementById('block_def');
 let blockInput = document.getElementById('block_input');
 let block1 = new Block(blockDef);
-let block2 = new InputBlock(blockInput);
+// let block2 = new InputBlock(blockInput);
+
 
 let blockMove = document.getElementById('block_move');
 //regEventsHandler
