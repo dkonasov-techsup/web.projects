@@ -10,9 +10,9 @@ class Block{
 	constructor(wrapper){
 		this.wrapper = wrapper;
 		this.svgBody = document.createElementNS(Block.xmlns, "svg");
-		
-		this.keyBlock = this.drawKeyBlock();
-		this.init();		
+		this.init();
+		this.keyBlockPath = ("M0 0 H30 L40 10 H60 L70 0 H"+endPosX+" V50 H70 L60 60 H40 L30 50 H0 Z")
+		this.keyBlock = this.drawKeyBlock();				
 	}
 
 	init(){		
@@ -43,9 +43,9 @@ class Block{
 
 	drawKeyBlock(){
 		let endPosX = this.drawText('TAKE OFF', 0);
-			
+		console.log(endPosX);
 		let keyBlock = document.createElementNS(Block.xmlns, "path");
-		keyBlock.setAttributeNS(null, "d", ("M0 0 H30 L40 10 H60 L70 0 H"+endPosX+" V50 H70 L60 60 H40 L30 50 H0 Z"));
+		keyBlock.setAttributeNS(null, "d", (this.keyBlockPath));
 		keyBlock.setAttributeNS(null,"id","key_block");
 		this.svgBody.prepend(keyBlock);
 		return(endPosX);
@@ -60,23 +60,28 @@ class InputBlock extends Block{
 
 	static inputBlockWidth = 36;
 
-	drawSVGbody(){
-		let svgBody = super.drawSVGbody()
-		// console.log(svgBody);
-		let endPosX = this.drawInputBlock(svgBody);
-		// endPosX =  this.drawDescBlock(endPosX);
-		svgBody.setAttributeNS(null,"width",endPosX);
-	}
+	// constructor(){
+	// 	super(...)
+	// 	this.dr
+	// }
 
-	drawKeyBlock(obj){
-		let endPosX = this.drawText(obj, 'INPUT BLOCK', 0);
-		// console.log(endPosX);		
-		let keyBlock = document.createElementNS(Block.xmlns, "path");
-		keyBlock.setAttributeNS(null, "d", ("M0 0 H30 L40 10 H60 L70 0 H"+endPosX+" V50 H70 L60 60 H40 L30 50 H0 Z"));
-		keyBlock.setAttributeNS(null,"id","key_block");
-		obj.prepend(keyBlock);
-		return(endPosX);
-	}
+	// init(){
+	// 	let svgBody = super.init()
+	// 	// console.log(svgBody);
+	// 	let endPosX = this.drawInputBlock(svgBody);
+	// 	// endPosX =  this.drawDescBlock(endPosX);
+	// 	svgBody.setAttributeNS(null,"width",endPosX);
+	// }
+
+	// drawKeyBlock(obj){
+	// 	let endPosX = this.drawText(obj, 'INPUT BLOCK', 0);
+	// 	// console.log(endPosX);		
+	// 	let keyBlock = document.createElementNS(Block.xmlns, "path");
+	// 	keyBlock.setAttributeNS(null, "d", ("M0 0 H30 L40 10 H60 L70 0 H"+endPosX+" V50 H70 L60 60 H40 L30 50 H0 Z"));
+	// 	keyBlock.setAttributeNS(null,"id","key_block");
+	// 	obj.prepend(keyBlock);
+	// 	return(endPosX);
+	// }
 
 	drawInputBlock(obj){
 		//GET SVGBODY - GET ACT SIZE		
