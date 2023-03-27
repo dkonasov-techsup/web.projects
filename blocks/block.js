@@ -10,8 +10,8 @@ class Block{
 	constructor(wrapper){
 		this.wrapper = wrapper;
 		this.svgBody = document.createElementNS(Block.xmlns, "svg");
+		this.wrapper.append(this.svgBody);
 		this.init();
-		this.keyBlockPath = ("M0 0 H30 L40 10 H60 L70 0 H"+endPosX+" V50 H70 L60 60 H40 L30 50 H0 Z")
 		this.keyBlock = this.drawKeyBlock();				
 	}
 
@@ -19,8 +19,8 @@ class Block{
 		this.svgBody.setAttributeNS(null,"id","svg_body");
 		this.svgBody.setAttributeNS(null,"height","60");
 		this.svgBody.setAttributeNS(null,"fill","white");
-		this.svgBody.setAttributeNS(null,"width",200);
-		this.wrapper.append(this.svgBody);
+		// this.svgBody.setAttributeNS(null,"width",200);
+		
 	}
 
 	drawText(textVal,xPos){
@@ -45,7 +45,7 @@ class Block{
 		let endPosX = this.drawText('TAKE OFF', 0);
 		console.log(endPosX);
 		let keyBlock = document.createElementNS(Block.xmlns, "path");
-		keyBlock.setAttributeNS(null, "d", (this.keyBlockPath));
+		keyBlock.setAttributeNS(null, "d", `M0 0 H30 L40 10 H60 L70 0 H${endPosX}V50 H70 L60 60 H40 L30 50 H0 Z`);
 		keyBlock.setAttributeNS(null,"id","key_block");
 		this.svgBody.prepend(keyBlock);
 		return(endPosX);
@@ -55,64 +55,42 @@ class Block{
 	}
 }
 
-
 class InputBlock extends Block{
 
-	static inputBlockWidth = 36;
+	constructor(wrapper){
+		super(wrapper)
+		this.inputBlock = this.drawInputBlock(this.svgBody);
+		this.drawDescBlock();
+	}
 
-	// constructor(){
-	// 	super(...)
-	// 	this.dr
-	// }
+	drawKeyBlock(){
+		let endPosX = this.drawText('INPUT BLOCK', 0);
+		console.log(endPosX);
+		let keyBlock = document.createElementNS(Block.xmlns, "path");
+		keyBlock.setAttributeNS(null, "d", `M0 0 H30 L40 10 H60 L70 0 H${endPosX} V50 H70 L60 60 H40 L30 50 H0 Z`);
+		keyBlock.setAttributeNS(null,"id","key_block");
+		this.svgBody.prepend(keyBlock);
+		return(endPosX);
+	}
 
-	// init(){
-	// 	let svgBody = super.init()
-	// 	// console.log(svgBody);
-	// 	let endPosX = this.drawInputBlock(svgBody);
-	// 	// endPosX =  this.drawDescBlock(endPosX);
-	// 	svgBody.setAttributeNS(null,"width",endPosX);
-	// }
-
-	// drawKeyBlock(obj){
-	// 	let endPosX = this.drawText(obj, 'INPUT BLOCK', 0);
-	// 	// console.log(endPosX);		
-	// 	let keyBlock = document.createElementNS(Block.xmlns, "path");
-	// 	keyBlock.setAttributeNS(null, "d", ("M0 0 H30 L40 10 H60 L70 0 H"+endPosX+" V50 H70 L60 60 H40 L30 50 H0 Z"));
-	// 	keyBlock.setAttributeNS(null,"id","key_block");
-	// 	obj.prepend(keyBlock);
-	// 	return(endPosX);
-	// }
-
-	drawInputBlock(obj){
-		//GET SVGBODY - GET ACT SIZE		
-		let keyBlock = obj.querySelector('#key_block');
-		let stPosX = keyBlock.getBBox().width;
-
+	drawInputBlock(){
+		// let keyBlock = this.svgBody.querySelector('#key_block');
+		// let stPosX = keyBlock.getBBox().width;
+		let stPosX = (this.keyBlock);
 		let endPosX = this.addInputArea(stPosX)+stPosX;
 		console.log(endPosX);
 
-		// let startPoint = parseInt(previous.getBBox().width);	
-		// let endPosX = (stPosX+endPosX);
-		// console.log(endPoint);
-		let inputBlock;
-		// if (obj.querySelector('#input_block')==null){
-		// 	inputBlock = document.createElementNS(xmlns, "path");
-		// }
-		// else{
-		// 	obj.querySelector('#input_block').remove();
-		// 	inputBlock = document.createElementNS(xmlns, "path");
-		// }
-		inputBlock = document.createElementNS(Block.xmlns, "path");		
+
+		let inputBlock = document.createElementNS(Block.xmlns, "path");		
 		inputBlock.setAttributeNS(null,"d", ("M"+stPosX+" 0 H"+endPosX+" V50 H"+stPosX+"Z"));
 		inputBlock.setAttributeNS(null,"id","input_block");
 		inputBlock.setAttributeNS(null,"fill","gray");
 	
-		obj.prepend(inputBlock);
+		this.svgBody.prepend(inputBlock);
 		return(endPosX);
 	}
 
 	addInputArea(stPosX){
-		console.log(this.wrapper);
 		let input = document.createElement('input');
 		let measureSpan = document.createElement('span');
 		input.className = "input_area";
@@ -131,22 +109,13 @@ class InputBlock extends Block{
 	}
 
 	drawDescBlock(){
-		let blockX;	
-		if(obj.querySelector('#input_block')==null){
-			blockX = parseInt(obj.querySelector('#key_block').getBBox().width);
-		}
-		else{
-			blockX = parseInt(obj.querySelector('#key_block').getBBox().width + obj.querySelector('#input_block').getBBox().width);
-		}
-
-		let text2width = drawText(obj,'forward',blockX);
-		let endPoint = blockX+text2width;
-	
-		let descBlock = document.createElementNS(xmlns, "path");	
-		descBlock.setAttributeNS(null, "d", ("M"+startPoint+" 0 H"+endPoint+" V50 H"+startPoint+"Z"));
-		descBlock.setAttributeNS(null,"fill","white");
-		obj.prepend(descBlock);
-		return(endPoint);
+		let text2width = this.drawText('forward',this.inputBlock);
+		let stPosX = this.inputBlock;
+		let endPosX = this.keyBlock + this.inputBlock;	
+		let descBlock = document.createElementNS(Block.xmlns, "path");	
+		descBlock.setAttributeNS(null, "d", ("M"+stPosX+" 0 H"+endPosX+" V50 H"+stPosX+"Z"));		
+		this.svgBody.prepend(descBlock);
+		return(endPosX);
 	}
 }
 
@@ -154,7 +123,7 @@ class InputBlock extends Block{
 let blockDef = document.getElementById('block_def');
 let blockInput = document.getElementById('block_input');
 let block1 = new Block(blockDef);
-// let block2 = new InputBlock(blockInput);
+let block2 = new InputBlock(blockInput);
 
 
 let blockMove = document.getElementById('block_move');
