@@ -11,16 +11,16 @@ class Block{
 		this.wrapper = wrapper;
 		this.svgBody = document.createElementNS(Block.xmlns, "svg");
 		this.wrapper.append(this.svgBody);
-		this.init();
-		this.keyBlock = this.drawKeyBlock();				
+		
+		this.keyBlock = this.drawKeyBlock();
+		this.init();				
 	}
 
 	init(){		
 		this.svgBody.setAttributeNS(null,"id","svg_body");
 		this.svgBody.setAttributeNS(null,"height","60");
 		this.svgBody.setAttributeNS(null,"fill","white");
-		// this.svgBody.setAttributeNS(null,"width",200);
-		
+		// this.svgBody.setAttributeNS(null,"width",200);		
 	}
 
 	drawText(textVal,xPos){
@@ -38,12 +38,11 @@ class Block{
 
 		this.svgBody.append(textEl);
 		let textWidth = parseInt(textEl.getBBox().width)+(Block.textPadding*2);
-		return(textWidth);	
+		return(textWidth);
 	}
 
 	drawKeyBlock(){
 		let endPosX = this.drawText('TAKE OFF', 0);
-		console.log(endPosX);
 		let keyBlock = document.createElementNS(Block.xmlns, "path");
 		keyBlock.setAttributeNS(null, "d", `M0 0 H30 L40 10 H60 L70 0 H${endPosX}V50 H70 L60 60 H40 L30 50 H0 Z`);
 		keyBlock.setAttributeNS(null,"id","key_block");
@@ -60,12 +59,11 @@ class InputBlock extends Block{
 	constructor(wrapper){
 		super(wrapper)
 		this.inputBlock = this.drawInputBlock(this.svgBody);
-		this.drawDescBlock();
+		this.descBlock = this.drawDescBlock();
 	}
 
 	drawKeyBlock(){
 		let endPosX = this.drawText('INPUT BLOCK', 0);
-		console.log(endPosX);
 		let keyBlock = document.createElementNS(Block.xmlns, "path");
 		keyBlock.setAttributeNS(null, "d", `M0 0 H30 L40 10 H60 L70 0 H${endPosX} V50 H70 L60 60 H40 L30 50 H0 Z`);
 		keyBlock.setAttributeNS(null,"id","key_block");
@@ -78,8 +76,6 @@ class InputBlock extends Block{
 		// let stPosX = keyBlock.getBBox().width;
 		let stPosX = (this.keyBlock);
 		let endPosX = this.addInputArea(stPosX)+stPosX;
-		console.log(endPosX);
-
 
 		let inputBlock = document.createElementNS(Block.xmlns, "path");		
 		inputBlock.setAttributeNS(null,"d", ("M"+stPosX+" 0 H"+endPosX+" V50 H"+stPosX+"Z"));
@@ -109,9 +105,8 @@ class InputBlock extends Block{
 	}
 
 	drawDescBlock(){
-		let text2width = this.drawText('forward',this.inputBlock);
 		let stPosX = this.inputBlock;
-		let endPosX = this.keyBlock + this.inputBlock;	
+		let endPosX = this.drawText('forward',this.inputBlock)+stPosX;	
 		let descBlock = document.createElementNS(Block.xmlns, "path");	
 		descBlock.setAttributeNS(null, "d", ("M"+stPosX+" 0 H"+endPosX+" V50 H"+stPosX+"Z"));		
 		this.svgBody.prepend(descBlock);
