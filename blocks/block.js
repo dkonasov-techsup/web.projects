@@ -6,6 +6,8 @@ class Block{
 
 	static textPadding = 18;	
 	static xmlns = "http://www.w3.org/2000/svg";
+	static keyBlockPath1 = `M0 0 H30 L40 10 H60 L70 0 H`;
+	static keyBlockPath2 = `V50 H70 L60 60 H40 L30 50 H0 Z`;
 	
 	constructor(wrapper){
 		this.wrapper = wrapper;
@@ -44,7 +46,7 @@ class Block{
 	drawKeyBlock(){
 		let endPosX = this.drawText('TAKE OFF', 0);
 		let keyBlock = document.createElementNS(Block.xmlns, "path");
-		keyBlock.setAttributeNS(null, "d", `M0 0 H30 L40 10 H60 L70 0 H${endPosX}V50 H70 L60 60 H40 L30 50 H0 Z`);
+		keyBlock.setAttributeNS(null, "d", `${Block.keyBlockPath1} ${endPosX} ${Block.keyBlockPath2}`);
 		keyBlock.setAttributeNS(null,"id","key_block");
 		this.svgBody.prepend(keyBlock);
 		return(endPosX);
@@ -56,6 +58,9 @@ class Block{
 
 class InputBlock extends Block{
 
+	static keyBlockPath1 = `M0 0 H30 L40 10 H60 L70 0 H`;
+	static keyBlockPath2 = `V50 H70 L60 60 H40 L30 50 H0 Z`;
+
 	constructor(wrapper){
 		super(wrapper)
 		this.inputBlock = this.drawInputBlock(this.svgBody);
@@ -65,7 +70,7 @@ class InputBlock extends Block{
 	drawKeyBlock(){
 		let endPosX = this.drawText('INPUT BLOCK', 0);
 		let keyBlock = document.createElementNS(Block.xmlns, "path");
-		keyBlock.setAttributeNS(null, "d", `M0 0 H30 L40 10 H60 L70 0 H${endPosX} V50 H70 L60 60 H40 L30 50 H0 Z`);
+		keyBlock.setAttributeNS(null, "d", `${Block.keyBlockPath1} ${endPosX} ${Block.keyBlockPath2}`);
 		keyBlock.setAttributeNS(null,"id","key_block");
 		this.svgBody.prepend(keyBlock);
 		return(endPosX);
