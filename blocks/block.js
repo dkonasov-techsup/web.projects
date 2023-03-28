@@ -217,7 +217,6 @@ function drawDescBlock(obj,startPoint){
 	return(endPoint);
 }
 
-
 function queryForResize(){
 	// resize InputArea
 	let inputEl = this.querySelector('.input_area');
