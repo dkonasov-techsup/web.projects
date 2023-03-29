@@ -16,9 +16,10 @@ class Block{
 		
 		this.keyBlock = this.drawKeyBlock();
 		this.init();
-		this.regEventsHandler();				
+		this.eventsHandler();				
 	}
 
+	//инициализация перемещена в конструктор → хер знает куда вынести атрибуты, учитывая что ширина svgbody адаптивна
 	init(){		
 		this.svgBody.setAttributeNS(null,"id","svg_body");
 		this.svgBody.setAttributeNS(null,"height","60");
@@ -50,10 +51,11 @@ class Block{
 		keyBlock.setAttributeNS(null, "d", `${Block.keyBlockPath1} ${endPosX} ${Block.keyBlockPath2}`);
 		keyBlock.setAttributeNS(null,"id","key_block");
 		this.svgBody.prepend(keyBlock);
-		return(endPosX);
+		let blockWidth = keyBlock.getBBox().width;
+		return {el: keyBlock, wdt: blockWidth};
 	}
 
-	regEventsHandler(){		
+	eventsHandler(){		
 	}
 }
 
@@ -74,13 +76,14 @@ class InputBlock extends Block{
 		keyBlock.setAttributeNS(null, "d", `${Block.keyBlockPath1} ${endPosX} ${Block.keyBlockPath2}`);
 		keyBlock.setAttributeNS(null,"id","key_block");
 		this.svgBody.prepend(keyBlock);
-		return(endPosX);
+		let blockWidth = keyBlock.getBBox().width;
+		return {el: keyBlock, wdt: blockWidth};
 	}
 
 	drawInputBlock(){
 		// let keyBlock = this.svgBody.querySelector('#key_block');
 		// let stPosX = keyBlock.getBBox().width;
-		let stPosX = (this.keyBlock);
+		let stPosX = this.keyBlock.wdt;
 		let endPosX = this.addInputArea(stPosX)+stPosX;
 
 		let inputBlock = document.createElementNS(Block.xmlns, "path");		
@@ -111,41 +114,46 @@ class InputBlock extends Block{
 	}
 
 	drawDescBlock(){
+		
+		let descText = this.drawText('forward',this.inputBlock);			
 
-		let descGroup = document.createElementNS(Block.xmlns, "g");
-
-		let descText = this.drawText('forward',this.inputBlock);
-			descGroup. 
 		let stPosX = this.inputBlock;
 		let endPosX = descText.wdt+stPosX;
-			
+
 		let descBlock = document.createElementNS(Block.xmlns, "path");		
 		descBlock.setAttributeNS(null, "d", ("M"+stPosX+" 0 H"+endPosX+" V50 H"+stPosX+"Z"));
 		descBlock.setAttributeNS(null, "id","desc_block");
 
+		let descGroup = document.createElementNS(Block.xmlns, "g");
+		descGroup.setAttributeNS(null, "id","desc_block_group");
 
-		this.svgBody.prepend(descBlock);
+		descGroup.append(descText.el);
+		descGroup.prepend(descBlock);
+
+		this.svgBody.prepend(descGroup);
 		return(endPosX);
 	}
 
-	regEventsHandler(){
+	eventsHandler(){
+		//use arrow-function from save link `this`
 		this.wrapper.addEventListener('input',()=>{
 			console.log(this);
 			let inputBlock = this.wrapper.querySelector('#input_block');
-			let descBlock = this.wrapper.querySelector('#desc_block');
+			let descBlockGroup = this.wrapper.querySelector('#desc_block_group');
 			let inputEl = this.wrapper.querySelector('.input_area');
 			let spanEl = this.wrapper.querySelector('.measure_span');
 
-			// resize InputArea
+			// resize inputArea
 			spanEl.textContent = inputEl.value;	
 			let inputWidth = inputEl.style.width = spanEl.offsetWidth + 'px';
-			
-			let stPosX = this.keyBlock;
-			let endPosX = this.keyBlock + parseInt(inputWidth);
+			// resize descArea
+			let stPosX = this.keyBlock.wdt;
+			let endPosX = stPosX + parseInt(inputWidth);
 			inputBlock.setAttributeNS(null,"d", ("M"+stPosX+" 0 H"+endPosX+" V50 H"+stPosX+"Z"));
-			endPosX = this.keyBlock + parseInt(inputWidth);
-			// descBlock.setAttributeNS(null, "d", ("M"+endPosX+" 0 H"+260+" V50 H"+endPosX+"Z"));
 
+			let trX = parseInt(inputWidth)-36;
+			descBlockGroup.setAttributeNS(null, "transform",`translate(${trX},0)`);
+			// this.svgBody.setAttributeNS(null,"width",endPosX);
 		});
 	}		
 }
