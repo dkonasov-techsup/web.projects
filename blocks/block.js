@@ -8,24 +8,27 @@ class Block{
 	static keyBlockPath2 = `V50 H70 L60 60 H40 L30 50 H0 Z`;
 	
 	constructor(wrapper){
-		this.wrapper = wrapper;
-		this.svgBody = document.createElementNS(Block.xmlns, "svg");
-		this.wrapper.append(this.svgBody);				
-		this.keyBlock = this.drawKeyBlock('DEF BLOCK');
+		this.wrapper = wrapper;		
+		this.textVal = {key: 'DEF BLOCK'};		
 		this.init();
 		this.eventsHandler();				
 	}
 
 	//инициализация перемещена в конструктор → хер знает куда вынести атрибуты, учитывая что ширина svgbody адаптивна
 	init(){
+		this.svgBody = document.createElementNS(Block.xmlns, "svg");
+		this.wrapper.append(this.svgBody);
 		this.svgBody.setAttributeNS(null,"id","svg_body");
 		this.svgBody.setAttributeNS(null,"height","60");
 		this.svgBody.setAttributeNS(null,"fill","white");
-		
+		let keyBlock = this.drawKeyBlock();
 		// let svgBodyWdt = this.keyBlock.wdt;
 		// this.svgBody.setAttributeNS(null,"width",svgBodyWdt);		
-		
-		console.log(this.svgBody.children[0]);
+		let body = this.svgBody;
+		console.log(body.children);
+		// for(let i=0; i<body.children.length; i++){
+		// 	console.log(body.children[i]);
+		// }
 
 	}
 
@@ -47,8 +50,8 @@ class Block{
 		return {el: textEl, wdt: textWdt};
 	}
 
-	drawKeyBlock(textVal){
-		let keyText = this.drawText(textVal, 0);
+	drawKeyBlock(){
+		let keyText = this.drawText(this.textVal.key, 0);
 		let endPosX = keyText.wdt;
 		let keyBlock = document.createElementNS(Block.xmlns, "path");
 		keyBlock.setAttributeNS(null, "d", `${Block.keyBlockPath1} ${endPosX} ${Block.keyBlockPath2}`);
@@ -75,30 +78,29 @@ class InputBlock extends Block{
 	static keyBlockPath2 = `V50 H70 L60 60 H40 L30 50 H0 Z`;
 
 	constructor(wrapper){
-		super(wrapper)
-		// super.keyBlock = this.drawKeyBlock('INPUT BLOCK');
-
+		super(wrapper);
+		this.textVal = {key: 'INP BLOCK'};
 		this.inputBlock = this.drawInputBlock(this.svgBody);
-		this.descBlock = this.drawDescBlock();					
+		this.descBlock = this.drawDescBlock();				
 	}
 
-	// drawKeyBlock(){
-	// 	let keyText = this.drawText('INPUT BLOCK', 0);
-	// 	let endPosX = keyText.wdt;
-	// 	let keyBlock = document.createElementNS(Block.xmlns, "path");
-	// 	keyBlock.setAttributeNS(null, "d", `${Block.keyBlockPath1} ${endPosX} ${Block.keyBlockPath2}`);
-	// 	keyBlock.setAttributeNS(null,"id","key_block");
+	drawKeyBlock(){
+		let keyText = this.drawText(this.textVal.key, 0);
+		let endPosX = keyText.wdt;
+		let keyBlock = document.createElementNS(Block.xmlns, "path");
+		keyBlock.setAttributeNS(null, "d", `${Block.keyBlockPath1} ${endPosX} ${Block.keyBlockPath2}`);
+		keyBlock.setAttributeNS(null,"id","key_block");
 
-	// 	let keyGroup = document.createElementNS(Block.xmlns, "g");
-	// 	keyGroup.setAttributeNS(null, "id","key_block_group");
-	// 	keyGroup.append(keyBlock);
-	// 	keyGroup.append(keyText.el);
+		let keyGroup = document.createElementNS(Block.xmlns, "g");
+		keyGroup.setAttributeNS(null, "id","key_block_group");
+		keyGroup.append(keyBlock);
+		keyGroup.append(keyText.el);
 
-	// 	this.svgBody.prepend(keyGroup);
+		this.svgBody.prepend(keyGroup);
 
-	// 	let groupWidth = keyGroup.getBBox().width;
-	// 	return {el: keyGroup, wdt: groupWidth};
-	// }
+		let groupWidth = keyGroup.getBBox().width;
+		return {el: keyGroup, wdt: groupWidth};
+	}
 
 	drawInputBlock(){
 		let stPosX = this.keyBlock.wdt;
