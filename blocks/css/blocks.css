@@ -4,6 +4,7 @@
 	width: fit-content;
 	display: flex;
 	margin: 10px;
+	clip-path: inset(0 0 0 0 round 6px);
 }
 
 .input_area{
