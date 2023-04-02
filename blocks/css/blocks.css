@@ -5,6 +5,7 @@
 	display: flex;
 	margin: 10px;
 	clip-path: inset(0 0 0 0 round 6px);
+	/*clip-path: path('M0 0 H30 L40 10 H60 L70 0 H131 V50 H70 L60 60 H40 L30 50 H0 Z');*/
 }
 
 .input_area{
