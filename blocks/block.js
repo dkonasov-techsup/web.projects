@@ -7,8 +7,8 @@ class Block{
 	static xmlns = "http://www.w3.org/2000/svg";
 	static rRad = 8;
 	// static hghT = 50;
-	// static keyBlockPath1 = `M0 ${Block.rRad} Q 0,0 ${Block.rRad},0 H30 L40 10 H60 L70 0 H`;
-	// static keyBlockPath2 = `V50 H70 L60 60 H40 L30 50 H${Block.rRad} Q0,50 0,${50-Block.rRad} Z`;
+	static keyBlockPath1 = `M0 ${Block.rRad} Q 0,0 ${Block.rRad},0 H30 L40 10 H60 L70 0 H`;
+	static keyBlockPath2 = `V50 H70 L60 60 H40 L30 50 H${Block.rRad} Q0,50 0,${50-Block.rRad} Z`;
 	
 	//min H xPos = 100;
 	
@@ -16,8 +16,8 @@ class Block{
 		this.wrapper = wrapper;		
 		this.textVal = textVal;
 
-		this.keyBlockPath1 = `M0 ${Block.rRad} Q 0,0 ${Block.rRad},0 H30 L40 10 H60 L70 0 H`;
-		this.keyBlockPath2 = `V50 H70 L60 60 H40 L30 50 H${Block.rRad} Q0,50 0,${50-Block.rRad} Z`;
+		this.keyBlockPath1 = Block.keyBlockPath1;
+		this.keyBlockPath2 = Block.keyBlockPath2;
 
 		this.init();
 		this.setSvgWdt();
