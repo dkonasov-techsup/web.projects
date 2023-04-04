@@ -17,8 +17,8 @@ class Block{
 		this.textVal = textVal;
 		this.keyBlockPath1 = Block.keyBlockPath1;
 		this.keyBlockPath2 = Block.keyBlockPath2;
-
 		this.svgBody = this.genSvgBody();
+		
 		this.keyBlock = this.drawKeyBlock();
 		this.setSvgWdt();
 		this.eventsHandler();				
@@ -60,6 +60,8 @@ class Block{
 		return {el: textEl, wdt: textWdt};
 	}
 
+
+
 	drawKeyBlock(){
 		let keyText = this.drawText(this.textVal, 0);
 		let endPosX = keyText.wdt < 100 ? 100 : keyText.wdt;
@@ -91,29 +93,31 @@ class InputBlock extends Block{
 		super(wrapper,textVal);
 		this.textVal = textVal;
 		this.keyBlockPath1 = InputBlock.keyBlockPath1;
-		this.keyBlockPath2 = InputBlock.keyBlockPath2;		
-		this.keyBlock = super.drawKeyBlock();
+		this.keyBlockPath2 = InputBlock.keyBlockPath2;
+
+		this.keyBlock = this.drawKeyBlock();
 		this.inputBlock = this.drawInputBlock();
-		this.descBlock = this.drawDescBlock();							
+		this.descBlock = this.drawDescBlock();									
 	}
 
-	// drawKeyBlock(){
-	// 	let keyText = this.drawText(this.textVal, 0);
-	// 	let endPosX = keyText.wdt;
-	// 	let keyBlock = document.createElementNS(Block.xmlns, "path");
-	// 	keyBlock.setAttributeNS(null, "d", `${this.keyBlockPath1} ${endPosX} ${this.keyBlockPath2}`);
-	// 	keyBlock.setAttributeNS(null,"id","key_block");
 
-	// 	let keyGroup = document.createElementNS(Block.xmlns, "g");
-	// 	keyGroup.setAttributeNS(null, "id","key_block_group");
-	// 	keyGroup.append(keyBlock);
-	// 	keyGroup.append(keyText.el);
+	drawKeyBlock(){
+		let keyText = this.drawText(this.textVal, 0);
+		let endPosX = keyText.wdt;
+		let keyBlock = document.createElementNS(Block.xmlns, "path");
+		keyBlock.setAttributeNS(null, "d", `${this.keyBlockPath1} ${endPosX} ${this.keyBlockPath2}`);
+		keyBlock.setAttributeNS(null,"id","key_block");
 
-	// 	this.svgBody.prepend(keyGroup);
+		let keyGroup = document.createElementNS(Block.xmlns, "g");
+		keyGroup.setAttributeNS(null, "id","key_block_group");
+		keyGroup.append(keyBlock);
+		keyGroup.append(keyText.el);
 
-	// 	let groupWidth = keyGroup.getBBox().width;
-	// 	return {el: keyGroup, wdt: groupWidth};
-	// }
+		this.svgBody.prepend(keyGroup);
+
+		let groupWidth = keyGroup.getBBox().width;
+		return {el: keyGroup, wdt: groupWidth};
+	}
 
 	drawInputBlock(){
 		let stPosX = this.keyBlock.wdt;
