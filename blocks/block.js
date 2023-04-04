@@ -15,25 +15,23 @@ class Block{
 	constructor(wrapper,textVal){
 		this.wrapper = wrapper;		
 		this.textVal = textVal;
-
 		this.keyBlockPath1 = Block.keyBlockPath1;
 		this.keyBlockPath2 = Block.keyBlockPath2;
 
-		this.init();
+		this.svgBody = this.genSvgBody();
+		this.keyBlock = this.drawKeyBlock();
 		this.setSvgWdt();
 		this.eventsHandler();				
 	}
 
 	//инициализация перемещена в конструктор → хер знает куда вынести атрибуты, учитывая что ширина svgbody адаптивна
-	init(){
-		this.svgBody = document.createElementNS(Block.xmlns, "svg");		
-		this.svgBody.setAttributeNS(null,"id","svg_body");
-		this.svgBody.setAttributeNS(null,"height","60");
-		this.svgBody.setAttributeNS(null,"fill","white");
-		this.wrapper.append(this.svgBody);
-
-		console.log(this.textVal);
-		this.keyBlock = this.drawKeyBlock();
+	genSvgBody(){
+		let svgBody = document.createElementNS(Block.xmlns, "svg");		
+		svgBody.setAttributeNS(null,"id","svg_body");
+		svgBody.setAttributeNS(null,"height","60");
+		svgBody.setAttributeNS(null,"fill","white");
+		this.wrapper.append(svgBody);
+		return svgBody;			
 	}
 
 	setSvgWdt(){
@@ -86,17 +84,17 @@ class Block{
 
 class InputBlock extends Block{
 
+	static keyBlockPath1 = `M0 0 H30 L40 10 H60 L70 0 H`;
+	static keyBlockPath2 = `V50 H70 L60 60 H40 L30 50 H0 Z`;
+
 	constructor(wrapper,textVal){
 		super(wrapper,textVal);
-		this.keyBlockPath1 = `M0 0 H30 L40 10 H60 L70 0 H`;
-		this.keyBlockPath2 = `V50 H70 L60 60 H40 L30 50 H0 Z`;		
-		this.textVal = textVal;							
-	}
-
-	init(){		
-		super.init();		
+		this.textVal = textVal;
+		this.keyBlockPath1 = InputBlock.keyBlockPath1;
+		this.keyBlockPath2 = InputBlock.keyBlockPath2;		
+		this.keyBlock = super.drawKeyBlock();
 		this.inputBlock = this.drawInputBlock();
-		this.descBlock = this.drawDescBlock();
+		this.descBlock = this.drawDescBlock();							
 	}
 
 	// drawKeyBlock(){
