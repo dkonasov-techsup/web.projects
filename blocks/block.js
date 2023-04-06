@@ -5,18 +5,16 @@ class Block{
 	static textPadding = 18;	
 	static xmlns = "http://www.w3.org/2000/svg";
 	static rRad = 8;
-	// static hghT = 50;
-	// static keyBlockPath1 = `M0 ${Block.rRad} Q 0,0 ${Block.rRad},0 H30 L40 10 H60 L70 0 H`;
-	// static keyBlockPath2 = `V${50-Block.rRad}  H70 L60 60 H40 L30 50 H${Block.rRad} Q0,50 0,${50-Block.rRad} Z`;
-	
+	// static hghT = 50;	
 	//min H xPos = 100;
 	
-	constructor(wrapper,textVal){
+	constructor(wrapper,config){
+		const defaultConfig={};
+		this.config = Object.assign(defaultConfig, config);
 		this.wrapper = wrapper;		
-		this.textVal = textVal;
-		// this.keyBlockPath1 = Block.keyBlockPath1;
-		// this.keyBlockPath2 = Block.keyBlockPath2;		
-		this.eventsHandler();						
+		// this.textVal = textVal;		
+		this.eventsHandler();
+		console.log(this.config);						
 	}
 
 	//инициализация перемещена в конструктор → хер знает куда вынести атрибуты, учитывая что ширина svgbody адаптивна
@@ -57,8 +55,8 @@ class Block{
 	}
 
 	drawKeyBlock(){
-		let keyText = this.drawText(this.textVal, 0);
-		let endPosX = keyText.wdt < 100 ? 100 : keyText.wdt;
+		let keyText = this.drawText(this.config.textVal.keyText, 0);
+		let endPosX = keyText.wdt < 80 ? 80 : keyText.wdt;
 
 		let keyBlock = document.createElementNS(Block.xmlns, "path");		
 		let keyBlockPath1 = `M0 ${Block.rRad} Q0,0 ${Block.rRad},0 H30 L40 10 H60 L70 0 H${endPosX-Block.rRad} Q ${endPosX},0 ${endPosX},${Block.rRad}`;
@@ -89,11 +87,10 @@ class Block{
 
 class InputBlock extends Block{
 
-	constructor(wrapper,textVal){
-		super(wrapper,textVal);
-		this.textVal = textVal;
-		this.keyBlockPath1 = InputBlock.keyBlockPath1;
-		this.keyBlockPath2 = InputBlock.keyBlockPath2;
+	constructor(wrapper,config){
+		super(wrapper,config);		
+		// this.keyBlockPath1 = InputBlock.keyBlockPath1;
+		// this.keyBlockPath2 = InputBlock.keyBlockPath2;
 		this.eventsHandler();								
 	}
 
@@ -108,24 +105,6 @@ class InputBlock extends Block{
 		this.descBlock = this.drawDescBlock();
 		this.setSvgWdt();			
 	}
-
-	// drawKeyBlock(){
-	// 	let keyText = this.drawText(this.textVal, 0);
-	// 	let endPosX = keyText.wdt;
-	// 	let keyBlock = document.createElementNS(Block.xmlns, "path");
-	// 	keyBlock.setAttributeNS(null, "d", `${this.keyBlockPath1} ${endPosX} ${this.keyBlockPath2}`);
-	// 	keyBlock.setAttributeNS(null,"id","key_block");
-
-	// 	let keyGroup = document.createElementNS(Block.xmlns, "g");
-	// 	keyGroup.setAttributeNS(null, "id","key_block_group");
-	// 	keyGroup.append(keyBlock);
-	// 	keyGroup.append(keyText.el);
-
-	// 	this.svgBody.prepend(keyGroup);
-
-	// 	let groupWidth = keyGroup.getBBox().width;
-	// 	return {el: keyGroup, wdt: groupWidth};
-	// }
 
 	drawInputBlock(){
 		let stPosX = this.keyBlock.wdt;
@@ -193,10 +172,14 @@ class InputBlock extends Block{
 			let stPosX = this.keyBlock.wdt;
 			let endPosX = stPosX + parseInt(inputWidth);
 			this.inputBlock.el.setAttributeNS(null,"d", (`M${stPosX} 0 H${endPosX} V50 H${stPosX} Z`));
-			
+
 			// resize descArea
 			let offsetX = parseInt(inputWidth)-36;
 			this.descBlock.el.setAttributeNS(null, "transform",`translate(${offsetX},0)`);
+
+			//* svg g не имеет пути тк логический объект
+			// stPosX = this.inputBlock.wdt + offsetX;
+			// this.descBlock.el.setAttributeNS(null, "d",`M${stPosX} 0 H${endPosX-Block.rRad} Q${endPosX},0 ${endPosX},${Block.rRad} V${50-Block.rRad} Q${endPosX},50 ${endPosX-Block.rRad},50 H${stPosX} Z`);
 
 			// resize svgBody
 			console.log(offsetX);
@@ -206,11 +189,22 @@ class InputBlock extends Block{
 	}		
 }
 
+const blockAttr = {
+	takeOff : {type:'default', bgColor:"#fff", textVal:{keyText:'TAKEOFF'}},
+	moveFwd : {type:'input', bgColor:"#fff", textVal:{keyText:'MOVE', descText:'forward'}},
+}
+
+// console.log(blockAttr.takeOff);
+
+
 
 let blockDef = document.getElementById('block_def');
 let blockInput = document.getElementById('block_input');
 
-let block1 = new Block(blockDef,'DEF BLOCK');
+let block1 = new Block(blockDef, blockAttr.takeOff);
 block1.init();
-let block2 = new InputBlock(blockInput,'INPUT BLOCK');
+let block2 = new InputBlock(blockInput, blockAttr.moveFwd);
 block2.init();
+
+
+
