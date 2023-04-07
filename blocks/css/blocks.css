@@ -10,12 +10,6 @@
 	transition: all 1s;
 }*/
 
-.input_area{
-	width: 36px;	
-	border-width: 0px;
-	border-radius: 6px;
-	/*transition: all 0.2s;*/
-}
 
 .input_area, .measure_span{
 	min-width: 36px;
@@ -28,6 +22,15 @@
 	font-size: 20px;
 	font-family: Segoe UI;
 	font-weight: bold; 
+}
+
+.input_area{
+	width: 36px;	
+	border-width: 0px;
+	border-radius: 6px;
+}
+.input_area:focus{	
+    outline: none;
 }
 
 .measure_span{

@@ -9,23 +9,22 @@ class Block{
 	//min H xPos = 100;
 	
 	constructor(wrapper,config){
-		const defaultConfig={};
+		const defaultConfig = {};
 		this.config = Object.assign(defaultConfig, config);
-		this.wrapper = wrapper;		
-		// this.textVal = textVal;		
-		this.eventsHandler();
+		this.wrapper = wrapper;
 		console.log(this.config);						
 	}
 
 	//инициализация перемещена в конструктор → хер знает куда вынести атрибуты, учитывая что ширина svgbody адаптивна
 	init(){
 		let svgBody = this.svgBody = document.createElementNS(Block.xmlns, "svg");		
-		svgBody.setAttributeNS(null,"id","svg_body");
-		svgBody.setAttributeNS(null,"height","60");
-		svgBody.setAttributeNS(null,"fill","white");
+		svgBody.setAttributeNS(null, "id", "svg_body");
+		svgBody.setAttributeNS(null, "height", "60");
+		svgBody.setAttributeNS(null, "fill", this.config.colors.bg);
 		this.wrapper.append(svgBody);
 		this.keyBlock = this.drawKeyBlock();
-		this.setSvgWdt();			
+		this.setSvgWdt();
+		this.eventsHandler();			
 	}
 
 	setSvgWdt(){
@@ -41,16 +40,18 @@ class Block{
 		let textEl = document.createElementNS(Block.xmlns, "text");
 		let textNode = document.createTextNode(textVal);
 		textEl.appendChild(textNode);
-		textEl.setAttributeNS(null,"font-size","18");
-		textEl.setAttributeNS(null,"x",xPos);
-		textEl.setAttributeNS(null,"y","50%");
-		textEl.setAttributeNS(null,"fill","gray");
-		textEl.setAttributeNS(null,"font-weight","bold");
-		textEl.setAttributeNS(null,"font-family","Segoe UI")
-		textEl.setAttributeNS(null,"alignment-baseline","middle");
+		textEl.setAttributeNS(null, "font-size", "18");
+		textEl.setAttributeNS(null, "x", xPos);
+		textEl.setAttributeNS(null, "y", "50%");
+		textEl.setAttributeNS(null, "fill", this.config.colors.font);
+		textEl.setAttributeNS(null, "font-weight", "bold");
+		textEl.setAttributeNS(null, "font-family", "Segoe UI")
+		textEl.setAttributeNS(null, "alignment-baseline", "middle");
 		
 		this.svgBody.append(textEl);
 		let textWdt = parseInt(textEl.getBBox().width)+(Block.textPadding*2);
+		
+		console.log(xPos);
 		return {el: textEl, wdt: textWdt};
 	}
 
@@ -58,11 +59,15 @@ class Block{
 		let keyText = this.drawText(this.config.textVal.keyText, 0);
 		let endPosX = keyText.wdt < 80 ? 80 : keyText.wdt;
 
+		//text alignment, when its width is less than 80 (note that drawText.wdt includes double padding)
+		let offsetX = ((endPosX - (keyText.wdt - Block.textPadding*2)) / 2);
+		keyText.el.setAttributeNS(null, "x", offsetX);
+
 		let keyBlock = document.createElementNS(Block.xmlns, "path");		
 		let keyBlockPath1 = `M0 ${Block.rRad} Q0,0 ${Block.rRad},0 H30 L40 10 H60 L70 0 H${endPosX-Block.rRad} Q ${endPosX},0 ${endPosX},${Block.rRad}`;
 		let keyBlockPath2 = `V${50-Block.rRad} Q${endPosX},50 ${endPosX-Block.rRad},50 H70 L60 60 H40 L30 50 H${Block.rRad} Q0,50 0,${50-Block.rRad} Z`;
 		
-		if(this.constructor.name == 'InputBlock'){
+		if(this.constructor.name !== 'Block'){
 			keyBlockPath1 = `M0 ${Block.rRad} Q0,0 ${Block.rRad},0 H30 L40 10 H60 L70 0 H${endPosX}`;
 			keyBlockPath2 = `V50 H70 L60 60 H40 L30 50 H${Block.rRad} Q0,50 0,${50-Block.rRad} Z`;
 		}
@@ -88,32 +93,30 @@ class Block{
 class InputBlock extends Block{
 
 	constructor(wrapper,config){
-		super(wrapper,config);		
-		// this.keyBlockPath1 = InputBlock.keyBlockPath1;
-		// this.keyBlockPath2 = InputBlock.keyBlockPath2;
-		this.eventsHandler();								
+		super(wrapper,config);										
 	}
 
 	init(){
 		let svgBody = this.svgBody = document.createElementNS(Block.xmlns, "svg");		
-		svgBody.setAttributeNS(null,"id","svg_body");
-		svgBody.setAttributeNS(null,"height","60");
-		svgBody.setAttributeNS(null,"fill","white");
+		svgBody.setAttributeNS(null, "id", "svg_body");
+		svgBody.setAttributeNS(null, "height", "60");
+		svgBody.setAttributeNS(null, "fill", this.config.colors.bg);
 		this.wrapper.append(svgBody);
 		this.keyBlock = this.drawKeyBlock();
 		this.inputBlock = this.drawInputBlock();
 		this.descBlock = this.drawDescBlock();
-		this.setSvgWdt();			
+		this.setSvgWdt();
+		this.eventsHandler();			
 	}
 
 	drawInputBlock(){
 		let stPosX = this.keyBlock.wdt;
-		let endPosX = this.addInputArea(stPosX)+stPosX;
+		let endPosX = this.addInputArea(stPosX) + stPosX;
 
 		let inputBlock = document.createElementNS(Block.xmlns, "path");		
 		inputBlock.setAttributeNS(null,"d", (`M${stPosX} 0 H${endPosX} V50 H${stPosX} Z`));
 		inputBlock.setAttributeNS(null,"id","input_block");
-		inputBlock.setAttributeNS(null,"fill","gray");
+		inputBlock.setAttributeNS(null,"fill",this.config.colors.bg);
 	
 		this.svgBody.append(inputBlock);
 		let blockWidth = inputBlock.getBBox().width;
@@ -131,8 +134,8 @@ class InputBlock extends Block{
 		this.wrapper.append(input);
 		this.wrapper.append(measureSpan);
 
-		input.style.top = measureSpan.style.top = 7+"px";
-		input.style.left = measureSpan.style.left = stPosX+"px";
+		input.style.top = measureSpan.style.top = 7 + "px";
+		input.style.left = measureSpan.style.left = stPosX + "px";
 		let endPosX = parseInt(window.getComputedStyle(input, null).getPropertyValue('width'));	
 		
 		return(endPosX);	
@@ -140,7 +143,7 @@ class InputBlock extends Block{
 
 	drawDescBlock(){
 		let stPosX = this.inputBlock.wdt + this.keyBlock.wdt;
-		let descText = this.drawText('forward',stPosX);
+		let descText = this.drawText(this.config.textVal.descText,stPosX);
 		let endPosX = descText.wdt+stPosX;
 
 		let descBlock = document.createElementNS(Block.xmlns, "path");		
@@ -174,7 +177,7 @@ class InputBlock extends Block{
 			this.inputBlock.el.setAttributeNS(null,"d", (`M${stPosX} 0 H${endPosX} V50 H${stPosX} Z`));
 
 			// resize descArea
-			let offsetX = parseInt(inputWidth)-36;
+			let offsetX = parseInt(inputWidth) - 36;
 			this.descBlock.el.setAttributeNS(null, "transform",`translate(${offsetX},0)`);
 
 			//* svg g не имеет пути тк логический объект
@@ -189,22 +192,48 @@ class InputBlock extends Block{
 	}		
 }
 
+class ColorBlock extends InputBlock{
+
+	constructor(wrapper,config){
+		super(wrapper,config);										
+	}
+
+	addInputArea(stPosX){
+		let input = document.createElement('input');		
+		input.className = "input_area";		
+		input.setAttribute("type","color");		
+					
+		this.wrapper.append(input);		
+
+		input.style.top = 7 +"px";
+		input.style.left = stPosX +"px";
+		let endPosX = parseInt(window.getComputedStyle(input, null).getPropertyValue('width'));	
+		
+		return(endPosX);	
+	}
+}
+
 const blockAttr = {
-	takeOff : {type:'default', bgColor:"#fff", textVal:{keyText:'TAKEOFF'}},
-	moveFwd : {type:'input', bgColor:"#fff", textVal:{keyText:'MOVE', descText:'forward'}},
+	takeOff : {type:'default', colors:{bg:"#ed4a0f", font:'#fff'}, textVal:{keyText:'TAKE OFF'}},
+	moveFwd : {type:'input', colors:{bg:"#4d97ff", font:'#fff'}, textVal:{keyText:'MOVE', descText:'forward'}},
+	setCol : {type:'input', colors:{bg:"#04d200", font:'#fff'}, textVal:{keyText:'SET', descText:'color'}},
 }
 
 // console.log(blockAttr.takeOff);
 
 
-
 let blockDef = document.getElementById('block_def');
 let blockInput = document.getElementById('block_input');
+let blockColor = document.getElementById('block_color');
 
 let block1 = new Block(blockDef, blockAttr.takeOff);
 block1.init();
+
 let block2 = new InputBlock(blockInput, blockAttr.moveFwd);
 block2.init();
+
+let block3 = new ColorBlock(blockColor, blockAttr.setCol);
+block3.init();
 
 
 
