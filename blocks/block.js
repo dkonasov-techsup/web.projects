@@ -49,9 +49,8 @@ class Block{
 		textEl.setAttributeNS(null, "alignment-baseline", "middle");
 		
 		this.svgBody.append(textEl);
-		let textWdt = parseInt(textEl.getBBox().width)+(Block.textPadding*2);
+		let textWdt = parseInt(textEl.getBBox().width)+(Block.textPadding*2);	
 		
-		console.log(xPos);
 		return {el: textEl, wdt: textWdt};
 	}
 
@@ -86,7 +85,10 @@ class Block{
 		return {el: keyGroup, wdt: groupWidth};
 	}
 
-	eventsHandler(){				
+	eventsHandler(){
+		this.wrapper.addEventListener('mousedown', () =>{
+			console.log('mdown');
+		})						
 	}
 }
 
