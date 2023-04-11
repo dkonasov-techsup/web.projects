@@ -254,13 +254,16 @@ let dropArea = document.getElementById('block_drop_area');
 dropArea.addEventListener("dragenter", handlerDragEnter);
 dropArea.addEventListener("dragleave", handlerDragLeave);
 dropArea.addEventListener("dragover", handlerDragOver);
-dropArea.addEventListener("ondrop", handlerDrop);
+dropArea.addEventListener("drop", handlerDrop);
 
 
 function blockDragStart(ev){	
-	console.log('start');	
+	console.log('start');
+	console.log(ev.target.id);	
 	this.classList.add(".block_container--active");
-	ev.dataTransfer.setData("itemId",this.target)
+
+	ev.dataTransfer.setData("itemId",ev.target.id);
+	ev.dataTransfer.effectAllowed="move";
 }
 function blockDragEnd(ev){
 	console.log('end');	
@@ -276,7 +279,7 @@ function handlerDragEnter(ev){
 	console.log('dragenter');	
 }
 
-function handlerDragLeave(ev){
+function handlerDragLeave(ev){	
 	console.log('dragleave');
 }
 
@@ -285,7 +288,11 @@ function handlerDragOver(ev){
 }
 
 function handlerDrop(ev){
-	console.log('drop');	
-	console.log(ev.dataTransfer.getData("itemId"));	
+	let data = ev.dataTransfer.getData("itemId");
+	let item = document.getElementById(data);
+	// item.style.position = "absolute";
+	this.appendChild(item);
+		
+	// console.log();	
 }
 
