@@ -6,10 +6,9 @@
 	margin: 10px;
 }
 
-/*svg path{
-	transition: all 1s;
-}*/
-
+.block_container--active{
+	opacity: 0.5;
+}
 
 .input_area, .measure_span{
 	min-width: 36px;

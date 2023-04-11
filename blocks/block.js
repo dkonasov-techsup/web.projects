@@ -12,6 +12,7 @@ class Block{
 		const defaultConfig = {};
 		this.config = Object.assign(defaultConfig, config);
 		this.wrapper = wrapper;
+		this.wrapper.setAttribute("draggable","true");
 		console.log(this.config);						
 	}
 
@@ -86,9 +87,9 @@ class Block{
 	}
 
 	eventsHandler(){
-		this.wrapper.addEventListener('mousedown', () =>{
-			console.log('mdown');
-		})						
+		this.wrapper.addEventListener("dragstart", blockDragStart);
+		this.wrapper.addEventListener("drag", blockDrag);
+		this.wrapper.addEventListener("dragend", blockDragEnd);						
 	}
 }
 
@@ -164,6 +165,7 @@ class InputBlock extends Block{
 	}
 
 	eventsHandler(){
+		super.eventsHandler();
 		//use arrow-function from save link `this`
 		this.wrapper.addEventListener('input',()=>{			
 
@@ -238,4 +240,52 @@ let block3 = new ColorBlock(blockColor, blockAttr.setCol);
 block3.init();
 
 
+
+//D&D methods
+//set dropzone
+let dropArea = document.getElementById('block_drop_area');
+
+
+// dropArea.setAttribute("dragenter","handlerDragEnter(ev)");
+// dropArea.setAttribute("dragleave","handlerDragLeave(ev)");
+// dropArea.setAttribute("dragover","handlerDragOver(ev)");
+// dropArea.setAttribute("ondrop","handlerDrop(ev)");
+
+dropArea.addEventListener("dragenter", handlerDragEnter);
+dropArea.addEventListener("dragleave", handlerDragLeave);
+dropArea.addEventListener("dragover", handlerDragOver);
+dropArea.addEventListener("ondrop", handlerDrop);
+
+
+function blockDragStart(ev){	
+	console.log('start');	
+	this.classList.add(".block_container--active");
+	ev.dataTransfer.setData("itemId",this.target)
+}
+function blockDragEnd(ev){
+	console.log('end');	
+}
+
+function blockDrag(ev){
+	// console.log('drag');	
+}
+
+
+function handlerDragEnter(ev){
+	ev.preventDefault();
+	console.log('dragenter');	
+}
+
+function handlerDragLeave(ev){
+	console.log('dragleave');
+}
+
+function handlerDragOver(ev){
+	ev.preventDefault();	
+}
+
+function handlerDrop(ev){
+	console.log('drop');	
+	console.log(ev.dataTransfer.getData("itemId"));	
+}
 
