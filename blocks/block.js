@@ -25,7 +25,8 @@ class Block{
 		this.wrapper.append(svgBody);
 		this.keyBlock = this.drawKeyBlock();
 		this.setSvgWdt();
-		this.eventsHandler();			
+		this.eventsHandler();
+		this.svgBody.setAttribute("draggable","true");			
 	}
 
 	setSvgWdt(){
