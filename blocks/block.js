@@ -242,7 +242,7 @@ block3.init();
 
 
 
-//D&D methods
+//D&D methods HTML
 //set dropzone
 let dropArea = document.getElementById('block_drop_area');
 
@@ -259,12 +259,14 @@ dropArea.addEventListener("drop", handlerDrop);
 
 
 function blockDragStart(ev){	
-	console.log('start');
-	console.log(ev.target.id);	
-	this.classList.add(".block_container--active");
-
+	console.log('start');		
+	// console.log(ev.target);
+	// console.log(ev.target.id);
+	console.log(this);
+	// this.style.opacity = '0.5';
 	ev.dataTransfer.setData("itemId",ev.target.id);
 	ev.dataTransfer.effectAllowed="move";
+	ev.dataTransfer.setDragImage(ev.target, 0, 0);
 }
 function blockDragEnd(ev){
 	console.log('end');	
@@ -274,10 +276,9 @@ function blockDrag(ev){
 	// console.log('drag');	
 }
 
-
 function handlerDragEnter(ev){
 	ev.preventDefault();
-	console.log('dragenter');	
+	console.log('dragenter');		
 }
 
 function handlerDragLeave(ev){	
@@ -291,8 +292,10 @@ function handlerDragOver(ev){
 function handlerDrop(ev){
 	let data = ev.dataTransfer.getData("itemId");
 	let item = document.getElementById(data);
-	// item.style.position = "absolute";
-	this.appendChild(item);
+	
+	let newItem = item.cloneNode(true);
+	// newItem.style.position = "absolute";
+	this.appendChild(newItem);
 		
 	// console.log();	
 }

@@ -6,10 +6,6 @@
 	/*margin: 10px;*/
 }
 
-.block_container--active{
-	opacity: 0.5;
-}
-
 .input_area, .measure_span{
 	min-width: 36px;
 	position: absolute;
