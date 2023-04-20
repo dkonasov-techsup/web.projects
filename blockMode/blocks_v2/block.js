@@ -11,8 +11,7 @@ class Block{
 	constructor(wrapper,config){
 		const defaultConfig = {};
 		this.config = Object.assign(defaultConfig, config);
-		this.wrapper = wrapper;
-		this.wrapper.setAttribute("draggable","true");
+		this.wrapper = wrapper;		
 		console.log(this.config);						
 	}
 
@@ -25,8 +24,7 @@ class Block{
 		this.wrapper.append(svgBody);
 		this.keyBlock = this.drawKeyBlock();
 		this.setSvgWdt();
-		this.eventsHandler();
-		this.svgBody.setAttribute("draggable","true");			
+		this.eventsHandler();					
 	}
 
 	setSvgWdt(){
@@ -88,9 +86,11 @@ class Block{
 	}
 
 	eventsHandler(){
-		this.wrapper.addEventListener("dragstart", blockDragStart);
-		this.wrapper.addEventListener("drag", blockDrag);
-		this.wrapper.addEventListener("dragend", blockDragEnd);						
+		//off default D&D
+		this.wrapper.ondragstart = function() {
+		  return false;
+		};
+		this.wrapper.addEventListener('mousedown', blMouseDown);			
 	}
 }
 
@@ -242,61 +242,28 @@ block3.init();
 
 
 
-//D&D methods HTML
+//D&D methods on mouse events
 //set dropzone
 let dropArea = document.getElementById('block_drop_area');
 
-
-// dropArea.setAttribute("dragenter","handlerDragEnter(ev)");
-// dropArea.setAttribute("dragleave","handlerDragLeave(ev)");
-// dropArea.setAttribute("dragover","handlerDragOver(ev)");
-// dropArea.setAttribute("ondrop","handlerDrop(ev)");
-
-dropArea.addEventListener("dragenter", handlerDragEnter);
-dropArea.addEventListener("dragleave", handlerDragLeave);
-dropArea.addEventListener("dragover", handlerDragOver);
-dropArea.addEventListener("drop", handlerDrop);
-
-
-function blockDragStart(ev){	
-	console.log('start');		
-	// console.log(ev.target);
-	// console.log(ev.target.id);
+function blMouseDown(){
 	console.log(this);
-	// this.style.opacity = '0.5';
-	ev.dataTransfer.setData("itemId",ev.target.id);
-	ev.dataTransfer.effectAllowed="move";
-	// ev.dataTransfer.setDragImage(ev.target, 0, 0);
-}
-function blockDragEnd(ev){
-	console.log('end');	
-}
 
-function blockDrag(ev){
-	// console.log('drag');	
-}
+	let newBlockCont = document.createElement('div');
+	newBlockCont.classList.add('block_container');
+	newBlockCont.style.position = 'absolute';
 
-function handlerDragEnter(ev){
-	ev.preventDefault();
-	console.log('dragenter');		
-}
+	moveAt(event.pageX, event.pageY);
 
-function handlerDragLeave(ev){	
-	console.log('dragleave');
-}
+	function moveAt(pageX, pageY) {
+    	newBlockCont.style.left = pageX - newBlockCont.offsetWidth / 2 + 'px';
+    	newBlockCont.style.top = pageY - newBlockCont.offsetHeight / 2 + 'px';
+  	}
 
-function handlerDragOver(ev){
-	ev.preventDefault();	
-}
+	newBlockCont.setAttribute('id','block_def');
+	document.body.append(newBlockCont);
 
-function handlerDrop(ev){
-	let data = ev.dataTransfer.getData("itemId");
-	let item = document.getElementById(data);
-	
-	let newItem = item.cloneNode(true);
-	// newItem.style.position = "absolute";
-	this.appendChild(newItem);
-		
-	// console.log();	
+	let newBlock = new Block(newBlockCont, blockAttr.takeOff);
+	newBlock.init();
 }
 
