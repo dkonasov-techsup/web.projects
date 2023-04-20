@@ -266,7 +266,7 @@ function blockDragStart(ev){
 	// this.style.opacity = '0.5';
 	ev.dataTransfer.setData("itemId",ev.target.id);
 	ev.dataTransfer.effectAllowed="move";
-	ev.dataTransfer.setDragImage(ev.target, 0, 0);
+	// ev.dataTransfer.setDragImage(ev.target, 0, 0);
 }
 function blockDragEnd(ev){
 	console.log('end');	
