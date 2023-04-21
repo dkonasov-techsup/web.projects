@@ -90,7 +90,8 @@ class Block{
 		this.wrapper.ondragstart = function() {
 		  return false;
 		};
-		this.wrapper.addEventListener('mousedown', blMouseDown);			
+		this.wrapper.addEventListener('mousedown', blMouseDown);
+		this.wrapper.addEventListener('mouseup', blMouseUp);			
 	}
 }
 
@@ -227,14 +228,14 @@ const blockAttr = {
 // console.log(blockAttr.takeOff);
 
 
-let blockDef = document.getElementById('block_def');
-let blockInput = document.getElementById('block_input');
-let blockColor = document.getElementById('block_color');
+let blockDef = document.getElementById('takeOff');
+let blockMoveFwd = document.getElementById('moveFwd');
+let blockColor = document.getElementById('setCol');
 
 let block1 = new Block(blockDef, blockAttr.takeOff);
 block1.init();
 
-let block2 = new InputBlock(blockInput, blockAttr.moveFwd);
+let block2 = new InputBlock(blockMoveFwd, blockAttr.moveFwd);
 block2.init();
 
 let block3 = new ColorBlock(blockColor, blockAttr.setCol);
@@ -247,7 +248,11 @@ block3.init();
 let dropArea = document.getElementById('block_drop_area');
 
 function blMouseDown(){
-	console.log(this);
+	console.log(block1);
+	// let parent = this.id;
+	//identify the parent before creating a new block ?
+	// console.log(this.textVal.keyText);
+
 
 	let newBlockCont = document.createElement('div');
 	newBlockCont.classList.add('block_container');
@@ -255,9 +260,9 @@ function blMouseDown(){
 
 	moveAt(event.pageX, event.pageY);
 
-	function moveAt(pageX, pageY) {
-    	newBlockCont.style.left = pageX - newBlockCont.offsetWidth / 2 + 'px';
-    	newBlockCont.style.top = pageY - newBlockCont.offsetHeight / 2 + 'px';
+	function moveAt(ev) {
+    	newBlockCont.style.left = ev.pageX - newBlockCont.offsetWidth / 2 + 'px';
+    	newBlockCont.style.top = ev.pageY - newBlockCont.offsetHeight / 2 + 'px';
   	}
 
 	newBlockCont.setAttribute('id','block_def');
@@ -265,5 +270,14 @@ function blMouseDown(){
 
 	let newBlock = new Block(newBlockCont, blockAttr.takeOff);
 	newBlock.init();
+
+	document.onmousemove = function(ev) {
+    	moveAt(ev);
+  	}
 }
 
+function blMouseUp(){
+	// console.log(this);
+	document.onmousemove = null;
+	// this.onmouseup = null;
+}
