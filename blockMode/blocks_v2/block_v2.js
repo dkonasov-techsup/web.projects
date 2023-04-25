@@ -271,37 +271,43 @@ let palette = document.getElementById('palette');
 // Prototype01
 function blMouseDown(obj){
 	let dragObj = {}
-	let e = event;
-	//check mouse key
-	if (e.which != 1) { 
-    	return;
-  	}
-
+	let e = event;	
+	let srcElem = obj;
 	//get click position
 	// console.log(event.clientX)
 	// console.log(event.clientY)
+	dragObj.srcElem = srcElem;
 	dragObj.shiftX = e.clientX - obj.wrapper.getBoundingClientRect().left;
 	dragObj.shiftY = e.clientY - obj.wrapper.getBoundingClientRect().top;
 	dragObj.downX = e.pageX;
     dragObj.downY = e.pageY;	
 
   	document.addEventListener('mousemove', onMouseMove);
-  	function onMouseMove(){
+  	document.addEventListener('mouseup', onMouseUp);
 
+  	function onMouseMove(){
+  		//check mouse key
+  		
+  		if (e.which != 1) return;
+  		// if (!dragObj.srcElem) return;
 	  	if (!dragObj.newBlock){
 	  		let moveX = event.pageX - dragObj.downX;
 	      	let moveY = event.pageY - dragObj.downY;
 	      	console.log(moveX);
 	      	console.log(moveY);
 
-	      	if (Math.abs(moveX) < 3 && Math.abs(moveY) < 3) {
+	      	if (Math.abs(moveX) < 6 && Math.abs(moveY) < 6) {
 	        	return;
 	      	}
 	      	dragObj.newBlock = buildNewBlock()
-	      	console.log(dragObj);
-	      	return
+	      	return;
 	    }
 	  	startMove(event.pageX, event.pageY)
+  	}
+
+  	function startMove(pageX, pageY){	
+    	dragObj.newBlock.wrapper.style.left = pageX - dragObj.shiftX + 'px';
+    	dragObj.newBlock.wrapper.style.top = pageY - dragObj.shiftY + 'px';
   	}
 
 
@@ -312,7 +318,7 @@ function blMouseDown(obj){
 		newBlockCont.style.position = 'absolute';
 		newBlockCont.style.zIndex = '500';
 		newBlockCont.setAttribute('id',obj.wrapper.id);
-		newBlockCont.addEventListener('mouseup',blMouseUp);
+		// newBlockCont.addEventListener('mouseup',onMouseUp);
 		document.body.append(newBlockCont);
 
 		//init newBlock
@@ -320,19 +326,14 @@ function blMouseDown(obj){
 		newBlock.init();
 		return newBlock;
   	}
-
-  	function startMove(pageX, pageY){
-	
-    	dragObj.newBlock.wrapper.style.left = pageX - dragObj.shiftX + 'px';
-    	dragObj.newBlock.wrapper.style.top = pageY - dragObj.shiftY + 'px';
-  	}
-
-  	function blMouseUp(){
+  	function onMouseUp(){  		
 		document.removeEventListener('mousemove', onMouseMove);
 		// newBlockCont.removeEventListener('mousedown',blMouseDown);
 		// this.onmouseup = null;
-		console.log(newBlockCont);
-	}	
+		
+		// dragObj = {}
+		return;
+	}		
 }
 
 
