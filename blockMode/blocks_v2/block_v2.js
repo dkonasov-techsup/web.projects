@@ -239,14 +239,13 @@ class ColorBlock extends InputBlock{
 const blockAttr = {
 	takeOff : {type:'default', colors:{bg:"#ed4a0f", font:'#fff'}, textVal:{keyText:'TAKE OFF'}},
 	moveFwd : {type:'input', colors:{bg:"#4d97ff", font:'#fff'}, textVal:{keyText:'MOVE', descText:'forward'}},
-	setCol : {type:'input', colors:{bg:"#04d200", font:'#fff'}, textVal:{keyText:'SET', descText:'color'}},
+	moveBwd : {type: InputBlock, colors:{bg:"#4d97ff", font:'#fff'}, textVal:{keyText:'MOVE', descText:'backward'}},	
+	setCol : {type:'input', colors:{bg:"#04d200", font:'#fff'}, textVal:{keyText:'SET', descText:'color'}},	
 }
-
-// console.log(blockAttr.takeOff);
-
 
 let blockDef = document.getElementById('takeOff');
 let blockMoveFwd = document.getElementById('moveFwd');
+let blockMoveBwd = document.getElementById('moveBwd');
 let blockColor = document.getElementById('setCol');
 
 let block1 = new Block(blockDef, blockAttr.takeOff);
@@ -255,51 +254,77 @@ block1.init();
 let block2 = new InputBlock(blockMoveFwd, blockAttr.moveFwd);
 block2.init();
 
-let block3 = new ColorBlock(blockColor, blockAttr.setCol);
+let block3 = new blockAttr.moveBwd.type(blockMoveBwd, blockAttr.moveBwd);
 block3.init();
+
+let block4 = new ColorBlock(blockColor, blockAttr.setCol);
+block4.init();
+
 
 
 //D&D methods on mouse events
-//set dropzone
+//set dropzone and palette
 let dropArea = document.getElementById('block_drop_area');
+let palette = document.getElementById('palette');
 
+
+// Prototype01
 function blMouseDown(obj){
-
+	let dragObj = {}
+	let e = event;
 	//check mouse key
-	if (event.which != 1) { 
+	if (e.which != 1) { 
     	return;
   	}
 
 	//get click position
-	console.log(event.clientX)
-	console.log(event.clientY)
-	let shiftX = event.clientX - obj.wrapper.getBoundingClientRect().left;
-	let shiftY = event.clientY - obj.wrapper.getBoundingClientRect().top;
-	
-	console.log(event);
-
-	//build new block_container
-	let newBlockCont = document.createElement('div');
-	newBlockCont.classList.add('block_container');
-	newBlockCont.style.position = 'absolute';
-	newBlockCont.style.zIndex = '500';
-	newBlockCont.setAttribute('id',obj.wrapper.id);
-	newBlockCont.addEventListener('mouseup',blMouseUp);
-	document.body.append(newBlockCont);
-
-	//init newBlock
-	let newBlock = new obj.constructor(newBlockCont, obj.config);
-	newBlock.init();
-
-	function moveAt(pageX, pageY){
-	
-    	newBlockCont.style.left = pageX - shiftX + 'px';
-    	newBlockCont.style.top = pageY - shiftY + 'px';
-  	}
+	// console.log(event.clientX)
+	// console.log(event.clientY)
+	dragObj.shiftX = e.clientX - obj.wrapper.getBoundingClientRect().left;
+	dragObj.shiftY = e.clientY - obj.wrapper.getBoundingClientRect().top;
+	dragObj.downX = e.pageX;
+    dragObj.downY = e.pageY;	
 
   	document.addEventListener('mousemove', onMouseMove);
   	function onMouseMove(){
-  		moveAt(event.pageX, event.pageY)
+
+	  	if (!dragObj.newBlock){
+	  		let moveX = event.pageX - dragObj.downX;
+	      	let moveY = event.pageY - dragObj.downY;
+	      	console.log(moveX);
+	      	console.log(moveY);
+
+	      	if (Math.abs(moveX) < 3 && Math.abs(moveY) < 3) {
+	        	return;
+	      	}
+	      	dragObj.newBlock = buildNewBlock()
+	      	console.log(dragObj);
+	      	return
+	    }
+	  	startMove(event.pageX, event.pageY)
+  	}
+
+
+  	function buildNewBlock(){
+	  	//build new block_container
+		let newBlockCont = document.createElement('div');
+		newBlockCont.classList.add('block_container');
+		newBlockCont.style.position = 'absolute';
+		newBlockCont.style.zIndex = '500';
+		newBlockCont.setAttribute('id',obj.wrapper.id);
+		newBlockCont.addEventListener('mouseup',blMouseUp);
+		document.body.append(newBlockCont);
+
+		//init newBlock
+		let newBlock = new obj.constructor(newBlockCont, obj.config);
+		newBlock.init();
+		return newBlock;
+  	}
+
+  	function startMove(pageX, pageY){
+	
+    	dragObj.newBlock.wrapper.style.left = pageX - dragObj.shiftX + 'px';
+    	dragObj.newBlock.wrapper.style.top = pageY - dragObj.shiftY + 'px';
   	}
 
   	function blMouseUp(){
@@ -309,4 +334,32 @@ function blMouseDown(obj){
 		console.log(newBlockCont);
 	}	
 }
+
+
+// const DragManager = new function(){
+// 	console.log(this);
+
+// 	let dragObj = {};
+// 	palette.addEventListener('mousedown', onMouseDown);
+	
+
+// 	function onMouseDown(e){
+// 		if (e.which != 1) return;
+// 		let elem = e.target.closest('.block_container');
+// 		if (!elem) return;
+
+// 		dragObj.elem = elem;
+// 	    dragObj.downX = e.pageX;
+//     	dragObj.downY = e.pageY;
+
+//     	console.log (dragObj);
+//     	document.addEventListener('mousemove', onMouseMove);
+//     	return false;
+// 	}
+
+// 	function onMouseMove(e){
+// 		console.log('mousemove');
+// 	}
+
+// } 
 
