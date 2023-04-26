@@ -286,8 +286,8 @@ function blMouseDown(obj){
   	document.addEventListener('mouseup', onMouseUp);
 
   	function onMouseMove(){
-  		//check mouse key
   		
+  		//check mouse key
   		if (e.which != 1) return;
   		// if (!dragObj.srcElem) return;
 	  	if (!dragObj.newBlock){
@@ -326,13 +326,22 @@ function blMouseDown(obj){
 		newBlock.init();
 		return newBlock;
   	}
-  	function onMouseUp(){  		
+  	function onMouseUp(){
+  		console.log(dragObj);
+  		if (!dragObj.newBlock){
+  			finishDrag(event);
+  		}
 		document.removeEventListener('mousemove', onMouseMove);
-		// newBlockCont.removeEventListener('mousedown',blMouseDown);
-		// this.onmouseup = null;
+		document.removeEventListener('mouseup', onMouseUp);
+		// newBlockCont.removeEventListener('mousedown',blMouseDown);		
 		
 		// dragObj = {}
-		return;
+		
+	}
+
+	function finishDrag(){
+		console.log('finishDrag');
+
 	}		
 }
 
