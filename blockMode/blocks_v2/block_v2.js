@@ -102,14 +102,16 @@ class Block{
 
 	eventsHandler(){
 		//off default D&D
-		this.wrapper.ondragstart = function() {
+		this.wrapper.ondragstart = ()=>{
 		  return false;
 		};
 		//set new EventListener
-		this.wrapper.addEventListener('mousedown', ()=>{			
+		// this.wrapper.addEventListener('mousedown', ()=>{			
+		// 	blMouseDown(this);
+		// });
+		this.wrapper.onmousedown = ()=>{
 			blMouseDown(this);
-		});
-		// this.wrapper.addEventListener('mouseup', blMouseUp);			
+		};			
 	}
 }
 
@@ -237,7 +239,7 @@ class ColorBlock extends InputBlock{
 }
 
 const blockAttr = {
-	takeOff : {type:'default', colors:{bg:"#ed4a0f", font:'#fff'}, textVal:{keyText:'TAKE OFF'}},
+	takeOff : {type:'default', colors:{bg:"#ed4a0f", font:'#fff'}, textVal:{keyText:'TAKEOFF'}},
 	moveFwd : {type:'input', colors:{bg:"#4d97ff", font:'#fff'}, textVal:{keyText:'MOVE', descText:'forward'}},
 	moveBwd : {type: InputBlock, colors:{bg:"#4d97ff", font:'#fff'}, textVal:{keyText:'MOVE', descText:'backward'}},	
 	setCol : {type:'input', colors:{bg:"#04d200", font:'#fff'}, textVal:{keyText:'SET', descText:'color'}},	
@@ -270,25 +272,24 @@ let palette = document.getElementById('palette');
 
 // Prototype01
 function blMouseDown(obj){
-	let dragObj = {}
-	let e = event;	
+	let dragObj = {}	
 	let srcElem = obj;
 	//get click position
 	// console.log(event.clientX)
 	// console.log(event.clientY)
 	dragObj.srcElem = srcElem;
-	dragObj.shiftX = e.clientX - obj.wrapper.getBoundingClientRect().left;
-	dragObj.shiftY = e.clientY - obj.wrapper.getBoundingClientRect().top;
-	dragObj.downX = e.pageX;
-    dragObj.downY = e.pageY;	
+	dragObj.shiftX = event.clientX - obj.wrapper.getBoundingClientRect().left;
+	dragObj.shiftY = event.clientY - obj.wrapper.getBoundingClientRect().top;
+	dragObj.downX = event.pageX;
+    dragObj.downY = event.pageY;	
 
-  	document.addEventListener('mousemove', onMouseMove);
-  	document.addEventListener('mouseup', onMouseUp);
+  	document.onmousemove = onMouseMove
+  	document.onmouseup = onMouseUp;
 
   	function onMouseMove(){
   		
   		//check mouse key
-  		if (e.which != 1) return;
+  		if (event.which != 1) return;
   		// if (!dragObj.srcElem) return;
 	  	if (!dragObj.newBlock){
 	  		let moveX = event.pageX - dragObj.downX;
@@ -308,6 +309,10 @@ function blMouseDown(obj){
   	function startMove(pageX, pageY){	
     	dragObj.newBlock.wrapper.style.left = pageX - dragObj.shiftX + 'px';
     	dragObj.newBlock.wrapper.style.top = pageY - dragObj.shiftY + 'px';
+
+    	dragObj.elemBelow = findDropArea();
+    	console.log(dragObj.srcElem.wrapper);
+
   	}
 
 
@@ -326,23 +331,54 @@ function blMouseDown(obj){
 		newBlock.init();
 		return newBlock;
   	}
-  	function onMouseUp(){
-  		console.log(dragObj);
-  		if (!dragObj.newBlock){
+  	function onMouseUp(){  		
+  		if (dragObj.newBlock){
   			finishDrag(event);
   		}
-		document.removeEventListener('mousemove', onMouseMove);
-		document.removeEventListener('mouseup', onMouseUp);
-		// newBlockCont.removeEventListener('mousedown',blMouseDown);		
-		
-		// dragObj = {}
-		
+		document.onmousemove = null;
+		document.onmouseup = null;		
 	}
 
 	function finishDrag(){
-		console.log('finishDrag');
+		let dropArea = findDropArea(event)
+		
+		dragObj.newBlock.wrapper.onmousedown = null;
+		if(dragObj.elemBelow.id != 'block_drop_area'){
+			console.log(dragObj);
+			interruptDrag();
+		}
+		
+	}
 
-	}		
+	function findDropArea(){
+
+		dragObj.newBlock.wrapper.style.visibility = "hidden";
+		let elem = document.elementFromPoint(event.clientX, event.clientY);
+		// console.log(elem);
+		dragObj.newBlock.wrapper.style.visibility = "visible";
+
+		if (elem == null) return null;
+		return elem;
+	}
+
+	function interruptDrag(){
+		// dragObj.srcElem.wrapper.parentElement.append(dragObj.newBlock.wrapper);
+		// dragObj.newBlock.wrapper.style.position = dragObj.srcElem.wrapper.style.position;
+		// console.log(dragObj.srcElem.wrapper.parentElement);
+
+		// console.log(dragObj.srcElem.wrapper.nextSibling)
+
+		
+
+		dragObj.srcElem.wrapper.parentElement.insertBefore(dragObj.newBlock.wrapper, dragObj.srcElem.wrapper);
+
+		dragObj.newBlock.wrapper.style.top = dragObj.srcElem.wrapper.style.top;
+		dragObj.newBlock.wrapper.style.left = dragObj.srcElem.wrapper.style.left;
+
+		// parentElement
+
+	}
+
 }
 
 
