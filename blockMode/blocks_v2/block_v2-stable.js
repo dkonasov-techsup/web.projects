@@ -102,14 +102,16 @@ class Block{
 
 	eventsHandler(){
 		//off default D&D
-		this.wrapper.ondragstart = function() {
+		this.wrapper.ondragstart = ()=>{
 		  return false;
 		};
 		//set new EventListener
-		this.wrapper.addEventListener('mousedown', ()=>{			
+		// this.wrapper.addEventListener('mousedown', ()=>{			
+		// 	blMouseDown(this);
+		// });
+		this.wrapper.onmousedown = ()=>{
 			blMouseDown(this);
-		});
-		// this.wrapper.addEventListener('mouseup', blMouseUp);			
+		};			
 	}
 }
 
@@ -237,16 +239,15 @@ class ColorBlock extends InputBlock{
 }
 
 const blockAttr = {
-	takeOff : {type:'default', colors:{bg:"#ed4a0f", font:'#fff'}, textVal:{keyText:'TAKE OFF'}},
+	takeOff : {type:'default', colors:{bg:"#ed4a0f", font:'#fff'}, textVal:{keyText:'TAKEOFF'}},
 	moveFwd : {type:'input', colors:{bg:"#4d97ff", font:'#fff'}, textVal:{keyText:'MOVE', descText:'forward'}},
-	setCol : {type:'input', colors:{bg:"#04d200", font:'#fff'}, textVal:{keyText:'SET', descText:'color'}},
+	moveBwd : {type: InputBlock, colors:{bg:"#4d97ff", font:'#fff'}, textVal:{keyText:'MOVE', descText:'backward'}},	
+	setCol : {type:'input', colors:{bg:"#04d200", font:'#fff'}, textVal:{keyText:'SET', descText:'color'}},	
 }
-
-// console.log(blockAttr.takeOff);
-
 
 let blockDef = document.getElementById('takeOff');
 let blockMoveFwd = document.getElementById('moveFwd');
+let blockMoveBwd = document.getElementById('moveBwd');
 let blockColor = document.getElementById('setCol');
 
 let block1 = new Block(blockDef, blockAttr.takeOff);
@@ -255,58 +256,156 @@ block1.init();
 let block2 = new InputBlock(blockMoveFwd, blockAttr.moveFwd);
 block2.init();
 
-let block3 = new ColorBlock(blockColor, blockAttr.setCol);
+let block3 = new blockAttr.moveBwd.type(blockMoveBwd, blockAttr.moveBwd);
 block3.init();
+
+let block4 = new ColorBlock(blockColor, blockAttr.setCol);
+block4.init();
+
 
 
 //D&D methods on mouse events
-//set dropzone
+//set dropzone and palette
 let dropArea = document.getElementById('block_drop_area');
+let palette = document.getElementById('palette');
 
+
+// Prototype01
 function blMouseDown(obj){
-
-	//check mouse key
-	if (event.which != 1) { 
-    	return;
-  	}
-
+	let dragObj = {}	
+	let srcElem = obj;
 	//get click position
-	console.log(event.clientX)
-	console.log(event.clientY)
-	let shiftX = event.clientX - obj.wrapper.getBoundingClientRect().left;
-	let shiftY = event.clientY - obj.wrapper.getBoundingClientRect().top;
-	
-	console.log(event);
+	// console.log(event.clientX)
+	// console.log(event.clientY)
+	dragObj.srcElem = srcElem;
+	dragObj.shiftX = event.clientX - obj.wrapper.getBoundingClientRect().left;
+	dragObj.shiftY = event.clientY - obj.wrapper.getBoundingClientRect().top;
+	dragObj.downX = event.pageX;
+    dragObj.downY = event.pageY;	
 
-	//build new block_container
-	let newBlockCont = document.createElement('div');
-	newBlockCont.classList.add('block_container');
-	newBlockCont.style.position = 'absolute';
-	newBlockCont.style.zIndex = '500';
-	newBlockCont.setAttribute('id',obj.wrapper.id);
-	newBlockCont.addEventListener('mouseup',blMouseUp);
-	document.body.append(newBlockCont);
+  	document.onmousemove = onMouseMove
+  	document.onmouseup = onMouseUp;
 
-	//init newBlock
-	let newBlock = new obj.constructor(newBlockCont, obj.config);
-	newBlock.init();
-
-	function moveAt(pageX, pageY){
-	
-    	newBlockCont.style.left = pageX - shiftX + 'px';
-    	newBlockCont.style.top = pageY - shiftY + 'px';
-  	}
-
-  	document.addEventListener('mousemove', onMouseMove);
   	function onMouseMove(){
-  		moveAt(event.pageX, event.pageY)
+  		
+  		//check mouse key
+  		if (event.which != 1) return;
+  		// if (!dragObj.srcElem) return;
+	  	if (!dragObj.newBlock){
+	  		let moveX = event.pageX - dragObj.downX;
+	      	let moveY = event.pageY - dragObj.downY;
+	      	console.log(moveX);
+	      	console.log(moveY);
+
+	      	if (Math.abs(moveX) < 6 && Math.abs(moveY) < 6) {
+	        	return;
+	      	}
+	      	dragObj.newBlock = buildNewBlock()
+	      	return;
+	    }
+	  	startMove(event.pageX, event.pageY)
   	}
 
-  	function blMouseUp(){
-		document.removeEventListener('mousemove', onMouseMove);
-		// newBlockCont.removeEventListener('mousedown',blMouseDown);
-		// this.onmouseup = null;
-		console.log(newBlockCont);
-	}	
+  	function startMove(pageX, pageY){	
+    	dragObj.newBlock.wrapper.style.left = pageX - dragObj.shiftX + 'px';
+    	dragObj.newBlock.wrapper.style.top = pageY - dragObj.shiftY + 'px';
+
+    	dragObj.elemBelow = findDropArea();
+    	console.log(dragObj.srcElem.wrapper);
+
+  	}
+
+
+  	function buildNewBlock(){
+	  	//build new block_container
+		let newBlockCont = document.createElement('div');
+		newBlockCont.classList.add('block_container');
+		newBlockCont.style.position = 'absolute';
+		newBlockCont.style.zIndex = '500';
+		newBlockCont.setAttribute('id',obj.wrapper.id);
+		// newBlockCont.addEventListener('mouseup',onMouseUp);
+		document.body.append(newBlockCont);
+
+		//init newBlock
+		let newBlock = new obj.constructor(newBlockCont, obj.config);
+		newBlock.init();
+		return newBlock;
+  	}
+  	function onMouseUp(){  		
+  		if (dragObj.newBlock){
+  			finishDrag(event);
+  		}
+		document.onmousemove = null;
+		document.onmouseup = null;		
+	}
+
+	function finishDrag(){
+		let dropArea = findDropArea(event)
+		
+		dragObj.newBlock.wrapper.onmousedown = null;
+		if(dragObj.elemBelow.id != 'block_drop_area'){
+			console.log(dragObj);
+			interruptDrag();
+		}
+		
+	}
+
+	function findDropArea(){
+
+		dragObj.newBlock.wrapper.style.visibility = "hidden";
+		let elem = document.elementFromPoint(event.clientX, event.clientY);
+		// console.log(elem);
+		dragObj.newBlock.wrapper.style.visibility = "visible";
+
+		if (elem == null) return null;
+		return elem;
+	}
+
+	function interruptDrag(){
+		// dragObj.srcElem.wrapper.parentElement.append(dragObj.newBlock.wrapper);
+		// dragObj.newBlock.wrapper.style.position = dragObj.srcElem.wrapper.style.position;
+		// console.log(dragObj.srcElem.wrapper.parentElement);
+
+		// console.log(dragObj.srcElem.wrapper.nextSibling)
+
+		
+
+		dragObj.srcElem.wrapper.parentElement.insertBefore(dragObj.newBlock.wrapper, dragObj.srcElem.wrapper);
+
+		dragObj.newBlock.wrapper.style.top = dragObj.srcElem.wrapper.style.top;
+		dragObj.newBlock.wrapper.style.left = dragObj.srcElem.wrapper.style.left;
+
+		// parentElement
+
+	}
+
 }
+
+
+// const DragManager = new function(){
+// 	console.log(this);
+
+// 	let dragObj = {};
+// 	palette.addEventListener('mousedown', onMouseDown);
+	
+
+// 	function onMouseDown(e){
+// 		if (e.which != 1) return;
+// 		let elem = e.target.closest('.block_container');
+// 		if (!elem) return;
+
+// 		dragObj.elem = elem;
+// 	    dragObj.downX = e.pageX;
+//     	dragObj.downY = e.pageY;
+
+//     	console.log (dragObj);
+//     	document.addEventListener('mousemove', onMouseMove);
+//     	return false;
+// 	}
+
+// 	function onMouseMove(e){
+// 		console.log('mousemove');
+// 	}
+
+// } 
 

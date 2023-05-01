@@ -311,11 +311,9 @@ function blMouseDown(obj){
     	dragObj.newBlock.wrapper.style.top = pageY - dragObj.shiftY + 'px';
 
     	dragObj.elemBelow = findDropArea();
-    	console.log(dragObj.srcElem.wrapper);
+    	// console.log(dragObj.srcElem.wrapper);
 
   	}
-
-
   	function buildNewBlock(){
 	  	//build new block_container
 		let newBlockCont = document.createElement('div');
@@ -361,51 +359,46 @@ function blMouseDown(obj){
 		return elem;
 	}
 
-	function interruptDrag(){
-		// dragObj.srcElem.wrapper.parentElement.append(dragObj.newBlock.wrapper);
-		// dragObj.newBlock.wrapper.style.position = dragObj.srcElem.wrapper.style.position;
-		// console.log(dragObj.srcElem.wrapper.parentElement);
-
-		// console.log(dragObj.srcElem.wrapper.nextSibling)
-
-		
+	function interruptDrag(){		
 
 		dragObj.srcElem.wrapper.parentElement.insertBefore(dragObj.newBlock.wrapper, dragObj.srcElem.wrapper);
 
-		dragObj.newBlock.wrapper.style.top = dragObj.srcElem.wrapper.style.top;
-		dragObj.newBlock.wrapper.style.left = dragObj.srcElem.wrapper.style.left;
+		// dragObj.newBlock.wrapper.style.position = dragObj.srcElem.wrapper.style.position;	
+		
+		// dragObj.newBlock.wrapper.style.top = dragObj.srcElem.wrapper.style.top;
+		// dragObj.newBlock.wrapper.style.left = dragObj.srcElem.wrapper.style.left;
 
-		// parentElement
+		animateInterrupt()
+	}
+
+	function animateInterrupt(time){
+		let sTime = performance.now();
+		
+		// let duration = 2000;
+		// let timing = 1;
+
+		// let stPosX = dragObj.newBlock.wrapper.style.left;
+		// let stPosY = dragObj.newBlock.wrapper.style.top;
+		let endPosX = dragObj.srcElem.wrapper.style.left;
+		let endPosY = dragObj.srcElem.wrapper.style.top;
+
+		// dragObj.newBlock.wrapper.style.transform = `translate(${endPosX}px,${endPosY}px)`;
+		dragObj.newBlock.wrapper.style.transform = `translate(200px,200px)`;
+
+		// requestAnimationFrame(function animate(time){
+		// 	let progress = time - sTime;
+		// 	// dragObj.newBlock.wrapper.style.top = Math.min(progress/10, 200) + "px";
+		// 	// dragObj.newBlock.wrapper.style.top = Math.min(progress/10, 200) + "px";
+
+		// 	dragObj.newBlock.wrapper.style.transform = `translate(${endPosX},${endPosY})`;
+
+		// 	if (progress < 3000) {
+  //   			requestAnimationFrame(animate);
+  // 			}
+
+		// })
 
 	}
 
 }
-
-
-// const DragManager = new function(){
-// 	console.log(this);
-
-// 	let dragObj = {};
-// 	palette.addEventListener('mousedown', onMouseDown);
-	
-
-// 	function onMouseDown(e){
-// 		if (e.which != 1) return;
-// 		let elem = e.target.closest('.block_container');
-// 		if (!elem) return;
-
-// 		dragObj.elem = elem;
-// 	    dragObj.downX = e.pageX;
-//     	dragObj.downY = e.pageY;
-
-//     	console.log (dragObj);
-//     	document.addEventListener('mousemove', onMouseMove);
-//     	return false;
-// 	}
-
-// 	function onMouseMove(e){
-// 		console.log('mousemove');
-// 	}
-
-// } 
 
