@@ -300,25 +300,26 @@ function blMouseDown(obj){
 	      	if (Math.abs(moveX) < 6 && Math.abs(moveY) < 6) {
 	        	return;
 	      	}
-	      	dragObj.newBlock = buildNewBlock()
+	      	dragObj.newBlock = buildNewBlock();
 	      	return;
 	    }
-	  	startMove(event.pageX, event.pageY)
+	  	onMove(event.pageX, event.pageY);
   	}
 
-  	function startMove(pageX, pageY){	
+  	function onMove(pageX, pageY){	
     	dragObj.newBlock.wrapper.style.left = pageX - dragObj.shiftX + 'px';
     	dragObj.newBlock.wrapper.style.top = pageY - dragObj.shiftY + 'px';
 
-    	dragObj.elemBelow = findDropArea();
-    	// console.log(dragObj.srcElem.wrapper);
+    	// dragObj.newBlock.wrapper.style.transform = `translate(${pageX - dragObj.shiftX}px,${pageY - dragObj.shiftY}px)`;
+    	
 
+    	dragObj.elemBelow = findDropArea();    	
   	}
   	function buildNewBlock(){
 	  	//build new block_container
 		let newBlockCont = document.createElement('div');
 		newBlockCont.classList.add('block_container');
-		newBlockCont.style.position = 'absolute';
+		// newBlockCont.style.position = 'absolute';
 		newBlockCont.style.zIndex = '500';
 		newBlockCont.setAttribute('id',obj.wrapper.id);
 		// newBlockCont.addEventListener('mouseup',onMouseUp);
@@ -361,44 +362,57 @@ function blMouseDown(obj){
 
 	function interruptDrag(){		
 
-		dragObj.srcElem.wrapper.parentElement.insertBefore(dragObj.newBlock.wrapper, dragObj.srcElem.wrapper);
+		// dragObj.srcElem.wrapper.parentElement.insertBefore(dragObj.newBlock.wrapper, dragObj.srcElem.wrapper);
 
 		// dragObj.newBlock.wrapper.style.position = dragObj.srcElem.wrapper.style.position;	
 		
-		// dragObj.newBlock.wrapper.style.top = dragObj.srcElem.wrapper.style.top;
-		// dragObj.newBlock.wrapper.style.left = dragObj.srcElem.wrapper.style.left;
+
+		// let top = obj.wrapper.getBoundingClientRect().top;
+		// let left = obj.wrapper.getBoundingClientRect().left;
+
+		// let gbcr = obj.wrapper.getBoundingClientRect();
+		// console.log(gbcr);
+
+		// dragObj.newBlock.wrapper.style.top = obj.wrapper.getBoundingClientRect().top +'px'
+		// dragObj.newBlock.wrapper.style.left = obj.wrapper.getBoundingClientRect().left +'px'
+		// console.log(left+':'+top);
 
 		animateInterrupt()
+
 	}
 
 	function animateInterrupt(time){
 		let sTime = performance.now();
 		
-		// let duration = 2000;
-		// let timing = 1;
+		let duration = 10;		
+		
+		let stPosX = dragObj.newBlock.wrapper.getBoundingClientRect().left;
+		let stPosY = dragObj.newBlock.wrapper.getBoundingClientRect().top;
 
-		// let stPosX = dragObj.newBlock.wrapper.style.left;
-		// let stPosY = dragObj.newBlock.wrapper.style.top;
-		let endPosX = dragObj.srcElem.wrapper.style.left;
-		let endPosY = dragObj.srcElem.wrapper.style.top;
+		let endPosX = obj.wrapper.getBoundingClientRect().left;
+		let endPosY = obj.wrapper.getBoundingClientRect().top;
+		let progressX = (endPosX - stPosX) / duration;
+		let progressY = (endPosY - stPosY) / duration;
 
-		// dragObj.newBlock.wrapper.style.transform = `translate(${endPosX}px,${endPosY}px)`;
-		dragObj.newBlock.wrapper.style.transform = `translate(200px,200px)`;
+		// console.log(stPosX+':'+stPosY);
+		// console.log(endPosX+':'+endPosY);				
 
-		// requestAnimationFrame(function animate(time){
-		// 	let progress = time - sTime;
-		// 	// dragObj.newBlock.wrapper.style.top = Math.min(progress/10, 200) + "px";
-		// 	// dragObj.newBlock.wrapper.style.top = Math.min(progress/10, 200) + "px";
+		let raf1 = requestAnimationFrame(function animate(time){
 
-		// 	dragObj.newBlock.wrapper.style.transform = `translate(${endPosX},${endPosY})`;
-
-		// 	if (progress < 3000) {
-  //   			requestAnimationFrame(animate);
-  // 			}
-
-		// })
-
-	}
-
+			
+			dragObj.newBlock.wrapper.style.top = dragObj.newBlock.wrapper.getBoundingClientRect().top + progressY + "px";
+			dragObj.newBlock.wrapper.style.left = dragObj.newBlock.wrapper.getBoundingClientRect().left + progressX + "px";
+			
+			let progress = (time - sTime)/duration;
+			console.log(progress);
+			
+			if (progress < duration) {
+    			requestAnimationFrame(animate);
+  			}
+  			else{
+  				dragObj.newBlock.wrapper.remove();
+  			}  			
+		})	
+	}	
 }
 
