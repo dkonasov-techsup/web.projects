@@ -16,14 +16,15 @@ class Block{
 	static textPadding = 18;	
 	static xmlns = "http://www.w3.org/2000/svg";
 	static rRad = 8;
-	// static hghT = 50;	
-	//min H xPos = 100;
+	// static KBminWdt = 80;
+	// static hghT = 60;	
+	// static minHxPos = 100;
 	
 	constructor(wrapper,config){
 		const defaultConfig = {};
 		this.config = Object.assign(defaultConfig, config);
 		this.wrapper = wrapper;		
-		console.log(this.config);						
+		// console.log(this.config);						
 	}
 
 	//инициализация перемещена в конструктор → хер знает куда вынести атрибуты, учитывая что ширина svgbody адаптивна
@@ -56,7 +57,7 @@ class Block{
 		textEl.setAttributeNS(null, "y", "50%");
 		textEl.setAttributeNS(null, "fill", this.config.colors.font);
 		textEl.setAttributeNS(null, "font-weight", "bold");
-		textEl.setAttributeNS(null, "font-family", "Segoe UI")
+		textEl.setAttributeNS(null, "font-family", "Segoe UI");
 		textEl.setAttributeNS(null, "alignment-baseline", "middle");
 		
 		this.svgBody.append(textEl);
@@ -67,9 +68,9 @@ class Block{
 
 	drawKeyBlock(){
 		let keyText = this.drawText(this.config.textVal.keyText, 0);
-		let endPosX = keyText.wdt < 80 ? 80 : keyText.wdt;
 
-		//text alignment, when its width is less than 80 (note that drawText.wdt includes double padding)
+		let endPosX = keyText.wdt < 100 ? 100 : keyText.wdt;		
+		//text alignment, when its width is less than 100 (note that drawText.wdt includes double padding)		
 		let offsetX = ((endPosX - (keyText.wdt - Block.textPadding*2)) / 2);
 		keyText.el.setAttributeNS(null, "x", offsetX);
 
@@ -78,6 +79,9 @@ class Block{
 		let keyBlockPath2 = `V${50-Block.rRad} Q${endPosX},50 ${endPosX-Block.rRad},50 H76 Q71,50 67,55 T58,60 H46 Q41,60 37,55 T28,50 H${Block.rRad} Q0,50 0,${50-Block.rRad} Z`;
 		
 		if(this.constructor.name !== 'Block'){
+			let endPosX = keyText.wdt < 80 ? 80 : keyText.wdt;
+			let offsetX = ((endPosX - (keyText.wdt - Block.textPadding*2)) / 2);
+			keyText.el.setAttributeNS(null, "x", offsetX);
 			keyBlockPath1 = `M0 ${Block.rRad} Q0,0 ${Block.rRad},0 H26 Q31,0 35,5 T44,10 H60 Q65,10 69,5 T78,0 H${endPosX}`;
 			keyBlockPath2 = `V50 H76 Q71,50 67,55 T58,60 H46 Q41,60 37,55 T28,50 H${Block.rRad} Q0,50 0,${50-Block.rRad} Z`;
 		}
@@ -239,28 +243,33 @@ class ColorBlock extends InputBlock{
 }
 
 const blockAttr = {
-	takeOff : {type:'default', colors:{bg:"#ed4a0f", font:'#fff'}, textVal:{keyText:'TAKEOFF'}},
-	moveFwd : {type:'input', colors:{bg:"#4d97ff", font:'#fff'}, textVal:{keyText:'MOVE', descText:'forward'}},
-	moveBwd : {type: InputBlock, colors:{bg:"#4d97ff", font:'#fff'}, textVal:{keyText:'MOVE', descText:'backward'}},	
-	setCol : {type:'input', colors:{bg:"#04d200", font:'#fff'}, textVal:{keyText:'SET', descText:'color'}},	
+	takeOff: {type:'default', colors:{bg:"#ed4a0f", font:'#fff'}, textVal:{keyText:'TAKEOFF'}},
+	toLand:  {type:'default', colors:{bg:"#ed4a0f", font:'#fff'}, textVal:{keyText:'LAND'}},
+	moveFwd: {type:'input', colors:{bg:"#4d97ff", font:'#fff'}, textVal:{keyText:'MOVE', descText:'forward'}},
+	moveBwd: {type: InputBlock, colors:{bg:"#4d97ff", font:'#fff'}, textVal:{keyText:'MOVE', descText:'backward'}},	
+	setCol:  {type:'input', colors:{bg:"#04d200", font:'#fff'}, textVal:{keyText:'SET', descText:'color'}},	
 }
 
-let blockDef = document.getElementById('takeOff');
+let blockTakeOff = document.getElementById('takeOff');
+let blockLand = document.getElementById('toLand');
 let blockMoveFwd = document.getElementById('moveFwd');
 let blockMoveBwd = document.getElementById('moveBwd');
 let blockColor = document.getElementById('setCol');
 
-let block1 = new Block(blockDef, blockAttr.takeOff);
+let block1 = new Block(blockTakeOff, blockAttr.takeOff);
 block1.init();
 
-let block2 = new InputBlock(blockMoveFwd, blockAttr.moveFwd);
+let block2 = new Block(blockLand, blockAttr.toLand);
 block2.init();
 
-let block3 = new blockAttr.moveBwd.type(blockMoveBwd, blockAttr.moveBwd);
+let block3 = new InputBlock(blockMoveFwd, blockAttr.moveFwd);
 block3.init();
 
-let block4 = new ColorBlock(blockColor, blockAttr.setCol);
+let block4 = new blockAttr.moveBwd.type(blockMoveBwd, blockAttr.moveBwd);
 block4.init();
+
+let block5 = new ColorBlock(blockColor, blockAttr.setCol);
+block5.init();
 
 
 
@@ -319,7 +328,7 @@ function blMouseDown(obj){
 	  	//build new block_container
 		let newBlockCont = document.createElement('div');
 		newBlockCont.classList.add('block_container');
-		// newBlockCont.style.position = 'absolute';
+		newBlockCont.style.position = 'absolute';
 		newBlockCont.style.zIndex = '500';
 		newBlockCont.setAttribute('id',obj.wrapper.id);
 		// newBlockCont.addEventListener('mouseup',onMouseUp);
@@ -360,12 +369,14 @@ function blMouseDown(obj){
 		return elem;
 	}
 
-	function interruptDrag(){		
+	function interruptDrag(){
 
 		// dragObj.srcElem.wrapper.parentElement.insertBefore(dragObj.newBlock.wrapper, dragObj.srcElem.wrapper);
 
-		// dragObj.newBlock.wrapper.style.position = dragObj.srcElem.wrapper.style.position;	
-		
+		// dragObj.newBlock.wrapper.style.position = 'relative';
+		// dragObj.newBlock.wrapper.style.top = '0px';
+		// dragObj.newBlock.wrapper.style.left = '0px';
+		// dragObj.newBlock.wrapper.style.transform = 'translate(0px,0px)';		
 
 		// let top = obj.wrapper.getBoundingClientRect().top;
 		// let left = obj.wrapper.getBoundingClientRect().left;
@@ -377,33 +388,39 @@ function blMouseDown(obj){
 		// dragObj.newBlock.wrapper.style.left = obj.wrapper.getBoundingClientRect().left +'px'
 		// console.log(left+':'+top);
 
-		animateInterrupt()
+		animateInterrupt0()
 
 	}
 
-	function animateInterrupt(time){
+	function animateInterrupt0(time){
 		let sTime = performance.now();
 		
-		let duration = 10;		
-		
+		let duration = 18;
+
+		let progress = 0;
+
 		let stPosX = dragObj.newBlock.wrapper.getBoundingClientRect().left;
 		let stPosY = dragObj.newBlock.wrapper.getBoundingClientRect().top;
 
 		let endPosX = obj.wrapper.getBoundingClientRect().left;
 		let endPosY = obj.wrapper.getBoundingClientRect().top;
-		let progressX = (endPosX - stPosX) / duration;
-		let progressY = (endPosY - stPosY) / duration;
 
-		// console.log(stPosX+':'+stPosY);
-		// console.log(endPosX+':'+endPosY);				
+		// let vel = 10;
 
+		let stepX = (endPosX - stPosX) / duration;
+		let stepY = (endPosY - stPosY) / duration;
+		
+		console.log(stPosX+':'+stPosY);
+		console.log(endPosX+':'+endPosY);
+		console.log(stepX+':'+stepY);
+		
 		let raf1 = requestAnimationFrame(function animate(time){
 
 			
-			dragObj.newBlock.wrapper.style.top = dragObj.newBlock.wrapper.getBoundingClientRect().top + progressY + "px";
-			dragObj.newBlock.wrapper.style.left = dragObj.newBlock.wrapper.getBoundingClientRect().left + progressX + "px";
+			dragObj.newBlock.wrapper.style.top = dragObj.newBlock.wrapper.getBoundingClientRect().top + stepY + "px";
+			dragObj.newBlock.wrapper.style.left = dragObj.newBlock.wrapper.getBoundingClientRect().left + stepX + "px";
 			
-			let progress = (time - sTime)/duration;
+			progress += 1;
 			console.log(progress);
 			
 			if (progress < duration) {
@@ -413,6 +430,54 @@ function blMouseDown(obj){
   				dragObj.newBlock.wrapper.remove();
   			}  			
 		})	
-	}	
+	}
+
+	function animateInterrupt1(time){
+		let sTime = performance.now();
+
+		let stPosX = dragObj.newBlock.wrapper.getBoundingClientRect().left;
+		let stPosY = dragObj.newBlock.wrapper.getBoundingClientRect().top;
+
+		let endPosX = obj.wrapper.getBoundingClientRect().left;
+		let endPosY = obj.wrapper.getBoundingClientRect().top;
+
+		let dx = (endPosX - stPosX)
+		let dy = (endPosY - stPosY)
+
+		let vel = 40;
+		let progress = 0;
+		
+		let k = Math.abs(dy / dx);
+
+
+		let stepX = Math.sqrt(Math.pow(vel, 2) / (Math.pow(k, 2) + 1));
+		let stepY = k * stepX;
+		
+		if (dx < 0) stepX = -stepX;
+		if (dy < 0) stepY = -stepY;
+
+		console.log(stPosX+':'+stPosY);
+		console.log(endPosX+':'+endPosY);
+		console.log(stepX+':'+stepY);
+
+		let duration = Math.sqrt(Math.pow(dx, 2) + Math.pow(dy, 2)) / vel;
+		
+		let raf1 = requestAnimationFrame(function animate(time){
+
+			
+			dragObj.newBlock.wrapper.style.top = dragObj.newBlock.wrapper.getBoundingClientRect().top + stepY + "px";
+			dragObj.newBlock.wrapper.style.left = dragObj.newBlock.wrapper.getBoundingClientRect().left + stepX + "px";
+			
+			progress += 1;
+			console.log(progress);
+			
+			if (progress < duration) {
+    			requestAnimationFrame(animate);
+  			}
+  			else{
+  				dragObj.newBlock.wrapper.remove();
+  			}  			
+		})	
+	}
 }
 
