@@ -113,9 +113,15 @@ class Block{
 		// this.wrapper.addEventListener('mousedown', ()=>{			
 		// 	blMouseDown(this);
 		// });
-		this.wrapper.onmousedown = ()=>{
-			blMouseDown(this);
-		};			
+
+		// this.wrapper.onmousedown = ()=>{
+		// 	blMouseDown(this);
+		// };
+		
+		let dragFromPalette = Draggable.create(this.wrapper,{
+			type: "x,y",
+			// minimumMovement: 6
+		})			
 	}
 }
 
@@ -378,94 +384,7 @@ function blMouseDown(obj){
 			dragObj.newBlock.wrapper.remove();
 		}
 	}
-
-	function animateInterrupt0(time){
-		let sTime = performance.now();
-		
-		let duration = 18;
-
-		let progress = 0;
-
-		let stPosX = dragObj.newBlock.wrapper.getBoundingClientRect().left;
-		let stPosY = dragObj.newBlock.wrapper.getBoundingClientRect().top;
-
-		let endPosX = obj.wrapper.getBoundingClientRect().left;
-		let endPosY = obj.wrapper.getBoundingClientRect().top;
-
-		// let vel = 10;
-
-		let stepX = (endPosX - stPosX) / duration;
-		let stepY = (endPosY - stPosY) / duration;
-		
-		console.log(stPosX+':'+stPosY);
-		console.log(endPosX+':'+endPosY);
-		console.log(stepX+':'+stepY);
-		
-		let raf1 = requestAnimationFrame(function animate(time){
-
-			
-			dragObj.newBlock.wrapper.style.top = dragObj.newBlock.wrapper.getBoundingClientRect().top + stepY + "px";
-			dragObj.newBlock.wrapper.style.left = dragObj.newBlock.wrapper.getBoundingClientRect().left + stepX + "px";
-			
-			progress += 1;
-			console.log(progress);
-			
-			if (progress < duration) {
-    			requestAnimationFrame(animate);
-  			}
-  			else{
-  				dragObj.newBlock.wrapper.remove();
-  			}  			
-		})	
-	}
-
-	function animateInterrupt1(time){
-		let sTime = performance.now();
-
-		let stPosX = dragObj.newBlock.wrapper.getBoundingClientRect().left;
-		let stPosY = dragObj.newBlock.wrapper.getBoundingClientRect().top;
-
-		let endPosX = obj.wrapper.getBoundingClientRect().left;
-		let endPosY = obj.wrapper.getBoundingClientRect().top;
-
-		let dx = (endPosX - stPosX)
-		let dy = (endPosY - stPosY)
-
-		let vel = 40;
-		let progress = 0;
-		
-		let k = Math.abs(dy / dx);
-
-
-		let stepX = Math.sqrt(Math.pow(vel, 2) / (Math.pow(k, 2) + 1));
-		let stepY = k * stepX;
-		
-		if (dx < 0) stepX = -stepX;
-		if (dy < 0) stepY = -stepY;
-
-		console.log(stPosX+':'+stPosY);
-		console.log(endPosX+':'+endPosY);
-		console.log(stepX+':'+stepY);
-
-		let duration = Math.sqrt(Math.pow(dx, 2) + Math.pow(dy, 2)) / vel;
-		
-		let raf1 = requestAnimationFrame(function animate(time){
-
-			
-			dragObj.newBlock.wrapper.style.top = dragObj.newBlock.wrapper.getBoundingClientRect().top + stepY + "px";
-			dragObj.newBlock.wrapper.style.left = dragObj.newBlock.wrapper.getBoundingClientRect().left + stepX + "px";
-			
-			progress += 1;
-			console.log(progress);
-			
-			if (progress < duration) {
-    			requestAnimationFrame(animate);
-  			}
-  			else{
-  				dragObj.newBlock.wrapper.remove();
-  			}  			
-		})	
-	}
 }
+
 
 

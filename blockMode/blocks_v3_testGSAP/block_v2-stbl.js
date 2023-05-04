@@ -273,10 +273,12 @@ block5.init();
 
 
 
-//D&D methods on mouse events
+//D&D methods on mouse events with GSAP
 //set dropzone and palette
 let dropArea = document.getElementById('block_drop_area');
 let palette = document.getElementById('palette');
+
+let shadePaletteTwin = gsap.to(palette,{duration:0.4, opacity:0.8, paused:true});
 
 
 // Prototype01
@@ -303,28 +305,25 @@ function blMouseDown(obj){
 	  	if (!dragObj.newBlock){
 	  		let moveX = event.pageX - dragObj.downX;
 	      	let moveY = event.pageY - dragObj.downY;
-	      	console.log(moveX);
-	      	console.log(moveY);
-
 	      	if (Math.abs(moveX) < 6 && Math.abs(moveY) < 6) {
 	        	return;
 	      	}
 	      	dragObj.newBlock = buildNewBlock();
 	      	return;
 	    }
-	  	onMove(event.pageX, event.pageY);
+	  	onMove(event.pageX, event.pageY);	  	
   	}
 
   	function onMove(pageX, pageY){	
-    	dragObj.newBlock.wrapper.style.left = pageX - dragObj.shiftX + 'px';
-    	dragObj.newBlock.wrapper.style.top = pageY - dragObj.shiftY + 'px';
+    	// dragObj.newBlock.wrapper.style.left = pageX - dragObj.shiftX + 'px';
+    	// dragObj.newBlock.wrapper.style.top = pageY - dragObj.shiftY + 'px';
 
-    	// dragObj.newBlock.wrapper.style.transform = `translate(${pageX - dragObj.shiftX}px,${pageY - dragObj.shiftY}px)`;
-    	
-
-    	dragObj.elemBelow = findDropArea();    	
+    	let onMoveTwin = gsap.to(dragObj.newBlock.wrapper,{duration:0.2, left:pageX - dragObj.shiftX, top:pageY - dragObj.shiftY });
+    	dragObj.elemBelow = findDropArea();
   	}
+
   	function buildNewBlock(){
+  		shadePaletteTwin.play()	
 	  	//build new block_container
 		let newBlockCont = document.createElement('div');
 		newBlockCont.classList.add('block_container');
@@ -339,7 +338,8 @@ function blMouseDown(obj){
 		newBlock.init();
 		return newBlock;
   	}
-  	function onMouseUp(){  		
+
+  	function onMouseUp(){
   		if (dragObj.newBlock){
   			finishDrag(event);
   		}
@@ -348,21 +348,19 @@ function blMouseDown(obj){
 	}
 
 	function finishDrag(){
-		let dropArea = findDropArea(event)
+		let dropArea = findDropArea(event);
 		
 		dragObj.newBlock.wrapper.onmousedown = null;
-		if(dragObj.elemBelow.id != 'block_drop_area'){
-			console.log(dragObj);
+		if(dragObj.elemBelow == null || dragObj.elemBelow.id != 'block_drop_area'){
+			console.log(dropArea);
 			interruptDrag();
-		}
-		
+		}		
 	}
 
 	function findDropArea(){
 
 		dragObj.newBlock.wrapper.style.visibility = "hidden";
-		let elem = document.elementFromPoint(event.clientX, event.clientY);
-		// console.log(elem);
+		let elem = document.elementFromPoint(event.clientX, event.clientY);		
 		dragObj.newBlock.wrapper.style.visibility = "visible";
 
 		if (elem == null) return null;
@@ -370,29 +368,15 @@ function blMouseDown(obj){
 	}
 
 	function interruptDrag(){
+		shadePaletteTwin.reverse();
+		let dropX = dragObj.srcElem.wrapper.getBoundingClientRect().left + window.pageXOffset ;
+		let dropY = dragObj.srcElem.wrapper.getBoundingClientRect().top + window.pageYOffset;
 
-
-		// dragObj.srcElem.wrapper.parentElement.insertBefore(dragObj.newBlock.wrapper, dragObj.srcElem.wrapper);
-
-		// dragObj.newBlock.wrapper.style.position = 'relative';
-		// dragObj.newBlock.wrapper.style.top = '0px';
-		// dragObj.newBlock.wrapper.style.left = '0px';
-		// dragObj.newBlock.wrapper.style.transform = 'translate(0px,0px)';
-
+		let intDragTwin = gsap.to(dragObj.newBlock.wrapper,{duration:0.2, left:dropX, top:dropY, opacity:0, onComplete:remObj});
 		
-
-		// let top = obj.wrapper.getBoundingClientRect().top;
-		// let left = obj.wrapper.getBoundingClientRect().left;
-
-		// let gbcr = obj.wrapper.getBoundingClientRect();
-		// console.log(gbcr);
-
-		// dragObj.newBlock.wrapper.style.top = obj.wrapper.getBoundingClientRect().top +'px'
-		// dragObj.newBlock.wrapper.style.left = obj.wrapper.getBoundingClientRect().left +'px'
-		// console.log(left+':'+top);
-
-		animateInterrupt0()
-
+		function remObj(){
+			dragObj.newBlock.wrapper.remove();
+		}
 	}
 
 	function animateInterrupt0(time){
@@ -483,4 +467,5 @@ function blMouseDown(obj){
 		})	
 	}
 }
+
 
