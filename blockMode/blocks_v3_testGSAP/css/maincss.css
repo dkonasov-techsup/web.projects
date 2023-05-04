@@ -1,0 +1,32 @@
+body{
+	background-color:#202020;
+	margin: 0px;
+	height: 100%;
+	font: 14px 'Segoe UI';
+	color: var(--text-light-gray);
+
+	user-select: none;
+}
+
+
+.page_wrapper{
+	position: relative;
+	height: 100%;
+}
+
+.page_inner{
+	margin: 0;
+	padding: 20px 120px 0px 120px;
+	height: 1800px;
+}
+
+:root{
+	--background-deep-dark: #121212;
+
+	--border-light-gray: #808080;
+	--border-gray: #424242;	
+	--sidebar-gray: #282828;
+
+	--text-light-gray: #e8e8e8;
+	--text-dark-accent: #808080;
+}
