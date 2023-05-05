@@ -119,9 +119,16 @@ class Block{
 		// };
 		
 		let dragFromPalette = Draggable.create(this.wrapper,{
-			type: "x,y",
-			// minimumMovement: 6
-		})			
+			dragClickables: false,
+			type: "left,top",
+			onPress: onPress,			
+			onDragStart: onDragStart,
+			onDragStartParams: [this],
+			target: document.getElementById('palette'),
+			// minimumMovement: 6,
+			onDrag: onDrag,
+		})
+		// createDraggable(this);			
 	}
 }
 
@@ -388,3 +395,48 @@ function blMouseDown(obj){
 
 
 
+// -------GSAP---------
+
+let dragObj = {}
+
+function onPress(){
+	console.log('press');
+}
+
+function onDragStart(obj){
+	console.log(this);
+	dragObj.newBlock = cloneTarget(obj);
+	
+	// dragObj.shiftX = event.clientX - obj.wrapper.getBoundingClientRect().left;
+	// dragObj.shiftY = event.clientY - obj.wrapper.getBoundingClientRect().top;
+	// console.log(`x:`+ dragObj.shiftX + `y:` + dragObj.shiftY)
+
+	// this.target = dragObj.newBlock; 
+}
+
+function cloneTarget(obj){
+	// shadePaletteTwin.play();	
+	//build new block_container
+	let newBlockCont = document.createElement('div');
+	newBlockCont.classList.add('block_container');
+	newBlockCont.style.position = 'absolute';
+	newBlockCont.style.zIndex = '500';
+	newBlockCont.setAttribute('id',obj.wrapper.id);
+	// newBlockCont.addEventListener('mouseup',onMouseUp);
+	obj.wrapper.append(newBlockCont);
+
+
+	//init newBlock
+	let newBlock = new obj.constructor(newBlockCont, obj.config);
+	newBlock.init();
+	return newBlock;
+}
+
+function onDrag(pointerX, pointerY){	
+	// dragObj.newBlock.wrapper.style.left = pointerX - dragObj.shiftX + 'px';
+	// dragObj.newBlock.wrapper.style.top = pointerY - dragObj.shiftY + 'px';
+
+	let onMoveTwin = gsap.to(dragObj.newBlock.wrapper,{duration:0.2, left:pointerX - dragObj.shiftX, top:pointerY - dragObj.shiftY });
+	// dragObj.elemBelow = findDropArea();
+	// console.log(dragObj.newBlock);	
+}
