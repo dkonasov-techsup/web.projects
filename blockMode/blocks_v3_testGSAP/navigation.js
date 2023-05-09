@@ -1,13 +1,16 @@
 "use strict"
 
+let page = document.querySelector(".page");
 let sidebar = document.querySelector('.sidebar')
+let sbStat;
+
 
 
 // Обработчик события sidebar_toggle
 function sidebar_toggle(){	
-	sidebar.classList.toggle('sidebar_open');
+	sbStat = sidebar.classList.toggle('sidebar_open');	
+	resizePage();
 }
-
 
 // Положение sidebar в зависмости от скрола документа
 document.addEventListener("DOMContentLoaded", stickSidebar)
@@ -21,4 +24,12 @@ function stickSidebar(){
 	else{
 		sidebar.style.top = 0 + "px";
 	} 
+}
+
+// Положение page в зависмости от сайдбара
+function resizePage(){
+	// console.log(sbStat);	
+	let sbWdt = sidebar.getBoundingClientRect().width;
+	if(sbStat){ page.style.paddingLeft = sbWdt + "px"; }
+	else{ page.style.paddingLeft = ""; }
 }

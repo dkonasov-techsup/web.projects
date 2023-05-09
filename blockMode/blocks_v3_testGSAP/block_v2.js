@@ -105,30 +105,48 @@ class Block{
 	}
 
 	eventsHandler(){
-		//off default D&D
+		// off default D&D
 		this.wrapper.ondragstart = ()=>{
 		  return false;
 		};
-		//set new EventListener
+		// set new EventListener
 		// this.wrapper.addEventListener('mousedown', ()=>{			
 		// 	blMouseDown(this);
 		// });
 
+		// from custom d&d:
 		// this.wrapper.onmousedown = ()=>{
 		// 	blMouseDown(this);
 		// };
-		
+
 		let dragFromPalette = Draggable.create(this.wrapper,{
 			dragClickables: false,
 			type: "left,top",
 			onPress: onPress,			
 			onDragStart: onDragStart,
 			onDragStartParams: [this],
-			target: document.getElementById('palette'),
-			// minimumMovement: 6,
+			
 			onDrag: onDrag,
-		})
-		// createDraggable(this);			
+			onDragEnd: onDragEnd,
+			onDragEndParams: [this],
+		});
+	}
+
+	// clone only for GSAP D&D
+	clone(drgbl){
+		let palette = document.getElementById('palette');
+		let newWrapper = document.createElement('div');
+		newWrapper.classList.add('block_container');
+		newWrapper.classList.add('clone');
+		// newWrapper.style.position = 'absolute';
+		// newWrapper.style.zIndex = '500';
+		newWrapper.setAttribute('id',this.wrapper.id);		
+		palette.insertBefore(newWrapper, this.wrapper);
+
+		//init newBlock
+		let newBlock = new this.constructor(newWrapper, this.config);
+		newBlock.init();
+		return newBlock;
 	}
 }
 
@@ -271,6 +289,7 @@ let blockColor = document.getElementById('setCol');
 
 let block1 = new Block(blockTakeOff, blockAttr.takeOff);
 block1.init();
+// block1.clone();
 
 let block2 = new Block(blockLand, blockAttr.toLand);
 block2.init();
@@ -289,6 +308,7 @@ block5.init();
 //D&D methods on mouse events with GSAP
 //set dropzone and palette
 let dropArea = document.getElementById('block_drop_area');
+let dropCont = document.getElementById('drop_container');
 let palette = document.getElementById('palette');
 
 let shadePaletteTwin = gsap.to(palette,{duration:0.4, opacity:0.8, paused:true});
@@ -332,7 +352,7 @@ function blMouseDown(obj){
     	// dragObj.newBlock.wrapper.style.top = pageY - dragObj.shiftY + 'px';
 
     	let onMoveTwin = gsap.to(dragObj.newBlock.wrapper,{duration:0.2, left:pageX - dragObj.shiftX, top:pageY - dragObj.shiftY });
-    	dragObj.elemBelow = findDropArea();
+    	dragObj.elemBelow = findDropArea();    	
   	}
 
   	function buildNewBlock(){
@@ -382,7 +402,7 @@ function blMouseDown(obj){
 
 	function interruptDrag(){
 		shadePaletteTwin.reverse();
-		let dropX = dragObj.srcElem.wrapper.getBoundingClientRect().left + window.pageXOffset ;
+		let dropX = dragObj.srcElem.wrapper.getBoundingClientRect().left + window.pageXOffset;
 		let dropY = dragObj.srcElem.wrapper.getBoundingClientRect().top + window.pageYOffset;
 
 		let intDragTwin = gsap.to(dragObj.newBlock.wrapper,{duration:0.2, left:dropX, top:dropY, opacity:0, onComplete:remObj});
@@ -393,50 +413,40 @@ function blMouseDown(obj){
 	}
 }
 
-
-
-// -------GSAP---------
-
-let dragObj = {}
-
+// Prototype02-------GSAP D&D---------
 function onPress(){
-	console.log('press');
+	
 }
 
 function onDragStart(obj){
-	console.log(this);
-	dragObj.newBlock = cloneTarget(obj);
-	
-	// dragObj.shiftX = event.clientX - obj.wrapper.getBoundingClientRect().left;
-	// dragObj.shiftY = event.clientY - obj.wrapper.getBoundingClientRect().top;
-	// console.log(`x:`+ dragObj.shiftX + `y:` + dragObj.shiftY)
-
-	// this.target = dragObj.newBlock; 
+	obj.clone();	
+	this.target.style.position = 'absolute';
+	console.log(obj.wrapper.offsetLeft,obj.wrapper.offsetTop);	
+	gsap.set(this.target,{left:obj.wrapper.offsetX, top:obj.wrapper.offsetY});
+	this.update();	
 }
 
-function cloneTarget(obj){
-	// shadePaletteTwin.play();	
-	//build new block_container
-	let newBlockCont = document.createElement('div');
-	newBlockCont.classList.add('block_container');
-	newBlockCont.style.position = 'absolute';
-	newBlockCont.style.zIndex = '500';
-	newBlockCont.setAttribute('id',obj.wrapper.id);
-	// newBlockCont.addEventListener('mouseup',onMouseUp);
-	obj.wrapper.append(newBlockCont);
-
-
-	//init newBlock
-	let newBlock = new obj.constructor(newBlockCont, obj.config);
-	newBlock.init();
-	return newBlock;
+function onDrag(pointerX, pointerY){
+	console.log(this.target.style.left,this.target.style.top);
+	// gsap.set(this.target,{left:this.pointerX, top:this.pointerY});
+	// let onMoveTwin = gsap.to(this.target,{duration:0.2, left:pointerX, top:pointerY});
 }
 
-function onDrag(pointerX, pointerY){	
-	// dragObj.newBlock.wrapper.style.left = pointerX - dragObj.shiftX + 'px';
-	// dragObj.newBlock.wrapper.style.top = pointerY - dragObj.shiftY + 'px';
 
-	let onMoveTwin = gsap.to(dragObj.newBlock.wrapper,{duration:0.2, left:pointerX - dragObj.shiftX, top:pointerY - dragObj.shiftY });
-	// dragObj.elemBelow = findDropArea();
-	// console.log(dragObj.newBlock);	
+function onDragEnd(obj){
+	if (this.hitTest(dropArea, "40%")){		
+		dropArea.append(this.target);
+		console.log(this);
+
+	}
+	else{
+		this.disable();
+		palette.append(this.target);
+		console.log('interruptDrag');		
+		let intDragTwin = gsap.to(this.target,{duration:0.2, left:this.startX, top:this.startY, opacity:1,onComplete:()=>{
+			// this.enable();
+			this.target.remove();
+		}});			
+	}
 }
+

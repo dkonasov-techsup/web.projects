@@ -8,16 +8,19 @@ body{
 	user-select: none;
 }
 
-
 .page_wrapper{
 	position: relative;
 	height: 100%;
 }
 
+.page{
+	transition: padding 150ms ease;
+}
+
 .page_inner{
-	margin: 0;
-	padding: 20px 120px 0px 120px;
+	margin: 0px;	
 	height: 1800px;
+	transition: margin 150ms ease;
 }
 
 :root{
