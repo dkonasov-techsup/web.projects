@@ -119,8 +119,9 @@ class Block{
 		// 	blMouseDown(this);
 		// };
 
-		let dragFromPalette = Draggable.create(this.wrapper,{
+		let blockDnD = Draggable.create(this.wrapper,{
 			dragClickables: false,
+			autoScroll : 1,
 			type: "left,top",
 			onPress: onPress,			
 			onDragStart: onDragStart,
@@ -133,7 +134,7 @@ class Block{
 	}
 
 	// clone only for GSAP D&D
-	clone(drgbl){
+	clone(){
 		let palette = document.getElementById('palette');
 		let newWrapper = document.createElement('div');
 		newWrapper.classList.add('block_container');
@@ -289,7 +290,6 @@ let blockColor = document.getElementById('setCol');
 
 let block1 = new Block(blockTakeOff, blockAttr.takeOff);
 block1.init();
-// block1.clone();
 
 let block2 = new Block(blockLand, blockAttr.toLand);
 block2.init();
@@ -419,31 +419,30 @@ function onPress(){
 }
 
 function onDragStart(obj){
+	let topOffset = obj.wrapper.offsetTop;
+	this.target.style.position = 'absolute';	
 	obj.clone();	
-	this.target.style.position = 'absolute';
-	console.log(obj.wrapper.offsetLeft,obj.wrapper.offsetTop);	
-	gsap.set(this.target,{left:obj.wrapper.offsetX, top:obj.wrapper.offsetY});
+
+	let leftSideBar = document.querySelector('.sidebar_inner');	
+
+	gsap.set(this.target,{left:26, top:topOffset-leftSideBar.scrollTop});
 	this.update();	
 }
 
 function onDrag(pointerX, pointerY){
 	console.log(this.target.style.left,this.target.style.top);
-	// gsap.set(this.target,{left:this.pointerX, top:this.pointerY});
-	// let onMoveTwin = gsap.to(this.target,{duration:0.2, left:pointerX, top:pointerY});
 }
 
-
 function onDragEnd(obj){
-	if (this.hitTest(dropArea, "40%")){		
+	if (this.hitTest(dropArea, "100%")){		
 		dropArea.append(this.target);
 		console.log(this);
-
 	}
 	else{
 		this.disable();
 		palette.append(this.target);
 		console.log('interruptDrag');		
-		let intDragTwin = gsap.to(this.target,{duration:0.2, left:this.startX, top:this.startY, opacity:1,onComplete:()=>{
+		let intDragTwin = gsap.to(this.target,{duration:0.2, left:this.startX, top:this.startY, opacity:0,onComplete:()=>{
 			// this.enable();
 			this.target.remove();
 		}});			
