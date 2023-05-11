@@ -309,6 +309,8 @@ block5.init();
 //set dropzone and palette
 let dropArea = document.getElementById('block_drop_area');
 let dropCont = document.getElementById('drop_container');
+
+let leftSideBar = document.querySelector('.sidebar_inner');
 let palette = document.getElementById('palette');
 
 let shadePaletteTwin = gsap.to(palette,{duration:0.4, opacity:0.8, paused:true});
@@ -414,38 +416,59 @@ function blMouseDown(obj){
 }
 
 // Prototype02-------GSAP D&D---------
-function onPress(){
-	
+function onPress(){	
 }
 
 function onDragStart(obj){
-	let topOffset = obj.wrapper.offsetTop;
-	this.target.style.position = 'absolute';	
-	obj.clone();	
+	if(obj.wrapper.parentNode.id == 'palette'){
+		let topOffset = obj.wrapper.offsetTop;
+		console.log(obj);
+		this.target.style.position = 'absolute';	
+		let newClone = obj.clone();		
+			
 
-	let leftSideBar = document.querySelector('.sidebar_inner');	
+		gsap.set(this.target,{left:26, top:topOffset-leftSideBar.scrollTop});
+		console.log(topOffset);
 
-	gsap.set(this.target,{left:26, top:topOffset-leftSideBar.scrollTop});
-	this.update();	
+		Object.defineProperty(obj, "parSposX", { value: 26 , configurable: true, writable: true, enumerable: true });
+		Object.defineProperty(obj, "parSposY", { value: topOffset, configurable: true, writable: true, enumerable: true });
+
+		this.update();
+	}	
 }
 
 function onDrag(pointerX, pointerY){
-	console.log(this.target.style.left,this.target.style.top);
+	
 }
 
 function onDragEnd(obj){
-	if (this.hitTest(dropArea, "100%")){		
-		dropArea.append(this.target);
-		console.log(this);
+	if (this.hitTest(dropArea, "100%")){
+		console.log(this.target.style.top);
+		 		
+		dropArea.append(this.target);		
+		// this.target.style.top = parseFloat(this.target.style.top) + 41 + 'px';
+
+		blockList.this = this;
 	}
 	else{
+		// this.target.style.top = parseFloat(this.target.style.top) - 41 + 'px';
+		// palette.append(obj.wrapper);
+		console.log('interruptDrag');
+		// console.log(obj);
 		this.disable();
-		palette.append(this.target);
-		console.log('interruptDrag');		
-		let intDragTwin = gsap.to(this.target,{duration:0.2, left:this.startX, top:this.startY, opacity:0,onComplete:()=>{
-			// this.enable();
+		console.log(this);
+		
+
+		let intDragTwin = gsap.to(this.target,{duration:1, left:obj.parSposX, top:obj.parSposY-leftSideBar.scrollTop, opacity:1,onComplete:()=>{						
 			this.target.remove();
-		}});			
+		}});
+
 	}
 }
+
+
+// Block list logic
+let blockList = {};
+
+
 

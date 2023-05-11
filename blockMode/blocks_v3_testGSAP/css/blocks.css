@@ -32,4 +32,8 @@
 	z-index: -100;
 }
 
+
+#block_drop_area{
+	height: inherit;
+}
 /*---------------------------

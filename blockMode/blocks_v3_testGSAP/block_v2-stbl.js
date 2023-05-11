@@ -105,18 +105,32 @@ class Block{
 	}
 
 	eventsHandler(){
-		//off default D&D
+		// off default D&D
 		this.wrapper.ondragstart = ()=>{
 		  return false;
 		};
-		//set new EventListener
+		// set new EventListener
 		// this.wrapper.addEventListener('mousedown', ()=>{			
 		// 	blMouseDown(this);
 		// });
 
+		// from custom d&d:
 		// this.wrapper.onmousedown = ()=>{
 		// 	blMouseDown(this);
-		// };					
+		// };
+
+		let blockDnD = Draggable.create(this.wrapper,{
+			dragClickables: false,
+			autoScroll : 1,
+			type: "left,top",
+			onPress: onPress,			
+			onDragStart: onDragStart,
+			onDragStartParams: [this],
+			
+			onDrag: onDrag,
+			onDragEnd: onDragEnd,
+			onDragEndParams: [this],
+		});
 	}
 
 	// clone only for GSAP D&D
@@ -124,25 +138,11 @@ class Block{
 		let palette = document.getElementById('palette');
 		let newWrapper = document.createElement('div');
 		newWrapper.classList.add('block_container');
-		newWrapper.style.position = 'absolute';
-		newWrapper.style.zIndex = '500';
-		newWrapper.setAttribute('id',this.wrapper.id);
-		//
-		this.wrapper.append(newWrapper);
+		newWrapper.classList.add('clone');
+		// newWrapper.style.position = 'absolute';
+		// newWrapper.style.zIndex = '500';
+		newWrapper.setAttribute('id',this.wrapper.id);		
 		palette.insertBefore(newWrapper, this.wrapper);
-
-		let dragFromPalette = Draggable.create(newWrapper,{
-			dragClickables: false,
-			type: "left,top",
-			onPress: onPress,			
-			onDragStart: onDragStart,
-			onDragStartParams: [this],
-			
-			// minimumMovement: 6,
-			onDrag: onDrag,
-			onDragEnd: onDragEnd,
-			onDragEndParams: [this],
-		});
 
 		//init newBlock
 		let newBlock = new this.constructor(newWrapper, this.config);
@@ -290,7 +290,6 @@ let blockColor = document.getElementById('setCol');
 
 let block1 = new Block(blockTakeOff, blockAttr.takeOff);
 block1.init();
-block1.clone();
 
 let block2 = new Block(blockLand, blockAttr.toLand);
 block2.init();
@@ -414,37 +413,38 @@ function blMouseDown(obj){
 	}
 }
 
-//Prototype02-------GSAP D&D---------
+// Prototype02-------GSAP D&D---------
 function onPress(){
-	// console.log('press');
+	
 }
 
 function onDragStart(obj){
-	console.log(obj);
-	document.body.append(this.target);		 
+	let topOffset = obj.wrapper.offsetTop;
+	this.target.style.position = 'absolute';	
+	obj.clone();	
+
+	let leftSideBar = document.querySelector('.sidebar_inner');	
+
+	gsap.set(this.target,{left:26, top:topOffset-leftSideBar.scrollTop});
+	this.update();	
 }
 
 function onDrag(pointerX, pointerY){
-	// console.log(this.target);	
-	let onMoveTwin = gsap.to(this.target,{duration:1, left:pointerX, top:pointerY});
+	console.log(this.target.style.left,this.target.style.top);
 }
 
-
 function onDragEnd(obj){
-	if (this.hitTest(dropArea, "40%")){		
-		obj.clone();
+	if (this.hitTest(dropArea, "100%")){		
 		dropArea.append(this.target);
 		console.log(this);
-		this.target.style.top = this.endY + dropArea.getBoundingClientRect().y;
-		this.target.style.left = this.endX;
 	}
 	else{
 		this.disable();
 		palette.append(this.target);
 		console.log('interruptDrag');		
 		let intDragTwin = gsap.to(this.target,{duration:0.2, left:this.startX, top:this.startY, opacity:0,onComplete:()=>{
-			this.enable();
-			this.target.style.opacity = 1;
+			// this.enable();
+			this.target.remove();
 		}});			
 	}
 }
