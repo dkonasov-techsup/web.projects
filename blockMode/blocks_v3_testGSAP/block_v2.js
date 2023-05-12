@@ -248,7 +248,7 @@ class InputBlock extends Block{
 			// resize svgBody
 			console.log(offsetX);
 			let svgBodyWdt = this.keyBlock.wdt + this.inputBlock.wdt + this.descBlock.wdt + offsetX;
-			this.svgBody.setAttributeNS(null,"width",svgBodyWdt);
+			this.svgBody.setAttributeNS(null,"width",svgBodyWdt);			
 		})
 	}		
 }
@@ -421,49 +421,41 @@ function onPress(){
 
 function onDragStart(obj){
 	if(obj.wrapper.parentNode.id == 'palette'){
-		let topOffset = obj.wrapper.offsetTop;
-		console.log(obj);
-		this.target.style.position = 'absolute';	
-		let newClone = obj.clone();		
-			
 
-		gsap.set(this.target,{left:26, top:topOffset-leftSideBar.scrollTop});
-		console.log(topOffset);
+		let objRect = obj.wrapper.getBoundingClientRect();
+		let newClone = obj.clone();
 
-		Object.defineProperty(obj, "parSposX", { value: 26 , configurable: true, writable: true, enumerable: true });
-		Object.defineProperty(obj, "parSposY", { value: topOffset, configurable: true, writable: true, enumerable: true });
-
-		this.update();
-	}	
+		this.target.style.position = 'absolute';		
+		document.body.append(this.target);			
+		
+		gsap.set(this.target,{left:objRect.left, top:objRect.top + window.pageYOffset});
+		this.update();	
+	}
+	shadePaletteTwin.play();	
 }
 
 function onDrag(pointerX, pointerY){
-	
+		
 }
 
 function onDragEnd(obj){
-	if (this.hitTest(dropArea, "100%")){
-		console.log(this.target.style.top);
+	if (this.hitTest(dropArea, "100%")){		
 		 		
-		dropArea.append(this.target);		
-		// this.target.style.top = parseFloat(this.target.style.top) + 41 + 'px';
-
+		dropArea.append(this.target);
 		blockList.this = this;
 	}
 	else{
-		// this.target.style.top = parseFloat(this.target.style.top) - 41 + 'px';
-		// palette.append(obj.wrapper);
-		console.log('interruptDrag');
-		// console.log(obj);
-		this.disable();
-		console.log(this);
-		
+		let parEl = palette.querySelector(`#${this.target.id}`);
+		let parRect = parEl.getBoundingClientRect();
 
-		let intDragTwin = gsap.to(this.target,{duration:1, left:obj.parSposX, top:obj.parSposY-leftSideBar.scrollTop, opacity:1,onComplete:()=>{						
+		console.log('interruptDrag');		
+		this.disable();		
+
+		let intDragTwin = gsap.to(this.target,{duration:0.3, left:parRect.x, top:parRect.y + window.pageYOffset, opacity:0,onComplete:()=>{						
 			this.target.remove();
 		}});
-
 	}
+	shadePaletteTwin.reverse();
 }
 
 
