@@ -248,7 +248,7 @@ class InputBlock extends Block{
 			// resize svgBody
 			console.log(offsetX);
 			let svgBodyWdt = this.keyBlock.wdt + this.inputBlock.wdt + this.descBlock.wdt + offsetX;
-			this.svgBody.setAttributeNS(null,"width",svgBodyWdt);
+			this.svgBody.setAttributeNS(null,"width",svgBodyWdt);			
 		})
 	}		
 }
@@ -309,6 +309,8 @@ block5.init();
 //set dropzone and palette
 let dropArea = document.getElementById('block_drop_area');
 let dropCont = document.getElementById('drop_container');
+
+let leftSideBar = document.querySelector('.sidebar_inner');
 let palette = document.getElementById('palette');
 
 let shadePaletteTwin = gsap.to(palette,{duration:0.4, opacity:0.8, paused:true});
@@ -414,38 +416,51 @@ function blMouseDown(obj){
 }
 
 // Prototype02-------GSAP D&D---------
-function onPress(){
-	
+function onPress(){	
 }
 
 function onDragStart(obj){
-	let topOffset = obj.wrapper.offsetTop;
-	this.target.style.position = 'absolute';	
-	obj.clone();	
+	if(obj.wrapper.parentNode.id == 'palette'){
 
-	let leftSideBar = document.querySelector('.sidebar_inner');	
+		let objRect = obj.wrapper.getBoundingClientRect();
+		let newClone = obj.clone();
 
-	gsap.set(this.target,{left:26, top:topOffset-leftSideBar.scrollTop});
-	this.update();	
+		this.target.style.position = 'absolute';		
+		document.body.append(this.target);			
+		
+		gsap.set(this.target,{left:objRect.left, top:objRect.top + window.pageYOffset});
+		this.update();	
+	}
+	shadePaletteTwin.play();	
 }
 
 function onDrag(pointerX, pointerY){
-	console.log(this.target.style.left,this.target.style.top);
+		
 }
 
 function onDragEnd(obj){
 	if (this.hitTest(dropArea, "100%")){		
+		 		
 		dropArea.append(this.target);
-		console.log(this);
+		blockList.this = this;
 	}
 	else{
-		this.disable();
-		palette.append(this.target);
+		let parEl = palette.querySelector(`#${this.target.id}`);
+		let parRect = parEl.getBoundingClientRect();
+
 		console.log('interruptDrag');		
-		let intDragTwin = gsap.to(this.target,{duration:0.2, left:this.startX, top:this.startY, opacity:0,onComplete:()=>{
-			// this.enable();
+		this.disable();		
+
+		let intDragTwin = gsap.to(this.target,{duration:0.3, left:parRect.x, top:parRect.y + window.pageYOffset, opacity:0,onComplete:()=>{						
 			this.target.remove();
-		}});			
+		}});
 	}
+	shadePaletteTwin.reverse();
 }
+
+
+// Block list logic
+let blockList = {};
+
+
 

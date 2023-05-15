@@ -420,6 +420,7 @@ function onPress(){
 }
 
 function onDragStart(obj){
+
 	if(obj.wrapper.parentNode.id == 'palette'){
 
 		let objRect = obj.wrapper.getBoundingClientRect();
@@ -431,6 +432,11 @@ function onDragStart(obj){
 		gsap.set(this.target,{left:objRect.left, top:objRect.top + window.pageYOffset});
 		this.update();	
 	}
+
+	if(obj.wrapper.parentNode.id =='block_drop_area'){
+		// let pos = BList.indexOf('takeOff');		
+		// BList.splice(pos,1);		
+	}
 	shadePaletteTwin.play();	
 }
 
@@ -439,11 +445,13 @@ function onDrag(pointerX, pointerY){
 }
 
 function onDragEnd(obj){
-	if (this.hitTest(dropArea, "100%")){		
-		 		
+	if (this.hitTest(dropArea, "100%")){		 		
 		dropArea.append(this.target);
-		blockList.this = this;
+
+		blc1.addBlock(obj,blockList);
+		blc1.changePos(obj,blockList);
 	}
+
 	else{
 		let parEl = palette.querySelector(`#${this.target.id}`);
 		let parRect = parEl.getBoundingClientRect();
@@ -460,7 +468,35 @@ function onDragEnd(obj){
 
 
 // Block list logic
-let blockList = {};
 
+const blockList = [];
+let BList = Array.from(blockList);
 
+class BlockListConstructor{
+
+	constructor(){
+	}
+
+	checkList(){
+	}
+
+	init(){
+	}
+
+	addBlock(obj,blockList){		
+		// let id = obj.wrapper.id;
+		BList.push(obj);	
+	}
+
+	changePos(obj,blockList){
+		// if (blockList[0]==null){
+		// 	return;
+		// }
+		// obj.wrapper.style.left = BList[0].wrapper.style.left;
+		console.log(BList[0]);
+		console.log(obj.wrapper.style.left);
+	}
+};
+
+let blc1 = new BlockListConstructor();
 
