@@ -434,9 +434,10 @@ function onDragStart(obj){
 	}
 
 	if(obj.wrapper.parentNode.id =='block_drop_area'){
-		// let pos = BList.indexOf('takeOff');		
-		// BList.splice(pos,1);		
+		let pos = blockList.indexOf(obj.wrapper.id);		
+		blockList.splice(pos,1);
 	}
+
 	shadePaletteTwin.play();	
 }
 
@@ -448,8 +449,7 @@ function onDragEnd(obj){
 	if (this.hitTest(dropArea, "100%")){		 		
 		dropArea.append(this.target);
 
-		blc1.addBlock(obj,blockList);
-		blc1.changePos(obj,blockList);
+		blc1.addBlock(obj,blockList);		
 	}
 
 	else{
@@ -470,7 +470,6 @@ function onDragEnd(obj){
 // Block list logic
 
 const blockList = [];
-let BList = Array.from(blockList);
 
 class BlockListConstructor{
 
@@ -485,14 +484,13 @@ class BlockListConstructor{
 
 	addBlock(obj,blockList){		
 		// let id = obj.wrapper.id;
-		BList.push(obj);	
+		// BList.push(obj);
+		blockList.unshift(obj);
+		console.log(blockList);	
 	}
 
 	changePos(obj,blockList){
-		// if (blockList[0]==null){
-		// 	return;
-		// }
-		// obj.wrapper.style.left = BList[0].wrapper.style.left;
+
 		console.log(BList[0]);
 		console.log(obj.wrapper.style.left);
 	}
