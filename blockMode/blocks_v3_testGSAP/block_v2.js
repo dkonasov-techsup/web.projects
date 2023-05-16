@@ -128,6 +128,7 @@ class Block{
 			onDragStartParams: [this],
 			
 			onDrag: onDrag,
+			onDragParams: [this],
 			onDragEnd: onDragEnd,
 			onDragEndParams: [this],
 		});
@@ -442,9 +443,9 @@ function onDragStart(obj){
 	shadePaletteTwin.play();	
 }
 
-function onDrag(pointerX, pointerY){
+function onDrag(obj){
 	if(this.hitTest(dropArea, "100%")){
-		
+		blc1.updPos(obj);
 	}		
 }
 
@@ -478,10 +479,11 @@ class BlockListConstructor{
 	constructor(){
 	}
 
-	checkPos(){
+	init(){
 	}
 
-	init(){
+	updPos(obj){
+		console.log('updPos');
 	}
 
 	addBlock(obj,blockList){
@@ -501,8 +503,8 @@ class BlockListConstructor{
 	}
 
 	renderBlocks(){
-		let newXpos = blockList[0].wrapper.getBoundingClientRect().x;
-		let newYpos = blockList[0].wrapper.getBoundingClientRect().y + window.pageYOffset;
+		let newXpos = blockList[0].wrapper.getBoundingClientRect().left;
+		let newYpos = blockList[0].wrapper.getBoundingClientRect().top + window.pageYOffset;
 
 		blockList.forEach(function(el, i){
 			gsap.to(el.wrapper,{duration:0.3, left:newXpos, top:newYpos});
