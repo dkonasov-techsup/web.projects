@@ -434,15 +434,18 @@ function onDragStart(obj){
 	}
 
 	if(obj.wrapper.parentNode.id =='block_drop_area'){
-		let pos = blockList.indexOf(obj.wrapper.id);		
-		blockList.splice(pos,1);
+		let pos = blockList.indexOf(obj);	
+		let deleted = blockList.splice(pos,1);
+		console.log('Deleted: ',deleted);
 	}
 
 	shadePaletteTwin.play();	
 }
 
 function onDrag(pointerX, pointerY){
+	if(this.hitTest(dropArea, "100%")){
 		
+	}		
 }
 
 function onDragEnd(obj){
@@ -468,7 +471,6 @@ function onDragEnd(obj){
 
 
 // Block list logic
-
 const blockList = [];
 
 class BlockListConstructor{
@@ -476,25 +478,38 @@ class BlockListConstructor{
 	constructor(){
 	}
 
-	checkList(){
+	checkPos(){
 	}
 
 	init(){
 	}
 
-	addBlock(obj,blockList){		
-		// let id = obj.wrapper.id;
-		// BList.push(obj);
-		blockList.unshift(obj);
-		console.log(blockList);	
+	addBlock(obj,blockList){
+		console.log(blockList);		
+		let newPos = 0;		
+		let objRect = obj.wrapper.getBoundingClientRect();
+					
+		blockList.forEach(function(el, i){
+			let elRect = el.wrapper.getBoundingClientRect();				
+			if(objRect.y >= elRect.y){
+				newPos = i + 1;					
+			}				
+		})
+
+		blockList.splice(newPos, 0, obj);		
+		this.renderBlocks()		
 	}
 
-	changePos(obj,blockList){
+	renderBlocks(){
+		let newXpos = blockList[0].wrapper.getBoundingClientRect().x;
+		let newYpos = blockList[0].wrapper.getBoundingClientRect().y + window.pageYOffset;
 
-		console.log(BList[0]);
-		console.log(obj.wrapper.style.left);
+		blockList.forEach(function(el, i){
+			gsap.to(el.wrapper,{duration:0.3, left:newXpos, top:newYpos});
+			newYpos += el.wrapper.getBoundingClientRect().height;
+		});
 	}
-};
+}
 
 let blc1 = new BlockListConstructor();
 
