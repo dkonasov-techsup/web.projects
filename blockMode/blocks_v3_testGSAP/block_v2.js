@@ -444,7 +444,7 @@ function onDragStart(obj){
 }
 
 function onDrag(obj){
-	if(this.hitTest(dropArea, "100%")){
+	if(this.hitTest(dropArea, "100%") && (blockList.length >= 2)){
 		blc1.updPos(obj);
 	}		
 }
@@ -484,10 +484,27 @@ class BlockListConstructor{
 
 	updPos(obj){
 		console.log('updPos');
+		let objRect = obj.wrapper.getBoundingClientRect();
+		let upper;
+		let lower;
+		let elRect;
+		blockList.forEach(function(el, i){
+			elRect = el.wrapper.getBoundingClientRect();				
+			if(objRect.y >= elRect.y){
+				upper = el;																	
+			}
+			else{
+				lower = el;
+			}
+			if
+
+		})
+		// console.log(upper,lower);
+		gsap.to(el.wrapper,{duration:0.3, left:newXpos, top:newYpos});			
 	}
 
 	addBlock(obj,blockList){
-		console.log(blockList);		
+		// console.log(blockList);		
 		let newPos = 0;		
 		let objRect = obj.wrapper.getBoundingClientRect();
 					
