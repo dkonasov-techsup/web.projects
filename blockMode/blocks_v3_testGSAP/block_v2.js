@@ -445,8 +445,9 @@ function onDragStart(obj){
 
 function onDrag(obj){
 	if(this.hitTest(dropArea, "100%") && (blockList.length >= 2)){
-		blc1.updPos(obj);
-	}		
+		blc1.updPos(obj,this);
+	}
+	// console.log(this);		
 }
 
 function onDragEnd(obj){
@@ -482,25 +483,31 @@ class BlockListConstructor{
 	init(){
 	}
 
-	updPos(obj){
-		console.log('updPos');
+	updPos(obj,drgb){
+		console.log(drgb.startY);
 		let objRect = obj.wrapper.getBoundingClientRect();
-		let upper;
-		let lower;
+		let upper = [];		
+		let lower = [];
 		let elRect;
 		blockList.forEach(function(el, i){
 			elRect = el.wrapper.getBoundingClientRect();				
-			if(objRect.y >= elRect.y){
-				upper = el;																	
+			if(objRect.y >= elRect.y + elRect.height){
+				upper.unshift(el.wrapper);																				
 			}
 			else{
-				lower = el;
+				lower.push(el.wrapper);
 			}
-			if
+			console.log(upper,lower);
+			if(lower[0] && upper[0] && lower[0].getBoundingClientRect().y < objRect.y){				
+				gsap.to(lower[0],{duration:0.2, left:lower[0].getBoundingClientRect().x, top:upper[0].getBoundingClientRect().y + upper[0].getBoundingClientRect().height })			
+			}
 
 		})
+
+		upper = [];
+		lower = [];
 		// console.log(upper,lower);
-		gsap.to(el.wrapper,{duration:0.3, left:newXpos, top:newYpos});			
+		// gsap.to(el.wrapper,{duration:0.3, left:newXpos, top:newYpos});			
 	}
 
 	addBlock(obj,blockList){
