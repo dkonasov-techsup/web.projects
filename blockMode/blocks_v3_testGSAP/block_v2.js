@@ -445,7 +445,7 @@ function onDragStart(obj){
 
 function onDrag(obj){
 	if(this.hitTest(dropArea, "100%") && (blockList.length >= 2)){
-		blc1.updPos(obj,this);
+		blc1.updPos(obj);
 	}
 	// console.log(this);		
 }
@@ -467,6 +467,7 @@ function onDragEnd(obj){
 		let intDragTwin = gsap.to(this.target,{duration:0.3, left:parRect.x, top:parRect.y + window.pageYOffset, opacity:0,onComplete:()=>{						
 			this.target.remove();
 		}});
+		blc1.renderBlocks();
 	}
 	shadePaletteTwin.reverse();
 }
@@ -483,31 +484,42 @@ class BlockListConstructor{
 	init(){
 	}
 
-	updPos(obj,drgb){
-		console.log(drgb.startY);
+	updPos(obj){
+		// console.log(drgb.startY);
 		let objRect = obj.wrapper.getBoundingClientRect();
 		let upper = [];		
 		let lower = [];
 		let elRect;
 		blockList.forEach(function(el, i){
+			
 			elRect = el.wrapper.getBoundingClientRect();				
-			if(objRect.y >= elRect.y + elRect.height){
-				upper.unshift(el.wrapper);																				
+			if(objRect.y >= elRect.y){
+				upper.unshift(el);																								
 			}
 			else{
-				lower.push(el.wrapper);
+				lower.push(el);				
 			}
 			console.log(upper,lower);
-			if(lower[0] && upper[0] && lower[0].getBoundingClientRect().y < objRect.y){				
-				gsap.to(lower[0],{duration:0.2, left:lower[0].getBoundingClientRect().x, top:upper[0].getBoundingClientRect().y + upper[0].getBoundingClientRect().height })			
-			}
-
 		})
 
-		upper = [];
-		lower = [];
-		// console.log(upper,lower);
-		// gsap.to(el.wrapper,{duration:0.3, left:newXpos, top:newYpos});			
+		if(upper.length){				
+				//let shift = parseInt(upper[0].wrapper.style.top)
+				gsap.to(upper[0].wrapper,{duration:0.2, top:calcShift(upper)})
+		}
+
+		function calcShift(arr){
+			console.log(arr);
+			let totalShift = arr.reduce(function(acc, cur){
+				console.log(cur);
+				return acc += cur.wrapper.getBoundingClientRect().height;
+				// return elem.wraper.style.height; 
+			},0);
+			console.log(totalShift);
+			return totalShift;
+		}
+		
+		// upper = [];
+		// lower = [];					
 	}
 
 	addBlock(obj,blockList){
