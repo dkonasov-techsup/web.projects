@@ -494,23 +494,25 @@ class BlockListConstructor{
 			
 			elRect = el.wrapper.getBoundingClientRect();				
 			if(objRect.y >= elRect.y){
-				upper.unshift(el);																								
+				upper.unshift(el);
+				console.log(upper[0]);
+				gsap.to(el.wrapper,{duration:0.2, top:upper[0].wrapper.getBoundingClientRect().top})																								
 			}
 			else{
 				lower.push(el);				
 			}
-			console.log(upper,lower);
+			// console.log(upper,lower);
 		})
 
-		if(upper.length){				
-				//let shift = parseInt(upper[0].wrapper.style.top)
-				gsap.to(upper[0].wrapper,{duration:0.2, top:calcShift(upper)})
-		}
+		// if(upper.length){				
+		// 		//let shift = parseInt(upper[0].wrapper.style.top)
+		// 		// gsap.to(upper[0].wrapper,{duration:0.2, top:calcShift(upper)})
+		// }
 
 		function calcShift(arr){
 			console.log(arr);
 			let totalShift = arr.reduce(function(acc, cur){
-				console.log(cur);
+				// console.log(cur);
 				return acc += cur.wrapper.getBoundingClientRect().height;
 				// return elem.wraper.style.height; 
 			},0);
