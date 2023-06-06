@@ -495,11 +495,16 @@ class BlockListConstructor{
 			elRect = el.wrapper.getBoundingClientRect();				
 			if(objRect.y >= elRect.y){
 				upper.unshift(el);
-				console.log(upper[0]);
-				gsap.to(el.wrapper,{duration:0.2, top:upper[0].wrapper.getBoundingClientRect().top})																								
+				// console.log(upper[upper.length-1].wrapper.getBoundingClientRect().y);
+				let top = upper[upper.length-1].wrapper.getBoundingClientRect().y + calcShift(upper) - objRect.height;
+				console.log(upper);
+				gsap.to(el.wrapper,{duration:0.1, top:top})																												
 			}
 			else{
-				lower.push(el);				
+				lower.push(el);
+				console.log(lower);
+				let top = upper[0].wrapper.getBoundingClientRect().y + calcShift(lower) + objRect.height;
+				gsap.to(el.wrapper,{duration:0.1, top:top})				
 			}
 			// console.log(upper,lower);
 		})
@@ -510,13 +515,13 @@ class BlockListConstructor{
 		// }
 
 		function calcShift(arr){
-			console.log(arr);
+			// console.log(arr);
 			let totalShift = arr.reduce(function(acc, cur){
 				// console.log(cur);
 				return acc += cur.wrapper.getBoundingClientRect().height;
 				// return elem.wraper.style.height; 
 			},0);
-			console.log(totalShift);
+			// console.log(totalShift);
 			return totalShift;
 		}
 		
