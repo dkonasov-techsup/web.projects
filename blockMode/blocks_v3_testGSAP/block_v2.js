@@ -485,7 +485,7 @@ class BlockListConstructor{
 	}
 
 	updPos(obj){
-		// console.log(drgb.startY);
+		console.log(blockList);
 		let objRect = obj.wrapper.getBoundingClientRect();
 		let upper = [];		
 		let lower = [];
@@ -496,15 +496,15 @@ class BlockListConstructor{
 			if(objRect.y >= elRect.y){
 				upper.unshift(el);
 				// console.log(upper[upper.length-1].wrapper.getBoundingClientRect().y);
-				let top = upper[upper.length-1].wrapper.getBoundingClientRect().y + calcShift(upper) - objRect.height;
-				console.log(upper);
-				gsap.to(el.wrapper,{duration:0.1, top:top})																												
+				// let top = upper[upper.length-1].wrapper.getBoundingClientRect().y + calcShift(upper) - objRect.height;
+				// console.log(upper);
+				// gsap.to(el.wrapper,{duration:0.1, top:top})																												
 			}
 			else{
 				lower.push(el);
-				console.log(lower);
-				let top = upper[0].wrapper.getBoundingClientRect().y + calcShift(lower) + objRect.height;
-				gsap.to(el.wrapper,{duration:0.1, top:top})				
+				// console.log(lower);
+				// let top = upper[0].wrapper.getBoundingClientRect().y + calcShift(lower) + objRect.height;
+				// gsap.to(el.wrapper,{duration:0.1, top:top})				
 			}
 			// console.log(upper,lower);
 		})
@@ -523,10 +523,7 @@ class BlockListConstructor{
 			},0);
 			// console.log(totalShift);
 			return totalShift;
-		}
-		
-		// upper = [];
-		// lower = [];					
+		}		
 	}
 
 	addBlock(obj,blockList){
