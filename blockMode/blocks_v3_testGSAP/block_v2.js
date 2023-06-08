@@ -20,19 +20,28 @@ class Block{
 	// static hghT = 60;	
 	// static minHxPos = 100;
 	
-	constructor(wrapper,config){
+	constructor(list,config){
 		const defaultConfig = {};
 		this.config = Object.assign(defaultConfig, config);
 		this.wrapper = wrapper;		
 		// console.log(this.config);						
 	}
+	
+	//TEST<<<
+	prepareWrapper(){
+		let newWrapper = document.createElement('div');
+		newWrapper.classList = "block_container";
+		newWrapper.id = this.config.contId;
+	}
 
-	//инициализация перемещена в конструктор → хер знает куда вынести атрибуты, учитывая что ширина svgbody адаптивна
 	init(){
 		let svgBody = this.svgBody = document.createElementNS(Block.xmlns, "svg");		
 		svgBody.setAttributeNS(null, "id", "svg_body");
 		svgBody.setAttributeNS(null, "height", "60");		
 		svgBody.setAttributeNS(null, "fill", this.config.colors.bg);
+
+		// this.list.append(wrapper);
+
 		this.wrapper.append(svgBody);
 		this.keyBlock = this.drawKeyBlock();
 		this.setSvgWdt();
@@ -276,33 +285,33 @@ class ColorBlock extends InputBlock{
 }
 
 const blockAttr = {
-	takeOff: {type:'default', colors:{bg:"#ed4a0f", font:'#fff'}, textVal:{keyText:'TAKEOFF'}},
-	toLand:  {type:'default', colors:{bg:"#ed4a0f", font:'#fff'}, textVal:{keyText:'LAND'}},
-	moveFwd: {type:'input', colors:{bg:"#4d97ff", font:'#fff'}, textVal:{keyText:'MOVE', descText:'forward'}},
-	moveBwd: {type: InputBlock, colors:{bg:"#4d97ff", font:'#fff'}, textVal:{keyText:'MOVE', descText:'backward'}},	
-	setCol:  {type:'input', colors:{bg:"#04d200", font:'#fff'}, textVal:{keyText:'SET', descText:'color'}},	
+	takeOff: {type: Block, 		contId: "takeOff", colors:{bg:"#ed4a0f", font:'#fff'}, textVal:{keyText:'TAKEOFF'}},
+	toLand:  {type: Block, 		contId: "toLand", colors:{bg:"#ed4a0f", font:'#fff'}, textVal:{keyText:'LAND'}},
+	moveFwd: {type: InputBlock, contId: "moveFwd", colors:{bg:"#4d97ff", font:'#fff'}, textVal:{keyText:'MOVE', descText:'forward'}},
+	moveBwd: {type: InputBlock, contId: "moveBwd", colors:{bg:"#4d97ff", font:'#fff'}, textVal:{keyText:'MOVE', descText:'backward'}},	
+	setCol:  {type: InputBlock, contId: "setCol", colors:{bg:"#04d200", font:'#fff'}, textVal:{keyText:'SET', descText:'color'}},	
 }
 
-let blockTakeOff = document.getElementById('takeOff');
-let blockLand = document.getElementById('toLand');
-let blockMoveFwd = document.getElementById('moveFwd');
-let blockMoveBwd = document.getElementById('moveBwd');
-let blockColor = document.getElementById('setCol');
+// let blockTakeOff = document.getElementById('takeOff');
+// let blockLand = document.getElementById('toLand');
+// let blockMoveFwd = document.getElementById('moveFwd');
+// let blockMoveBwd = document.getElementById('moveBwd');
+// let blockColor = document.getElementById('setCol');
 
-let block1 = new Block(blockTakeOff, blockAttr.takeOff);
-block1.init();
+// let block1 = new Block(palette, blockAttr.takeOff);
+// block1.init();
 
-let block2 = new Block(blockLand, blockAttr.toLand);
-block2.init();
+// let block2 = new Block(blockLand, blockAttr.toLand);
+// block2.init();
 
-let block3 = new InputBlock(blockMoveFwd, blockAttr.moveFwd);
-block3.init();
+// let block3 = new InputBlock(blockMoveFwd, blockAttr.moveFwd);
+// block3.init();
 
-let block4 = new blockAttr.moveBwd.type(blockMoveBwd, blockAttr.moveBwd);
-block4.init();
+// let block4 = new blockAttr.moveBwd.type(blockMoveBwd, blockAttr.moveBwd);
+// block4.init();
 
-let block5 = new ColorBlock(blockColor, blockAttr.setCol);
-block5.init();
+// let block5 = new ColorBlock(blockColor, blockAttr.setCol);
+// block5.init();
 
 
 
@@ -435,8 +444,8 @@ function onDragStart(obj){
 	}
 
 	if(obj.wrapper.parentNode.id =='block_drop_area'){
-		let pos = blockList.indexOf(obj);	
-		let deleted = blockList.splice(pos,1);
+		let pos = blc1.blockList.indexOf(obj);	
+		let deleted = blc1.blockList.splice(pos,1);
 		console.log('Deleted: ',deleted);
 	}
 
@@ -444,7 +453,7 @@ function onDragStart(obj){
 }
 
 function onDrag(obj){
-	if(this.hitTest(dropArea, "100%") && (blockList.length >= 2)){
+	if(this.hitTest(dropArea, "100%") && (blc1.blockList.length >= 2)){
 		blc1.updPos(obj);
 	}
 	// console.log(this);		
@@ -454,7 +463,7 @@ function onDragEnd(obj){
 	if (this.hitTest(dropArea, "100%")){		 		
 		dropArea.append(this.target);
 
-		blc1.addBlock(obj,blockList);		
+		blc1.addBlock(obj,blc1.blockList);		
 	}
 
 	else{
@@ -474,23 +483,36 @@ function onDragEnd(obj){
 
 
 // Block list logic
-const blockList = [];
+class BlockList{
 
-class BlockListConstructor{
+	constructor(config){
 
-	constructor(){
+		const defaultConfig = {};
+		this.config = Object.assign(defaultConfig, config);
+		this.blockList = this.initBlockList(config);
+
+		this.cont = this.config.cont;
+		// this.initBlockList();
 	}
 
-	init(){
+	initBlockList(){
+		let newBlockList = [];
+		if(this.config.list){
+			// newBlockList = this.config.list;
+			console.log(this.config.list);			
+		}
+		// newBlockList.
+		console.log(newBlockList);
+		return newBlockList;
 	}
 
 	updPos(obj){
-		console.log(blockList);
+		console.log(blc1);
 		let objRect = obj.wrapper.getBoundingClientRect();
 		let upper = [];		
 		let lower = [];
 		let elRect;
-		blockList.forEach(function(el, i){
+		blc1.blockList.forEach(function(el, i){
 			
 			elRect = el.wrapper.getBoundingClientRect();				
 			if(objRect.y >= elRect.y){
@@ -543,15 +565,18 @@ class BlockListConstructor{
 	}
 
 	renderBlocks(){
-		let newXpos = blockList[0].wrapper.getBoundingClientRect().left;
-		let newYpos = blockList[0].wrapper.getBoundingClientRect().top + window.pageYOffset;
+		let newXpos = this.blockList[0].wrapper.getBoundingClientRect().left;
+		let newYpos = this.blockList[0].wrapper.getBoundingClientRect().top + window.pageYOffset;
 
-		blockList.forEach(function(el, i){
+		this.blockList.forEach(function(el, i){
 			gsap.to(el.wrapper,{duration:0.3, left:newXpos, top:newYpos});
 			newYpos += el.wrapper.getBoundingClientRect().height;
 		});
 	}
 }
 
-let blc1 = new BlockListConstructor();
+
+let sbPalette = new BlockList({type:'sbPalette', list:blockAttr, cont: palette});
+console.log(sbPalette);
+let blc1 = new BlockList({type:'newList', list:[]});
 

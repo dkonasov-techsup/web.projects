@@ -128,6 +128,7 @@ class Block{
 			onDragStartParams: [this],
 			
 			onDrag: onDrag,
+			onDragParams: [this],
 			onDragEnd: onDragEnd,
 			onDragEndParams: [this],
 		});
@@ -420,6 +421,7 @@ function onPress(){
 }
 
 function onDragStart(obj){
+
 	if(obj.wrapper.parentNode.id == 'palette'){
 
 		let objRect = obj.wrapper.getBoundingClientRect();
@@ -431,19 +433,30 @@ function onDragStart(obj){
 		gsap.set(this.target,{left:objRect.left, top:objRect.top + window.pageYOffset});
 		this.update();	
 	}
+
+	if(obj.wrapper.parentNode.id =='block_drop_area'){
+		let pos = blc1.blockList.indexOf(obj);	
+		let deleted = blc1.blockList.splice(pos,1);
+		console.log('Deleted: ',deleted);
+	}
+
 	shadePaletteTwin.play();	
 }
 
-function onDrag(pointerX, pointerY){
-		
+function onDrag(obj){
+	if(this.hitTest(dropArea, "100%") && (blc1.blockList.length >= 2)){
+		blc1.updPos(obj);
+	}
+	// console.log(this);		
 }
 
 function onDragEnd(obj){
-	if (this.hitTest(dropArea, "100%")){		
-		 		
+	if (this.hitTest(dropArea, "100%")){		 		
 		dropArea.append(this.target);
-		blockList.this = this;
+
+		blc1.addBlock(obj,blc1.blockList);		
 	}
+
 	else{
 		let parEl = palette.querySelector(`#${this.target.id}`);
 		let parRect = parEl.getBoundingClientRect();
@@ -454,13 +467,98 @@ function onDragEnd(obj){
 		let intDragTwin = gsap.to(this.target,{duration:0.3, left:parRect.x, top:parRect.y + window.pageYOffset, opacity:0,onComplete:()=>{						
 			this.target.remove();
 		}});
+		blc1.renderBlocks();
 	}
 	shadePaletteTwin.reverse();
 }
 
 
 // Block list logic
-let blockList = {};
+class BlockList{
 
+	constructor(config){
+		const defaultConfig = {};
+		this.config = Object.assign(defaultConfig, config);
+		this.blockList = this.initBlockList(config);
+	}
 
+	initBlockList(config){
+		let newBlockList = [];
+		if(this.config.list){
+			let newBlockList = this.config.list;
+		}
+	
+		return newBlockList;
+	}
+
+	updPos(obj){
+		console.log(blc1);
+		let objRect = obj.wrapper.getBoundingClientRect();
+		let upper = [];		
+		let lower = [];
+		let elRect;
+		blc1.blockList.forEach(function(el, i){
+			
+			elRect = el.wrapper.getBoundingClientRect();				
+			if(objRect.y >= elRect.y){
+				upper.unshift(el);
+				// console.log(upper[upper.length-1].wrapper.getBoundingClientRect().y);
+				// let top = upper[upper.length-1].wrapper.getBoundingClientRect().y + calcShift(upper) - objRect.height;
+				// console.log(upper);
+				// gsap.to(el.wrapper,{duration:0.1, top:top})																												
+			}
+			else{
+				lower.push(el);
+				// console.log(lower);
+				// let top = upper[0].wrapper.getBoundingClientRect().y + calcShift(lower) + objRect.height;
+				// gsap.to(el.wrapper,{duration:0.1, top:top})				
+			}
+			// console.log(upper,lower);
+		})
+
+		// if(upper.length){				
+		// 		//let shift = parseInt(upper[0].wrapper.style.top)
+		// 		// gsap.to(upper[0].wrapper,{duration:0.2, top:calcShift(upper)})
+		// }
+
+		function calcShift(arr){
+			// console.log(arr);
+			let totalShift = arr.reduce(function(acc, cur){
+				// console.log(cur);
+				return acc += cur.wrapper.getBoundingClientRect().height;
+				// return elem.wraper.style.height; 
+			},0);
+			// console.log(totalShift);
+			return totalShift;
+		}		
+	}
+
+	addBlock(obj,blockList){
+		// console.log(blockList);		
+		let newPos = 0;		
+		let objRect = obj.wrapper.getBoundingClientRect();
+					
+		blockList.forEach(function(el, i){
+			let elRect = el.wrapper.getBoundingClientRect();				
+			if(objRect.y >= elRect.y){
+				newPos = i + 1;					
+			}				
+		})
+
+		blockList.splice(newPos, 0, obj);		
+		this.renderBlocks()		
+	}
+
+	renderBlocks(){
+		let newXpos = this.blockList[0].wrapper.getBoundingClientRect().left;
+		let newYpos = this.blockList[0].wrapper.getBoundingClientRect().top + window.pageYOffset;
+
+		this.blockList.forEach(function(el, i){
+			gsap.to(el.wrapper,{duration:0.3, left:newXpos, top:newYpos});
+			newYpos += el.wrapper.getBoundingClientRect().height;
+		});
+	}
+}
+
+let blc1 = new BlockList({type:'newList', list:[]});
 
