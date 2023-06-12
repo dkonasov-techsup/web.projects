@@ -19,7 +19,7 @@
 .sidebar_inner{
 	/*display: flex;*/
     height: 100%;
-    padding: 26px;
+    padding: 18px;
     overflow: auto;
 }
 
@@ -38,10 +38,33 @@
 	color: var(--text-light-gray);
 }
 
-.sidebar_section_title{	
+
+
+
+.sidebar_section .tabs_nav{
+	display: flex;
+	column-gap: 10px;
+}
+
+.sidebar_section_btn{
+	/*flex: 1;*/
+	padding: 0px;	
+	font: 18px "Montserrat";
+	height: 40px;
+	background-color: var(--sidebar-btn-gray);
+	border: 0;	
 	color: var(--text-dark-accent);
-	font-size: 20px;
-	font-weight: 700;
+	/*font-size: 20px;*/
+	font-weight: 400;
+}
+
+.btn_active{
+	color: var(--sb-btn-text-active);
+}
+
+.sidebar_section_btn:hover{
+	/*background-color: var(--border-light-gray);*/
+	color: var(--sb-btn-hover-text);
 }
 
 .palette{

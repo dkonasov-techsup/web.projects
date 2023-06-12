@@ -30,6 +30,11 @@ body{
 	--border-gray: #424242;	
 	--sidebar-gray: #282828;
 
+	--sidebar-btn-gray: #282828;
+	--sb-btn-text-active: #eaeaea;
+	--sb-btn-hover-text: #eaeaea;
+
+
 	--text-light-gray: #e8e8e8;
 	--text-dark-accent: #808080;
 }

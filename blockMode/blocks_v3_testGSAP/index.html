@@ -11,7 +11,7 @@
 	<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200">
 
 	<link rel="preconnect" href="https://fonts.googleapis.com">
-	<link href="https://fonts.googleapis.com/css2?family=Montserrat+Alternates:wght@700&family=Montserrat:wght@300;400;500;700&display=swap" rel="stylesheet">
+	<link href="https://fonts.googleapis.com/css2?family=Montserrat+Alternates:wght@700&family=Montserrat:wght@100;200;300;400;500;700&display=swap" rel="stylesheet">
 	
 </head>
 <body>	
@@ -27,23 +27,32 @@
 				<button class="sidebar_toggle <!-- material-symbols-outlined -->" onclick="sidebar_toggle()"></button>
 				<div class="sidebar_inner">
 					<div class="sidebar_content">
-						<div class="sidebar_section">
-							<span class="sidebar_section_title">Palette</span>
-							<div class="palette" id="palette">
-<!-- 								<div class="block_container" id="takeOff"></div>
-								<div class="block_container" id="toLand"></div>
-								<div class="block_container" id="moveFwd"></div>
-								<div class="block_container" id="moveBwd"></div>
-								<div class="block_container" id="setCol"></div> -->
+						<!-- TEST Use a new tabs_wrapper (class Tabs) type:sBarTabs -->
+						<div class="sidebar_section tabs_wrapper">
+							<div class="tabs_nav">								
+								<button class="sidebar_section_btn">Palette</button>
+								<button class="sidebar_section_btn btn_active">Patterns</button>
+
+							</div>
+							<div class="tabs_contents">	
+								<div class="palette tabs_cont" id="palette">
+									<!-- Injecting a new list (class BlockList) type:palette -->
+								</div>
+								<div class="patterns tabs_cont" id="patterns">
+									<!-- Injecting a new list (class BlockList) type:patterns -->
+								</div>
 							</div>
 						</div>
+
 					</div>
 				</div>
 			</div>		
 
 			<div class="page_inner">
-				Some text
-				<div id="block_drop_area"></div>
+				
+				<div id="block_drop_area">
+					<!-- Injecting a new list (class BlockList) type: pattern0 -->
+				</div>
 			</div>
 		</div>
 

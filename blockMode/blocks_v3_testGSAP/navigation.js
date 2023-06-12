@@ -1,18 +1,23 @@
 "use strict"
 
-let page = document.querySelector(".page");
-let sidebar = document.querySelector('.sidebar')
+let page = document.querySelector('.page');
+let sidebar = document.querySelector('.sidebar');
+
+let tabs = document.getElementsByClassName('tabs_wrapper');
+
+console.log(tabs);
+
 let sbStat;
 
 
 
-// Обработчик события sidebar_toggle
+// evHandler > sidebar_toggle
 function sidebar_toggle(){	
 	sbStat = sidebar.classList.toggle('sidebar_open');	
 	resizePage();
 }
 
-// Положение sidebar в зависмости от скрола документа
+// Sidebar position (в зависмости от скрола документа)
 document.addEventListener("DOMContentLoaded", stickSidebar)
 document.addEventListener("scroll",stickSidebar);
 
@@ -26,10 +31,20 @@ function stickSidebar(){
 	} 
 }
 
-// Положение page в зависмости от сайдбара
+// Page position (в зависмости от сайдбара)
 function resizePage(){
 	// console.log(sbStat);	
 	let sbWdt = sidebar.getBoundingClientRect().width;
 	if(sbStat){ page.style.paddingLeft = sbWdt + "px"; }
 	else{ page.style.paddingLeft = ""; }
 }
+
+
+// Tabs
+class Tabs{
+	constructor(config){
+
+	}
+}
+
+
