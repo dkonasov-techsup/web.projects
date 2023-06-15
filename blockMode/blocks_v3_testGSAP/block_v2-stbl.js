@@ -20,23 +20,24 @@ class Block{
 	// static hghT = 60;	
 	// static minHxPos = 100;
 	
-	constructor(wrapper,config){
-		const defaultConfig = {};
+	constructor(wrapper, config){
+		const defaultConfig = {};		
 		this.config = Object.assign(defaultConfig, config);
-		this.wrapper = wrapper;		
-		// console.log(this.config);						
+		this.wrapper = wrapper;								
 	}
 
-	//инициализация перемещена в конструктор → хер знает куда вынести атрибуты, учитывая что ширина svgbody адаптивна
 	init(){
 		let svgBody = this.svgBody = document.createElementNS(Block.xmlns, "svg");		
 		svgBody.setAttributeNS(null, "id", "svg_body");
 		svgBody.setAttributeNS(null, "height", "60");		
 		svgBody.setAttributeNS(null, "fill", this.config.colors.bg);
+
+		// this.list.append(wrapper);
+
 		this.wrapper.append(svgBody);
 		this.keyBlock = this.drawKeyBlock();
 		this.setSvgWdt();
-		this.eventsHandler();					
+		this.eventsHandler();							
 	}
 
 	setSvgWdt(){
@@ -109,10 +110,6 @@ class Block{
 		this.wrapper.ondragstart = ()=>{
 		  return false;
 		};
-		// set new EventListener
-		// this.wrapper.addEventListener('mousedown', ()=>{			
-		// 	blMouseDown(this);
-		// });
 
 		// from custom d&d:
 		// this.wrapper.onmousedown = ()=>{
@@ -154,8 +151,8 @@ class Block{
 
 class InputBlock extends Block{
 
-	constructor(wrapper,config){
-		super(wrapper,config);										
+	constructor(wrapper, config){
+		super(wrapper, config);										
 	}
 
 	init(){
@@ -275,36 +272,13 @@ class ColorBlock extends InputBlock{
 	}
 }
 
-const blockAttr = {
-	takeOff: {type:'default', colors:{bg:"#ed4a0f", font:'#fff'}, textVal:{keyText:'TAKEOFF'}},
-	toLand:  {type:'default', colors:{bg:"#ed4a0f", font:'#fff'}, textVal:{keyText:'LAND'}},
-	moveFwd: {type:'input', colors:{bg:"#4d97ff", font:'#fff'}, textVal:{keyText:'MOVE', descText:'forward'}},
-	moveBwd: {type: InputBlock, colors:{bg:"#4d97ff", font:'#fff'}, textVal:{keyText:'MOVE', descText:'backward'}},	
-	setCol:  {type:'input', colors:{bg:"#04d200", font:'#fff'}, textVal:{keyText:'SET', descText:'color'}},	
+const BLOCK_OPTION = {
+	takeOff: {type: Block, 		contId: "takeOff", colors:{bg:"#ed4a0f", font:'#fff'}, textVal:{keyText:'TAKEOFF'}},
+	toLand:  {type: Block, 		contId: "toLand", colors:{bg:"#ed4a0f", font:'#fff'}, textVal:{keyText:'LAND'}},
+	moveFwd: {type: InputBlock, contId: "moveFwd", colors:{bg:"#4d97ff", font:'#fff'}, textVal:{keyText:'MOVE', descText:'forward'}},
+	moveBwd: {type: InputBlock, contId: "moveBwd", colors:{bg:"#4d97ff", font:'#fff'}, textVal:{keyText:'MOVE', descText:'backward'}},	
+	setCol:  {type: InputBlock, contId: "setCol", colors:{bg:"#04d200", font:'#fff'}, textVal:{keyText:'SET', descText:'color'}},	
 }
-
-let blockTakeOff = document.getElementById('takeOff');
-let blockLand = document.getElementById('toLand');
-let blockMoveFwd = document.getElementById('moveFwd');
-let blockMoveBwd = document.getElementById('moveBwd');
-let blockColor = document.getElementById('setCol');
-
-let block1 = new Block(blockTakeOff, blockAttr.takeOff);
-block1.init();
-
-let block2 = new Block(blockLand, blockAttr.toLand);
-block2.init();
-
-let block3 = new InputBlock(blockMoveFwd, blockAttr.moveFwd);
-block3.init();
-
-let block4 = new blockAttr.moveBwd.type(blockMoveBwd, blockAttr.moveBwd);
-block4.init();
-
-let block5 = new ColorBlock(blockColor, blockAttr.setCol);
-block5.init();
-
-
 
 //D&D methods on mouse events with GSAP
 //set dropzone and palette
@@ -423,7 +397,7 @@ function onPress(){
 function onDragStart(obj){
 
 	if(obj.wrapper.parentNode.id == 'palette'){
-
+		 
 		let objRect = obj.wrapper.getBoundingClientRect();
 		let newClone = obj.clone();
 
@@ -446,14 +420,13 @@ function onDragStart(obj){
 function onDrag(obj){
 	if(this.hitTest(dropArea, "100%") && (blc1.blockList.length >= 2)){
 		blc1.updPos(obj);
-	}
-	// console.log(this);		
+	}		
 }
 
-function onDragEnd(obj){
+function onDragEnd(obj){	
+
 	if (this.hitTest(dropArea, "100%")){		 		
 		dropArea.append(this.target);
-
 		blc1.addBlock(obj,blc1.blockList);		
 	}
 
@@ -472,22 +445,33 @@ function onDragEnd(obj){
 	shadePaletteTwin.reverse();
 }
 
-
 // Block list logic
 class BlockList{
 
 	constructor(config){
 		const defaultConfig = {};
 		this.config = Object.assign(defaultConfig, config);
+		this.type = this.config.type;
+		this.wrapper = this.config.wrapper;
 		this.blockList = this.initBlockList(config);
 	}
 
-	initBlockList(config){
+	initBlockList(){
 		let newBlockList = [];
-		if(this.config.list){
-			let newBlockList = this.config.list;
+		if(this.config.reqSeq){
+			newBlockList = Array.from(this.config.reqSeq, (el)=>{
+				let blockAttr = BLOCK_OPTION[el];
+				let blockType = blockAttr.type;
+				let newWrapper = document.createElement('div');
+					newWrapper.classList = "block_container";
+					newWrapper.id = blockAttr.contId; 
+					this.wrapper.append(newWrapper)
+				
+				let newBlock = new blockType(newWrapper, blockAttr);
+				newBlock.init();
+				return newBlock;				
+			});	
 		}
-	
 		return newBlockList;
 	}
 
@@ -501,40 +485,15 @@ class BlockList{
 			
 			elRect = el.wrapper.getBoundingClientRect();				
 			if(objRect.y >= elRect.y){
-				upper.unshift(el);
-				// console.log(upper[upper.length-1].wrapper.getBoundingClientRect().y);
-				// let top = upper[upper.length-1].wrapper.getBoundingClientRect().y + calcShift(upper) - objRect.height;
-				// console.log(upper);
-				// gsap.to(el.wrapper,{duration:0.1, top:top})																												
+				upper.unshift(el);																												
 			}
 			else{
-				lower.push(el);
-				// console.log(lower);
-				// let top = upper[0].wrapper.getBoundingClientRect().y + calcShift(lower) + objRect.height;
-				// gsap.to(el.wrapper,{duration:0.1, top:top})				
-			}
-			// console.log(upper,lower);
+				lower.push(el);				
+			}			
 		})
-
-		// if(upper.length){				
-		// 		//let shift = parseInt(upper[0].wrapper.style.top)
-		// 		// gsap.to(upper[0].wrapper,{duration:0.2, top:calcShift(upper)})
-		// }
-
-		function calcShift(arr){
-			// console.log(arr);
-			let totalShift = arr.reduce(function(acc, cur){
-				// console.log(cur);
-				return acc += cur.wrapper.getBoundingClientRect().height;
-				// return elem.wraper.style.height; 
-			},0);
-			// console.log(totalShift);
-			return totalShift;
-		}		
 	}
 
-	addBlock(obj,blockList){
-		// console.log(blockList);		
+	addBlock(obj,blockList){		
 		let newPos = 0;		
 		let objRect = obj.wrapper.getBoundingClientRect();
 					
@@ -546,7 +505,7 @@ class BlockList{
 		})
 
 		blockList.splice(newPos, 0, obj);		
-		this.renderBlocks()		
+		this.renderBlocks();		
 	}
 
 	renderBlocks(){
@@ -560,5 +519,12 @@ class BlockList{
 	}
 }
 
-let blc1 = new BlockList({type:'newList', list:[]});
+//Block sequence for new list(Palette + workspaceList)
+const sbPaletteReqSeq = ['takeOff', 'toLand', 'moveFwd', 'moveBwd', 'setCol'];
+const sbPalette = new BlockList({type:'sbPalette', reqSeq:sbPaletteReqSeq, wrapper: palette});
 
+let blc1 = new BlockList({type:'pattern0', reqSeq:[]});
+
+console.log(sbPalette,blc1);
+//Добавить для отладки тестовый лист с последовательностью. 
+;

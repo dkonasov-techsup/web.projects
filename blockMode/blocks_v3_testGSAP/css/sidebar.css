@@ -19,9 +19,19 @@
 .sidebar_inner{
 	/*display: flex;*/
     height: 100%;
-    padding: 18px;
+    /*padding: 18px;*/
     overflow: auto;
 }
+
+.sidebar_inner .tabs_contents{
+	padding: 18px;
+}
+
+.sidebar_inner .tabs_nav{
+	position: sticky;
+	top: 0;
+}
+
 
 .sidebar_navigation_links{
 	padding: 0px;
@@ -38,13 +48,6 @@
 	color: var(--text-light-gray);
 }
 
-
-
-
-.sidebar_section .tabs_nav{
-	display: flex;
-	column-gap: 10px;
-}
 
 .sidebar_section_btn{
 	/*flex: 1;*/
@@ -69,7 +72,7 @@
 
 .palette{
 	height: 1800px;
-	padding: 20px 0px;
+	/*padding: 20px 0px;*/
 }
 
 
