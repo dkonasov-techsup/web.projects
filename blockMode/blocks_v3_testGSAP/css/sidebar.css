@@ -16,63 +16,61 @@
 	transform: translateX(0px);
 }
 
-.sidebar_inner{
-	/*display: flex;*/
+.sidebar_inner{	
+    height: 100%;    
+}
+
+.sidebar .tabs_wrapper{
     height: 100%;
-    /*padding: 18px;*/
-    overflow: auto;
 }
 
-.sidebar_inner .tabs_contents{
-	padding: 18px;
+.sidebar .tabs_sections{
+	display: flex;
+	flex-direction: row;	
+	height: 100%;	
 }
 
-.sidebar_inner .tabs_nav{
-	position: sticky;
-	top: 0;
+.sidebar .tab_sect{
+	display: none;
+	width: 100%;
+}
+.sidebar .sect_active{
+	display: block;
 }
 
-
-.sidebar_navigation_links{
-	padding: 0px;
-	margin: 20px 0px;
-	list-style: none;
+.sidebar .tabs_nav{
+	display: flex;
+	column-gap: 20px;
+	padding: 0px 18px;
+	border-bottom: solid 1px var(--border-gray);
 }
 
-.sidebar_navigation_link{
-	margin-top: 8px;
-}
-
-.sidebar_link{
-	text-decoration: none;
-	color: var(--text-light-gray);
-}
-
-
-.sidebar_section_btn{
-	/*flex: 1;*/
+.sidebar .nav_btn{
+	height: 72px;
 	padding: 0px;	
-	font: 18px "Montserrat";
-	height: 40px;
+	font: 17px "Montserrat";	
 	background-color: var(--sidebar-btn-gray);
 	border: 0;	
-	color: var(--text-dark-accent);
-	/*font-size: 20px;*/
+	color: var(--text-dark-accent);	
 	font-weight: 400;
+	border-bottom: 2px solid transparent;
 }
 
-.btn_active{
+.sidebar .btn_active{
 	color: var(--sb-btn-text-active);
+	border-bottom: 2px solid var(--sb-btn-text-active);
 }
 
-.sidebar_section_btn:hover{
+.sidebar .nav_btn:hover{
 	/*background-color: var(--border-light-gray);*/
 	color: var(--sb-btn-hover-text);
 }
 
+
 .palette{
-	height: 1800px;
-	/*padding: 20px 0px;*/
+	height: 100%;
+	overflow-y: scroll;
+	padding: 18px;
 }
 
 
@@ -80,7 +78,7 @@
     top: 14px;
     left: 100%;
     margin-left: 14px;
-	content: "";
+	color: var(--sb-btn-text-active);
 	display: inline-block;
 	position: absolute;
 	padding: 0px;
@@ -89,10 +87,11 @@
 	width: 44px;
 	height: 44px;
 	cursor: pointer;
+	font-size: 24px;
+	transition: all linear 100ms;
 }
 
-.sidebar_toggle:before{
-	content: "\e5d2";
-	font-size: 24px;
-	color: var(--border-light-gray);	
+.sidebar_toggle:hover{
+	/*transform: scale(1.2);*/
+	font-size: 30px;
 }

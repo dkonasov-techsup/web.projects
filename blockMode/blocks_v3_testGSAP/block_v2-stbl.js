@@ -31,9 +31,7 @@ class Block{
 		svgBody.setAttributeNS(null, "id", "svg_body");
 		svgBody.setAttributeNS(null, "height", "60");		
 		svgBody.setAttributeNS(null, "fill", this.config.colors.bg);
-
-		// this.list.append(wrapper);
-
+		
 		this.wrapper.append(svgBody);
 		this.keyBlock = this.drawKeyBlock();
 		this.setSvgWdt();
@@ -69,6 +67,7 @@ class Block{
 
 	drawKeyBlock(){
 		let keyText = this.drawText(this.config.textVal.keyText, 0);
+		console.log(keyText);
 
 		let endPosX = keyText.wdt < 100 ? 100 : keyText.wdt;		
 		//text alignment, when its width is less than 100 (note that drawText.wdt includes double padding)		
@@ -152,7 +151,8 @@ class Block{
 class InputBlock extends Block{
 
 	constructor(wrapper, config){
-		super(wrapper, config);										
+		super(wrapper, config);
+		this.inpValue = config.inpDefVal;										
 	}
 
 	init(){
@@ -187,11 +187,16 @@ class InputBlock extends Block{
 
 	addInputArea(stPosX){
 		let input = document.createElement('input');
-		let measureSpan = document.createElement('span');
-		input.className = "input_area";
-		measureSpan.className = "measure_span";
+		input.className = "input_area";		
 		input.setAttribute("type","text");
 		input.setAttribute("maxlength","6"); //for HTML5
+		input.value = this.inpValue;
+
+		//more attribute in styles
+
+		let measureSpan = document.createElement('span');
+		measureSpan.className = "measure_span";
+
 					
 		this.wrapper.append(input);
 		this.wrapper.append(measureSpan);
@@ -226,11 +231,14 @@ class InputBlock extends Block{
 	eventsHandler(){
 		super.eventsHandler();
 		//use arrow-function from save link `this`
-		this.wrapper.addEventListener('input',()=>{			
+		this.wrapper.addEventListener('input',()=>{	
 
 			let inputEl = this.wrapper.querySelector('.input_area');
 			let spanEl = this.wrapper.querySelector('.measure_span');
-			console.log(spanEl);
+
+			// return inputEl.type == "color" ? false : true;
+			if(inputEl.type=="color"){return};
+
 			// resize inputArea
 			spanEl.textContent = inputEl.value;	
 			let inputWidth = inputEl.style.width = spanEl.offsetWidth + 'px';
@@ -259,9 +267,10 @@ class ColorBlock extends InputBlock{
 
 	addInputArea(stPosX){
 		let input = document.createElement('input');		
-		input.className = "input_area";		
-		input.setAttribute("type","color");		
-					
+		input.className = "input_area";				
+		input.setAttribute("type","color");
+		input.value = this.inpValue;		
+						
 		this.wrapper.append(input);		
 
 		input.style.top = 7 +"px";
@@ -274,10 +283,10 @@ class ColorBlock extends InputBlock{
 
 const BLOCK_OPTION = {
 	takeOff: {type: Block, 		contId: "takeOff", colors:{bg:"#ed4a0f", font:'#fff'}, textVal:{keyText:'TAKEOFF'}},
-	toLand:  {type: Block, 		contId: "toLand", colors:{bg:"#ed4a0f", font:'#fff'}, textVal:{keyText:'LAND'}},
-	moveFwd: {type: InputBlock, contId: "moveFwd", colors:{bg:"#4d97ff", font:'#fff'}, textVal:{keyText:'MOVE', descText:'forward'}},
-	moveBwd: {type: InputBlock, contId: "moveBwd", colors:{bg:"#4d97ff", font:'#fff'}, textVal:{keyText:'MOVE', descText:'backward'}},	
-	setCol:  {type: InputBlock, contId: "setCol", colors:{bg:"#04d200", font:'#fff'}, textVal:{keyText:'SET', descText:'color'}},	
+	toLand:  {type: Block, 		contId: "toLand",  colors:{bg:"#ed4a0f", font:'#fff'}, textVal:{keyText:'LAND'}},
+	moveFwd: {type: InputBlock, contId: "moveFwd", colors:{bg:"#4d97ff", font:'#fff'}, textVal:{keyText:'MOVE', descText:'forward'},  inpDefVal:0.56},
+	moveBwd: {type: InputBlock, contId: "moveBwd", colors:{bg:"#4d97ff", font:'#fff'}, textVal:{keyText:'MOVE', descText:'backward'}, inpDefVal:0.56},	
+	setCol:  {type: ColorBlock, contId: "setCol",  colors:{bg:"#04d200", font:'#fff'}, textVal:{keyText:'SET',  descText:'color'},	  inpDefVal:'#027800'},	
 }
 
 //D&D methods on mouse events with GSAP
@@ -520,7 +529,7 @@ class BlockList{
 }
 
 //Block sequence for new list(Palette + workspaceList)
-const sbPaletteReqSeq = ['takeOff', 'toLand', 'moveFwd', 'moveBwd', 'setCol'];
+const sbPaletteReqSeq = ['takeOff', 'toLand', 'moveFwd', 'moveBwd', 'setCol', 'toLand', 'moveFwd', 'moveBwd', 'setCol', 'toLand', 'moveFwd', 'moveBwd', 'setCol'];
 const sbPalette = new BlockList({type:'sbPalette', reqSeq:sbPaletteReqSeq, wrapper: palette});
 
 let blc1 = new BlockList({type:'pattern0', reqSeq:[]});

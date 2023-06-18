@@ -23,7 +23,27 @@
 	width: 36px;	
 	border-width: 0px;
 	border-radius: 6px;
+	background: #ffffffcc;
+
 }
+
+.input_area[type="color"]{
+	width: 36px;
+	padding: 0px;	
+	border-width: 0px;
+	border-radius: 6px;
+	background: none;	
+}
+
+.input_area[type="color"]::-webkit-color-swatch-wrapper {
+	padding: 0;
+}
+
+.input_area[type="color"]::-webkit-color-swatch {
+	border: solid 0px #000; /*change color of the swatch border here*/
+	border-radius: 6px;
+}
+
 .input_area:focus{	
     outline: none;
 }
