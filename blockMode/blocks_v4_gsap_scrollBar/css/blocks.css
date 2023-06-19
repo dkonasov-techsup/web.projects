@@ -1,0 +1,63 @@
+.block_container{
+	position: relative;
+	/*border: solid 1px red;*/
+	width: fit-content;
+	display: flex;
+	/*margin: 0px;*/
+}
+
+.input_area, .measure_span{
+	min-width: 36px;
+	position: absolute;
+	box-sizing: border-box;		
+	padding: 4px;
+	text-align: center;
+	height: 36px;
+	
+	font-size: 20px;
+	font-family: Segoe UI;
+	font-weight: bold; 
+}
+
+.input_area{
+	width: 36px;	
+	border-width: 0px;
+	border-radius: 6px;
+	background: #ffffffcc;
+	color: #20202080;
+	transition: background-color 300ms ease,
+				color 300ms ease;
+}
+
+.input_area[type="color"]{
+	width: 36px;
+	padding: 0px;	
+	border-width: 0px;
+	border-radius: 6px;
+	background: none;	
+}
+
+.input_area[type="color"]::-webkit-color-swatch-wrapper {
+	padding: 0;
+}
+
+.input_area[type="color"]::-webkit-color-swatch {
+	border: solid 0px #000; /*change color of the swatch border here*/
+	border-radius: 6px;
+}
+
+.input_area:focus{	
+    outline: none;
+    background: #fff;
+	color: #000;
+}
+
+.measure_span{
+	z-index: -100;
+}
+
+
+#block_drop_area{
+	height: inherit;
+}
+/*---------------------------
