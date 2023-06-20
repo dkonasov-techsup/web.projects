@@ -57,7 +57,7 @@ class Block{
 		textEl.setAttributeNS(null, "fill", this.config.colors.font);
 		textEl.setAttributeNS(null, "font-weight", "bold");
 		textEl.setAttributeNS(null, "font-family", "Segoe UI");
-		textEl.setAttributeNS(null, "alignment-baseline", "middle");
+		textEl.setAttributeNS(null, "dominant-baseline", "middle");
 		
 		this.svgBody.append(textEl);
 		let textWdt = parseInt(textEl.getBBox().width)+(Block.textPadding*2);	
@@ -106,9 +106,9 @@ class Block{
 
 	eventsHandler(){
 		// off default D&D
-		this.wrapper.ondragstart = ()=>{
-		  return false;
-		};
+		// this.wrapper.ondragstart = ()=>{
+		//   return false;
+		// };
 
 		// from custom d&d:
 		// this.wrapper.onmousedown = ()=>{
@@ -117,7 +117,7 @@ class Block{
 
 		let blockDnD = Draggable.create(this.wrapper,{
 			dragClickables: false,
-			autoScroll : 1,
+			autoScroll : 0,
 			type: "left,top",
 			onPress: onPress,			
 			onDragStart: onDragStart,
@@ -180,6 +180,11 @@ class InputBlock extends Block{
 		// Gaps between svg paths?
 		// inputBlock.setAttributeNS(null,"stroke",this.config.colors.bg);
 		// inputBlock.setAttributeNS(null,"stroke-width", 0);
+
+		// not necessary
+		// let inputGroup = document.createElementNS(Block.xmlns, "g");
+		// inputGroup.setAttributeNS(null, "id","input_block_group");
+		// inputGroup.append(inputBlock);
 	
 		this.svgBody.append(inputBlock);
 		let blockWidth = inputBlock.getBBox().width;
@@ -229,6 +234,12 @@ class InputBlock extends Block{
 
 	eventsHandler(){
 		super.eventsHandler();
+
+		let inputEl = this.wrapper.querySelector('.input_area');
+		inputEl.addEventListener('focusout',(e)=>{
+			console.log('focusout');
+		})
+
 		//use arrow-function from save link `this`
 		this.wrapper.addEventListener('input',(e)=>{
 
@@ -251,9 +262,7 @@ class InputBlock extends Block{
 			this.descBlock.el.setAttributeNS(null, "transform",`translate(${offsetX},0)`);
 
 			// resize svgBody
-			console.log(offsetX);
-			let svgBodyWdt = this.keyBlock.wdt + this.inputBlock.wdt + this.descBlock.wdt + offsetX;
-			this.svgBody.setAttributeNS(null,"width",svgBodyWdt);			
+			this.setSvgWdt();			
 		})
 	}		
 }
@@ -402,16 +411,18 @@ function blMouseDown(obj){
 
 // Prototype02-------GSAP D&D---------
 function onPress(){
-	// event.stopPropagation();
-	console.log(event);	
-
-	let input = this.target.querySelector('input')
-	console.log(input);
-	// input.blur();	
+	
+	console.log(event.target);	
+	// console.log(this);
+	let input = this.target.querySelector('input');
+	let span = this.target.querySelector('.measure_span');
+	// console.log(span);
+	// input.focus();
+	// span.blur()
 }
 
 function onDragStart(obj){
-	
+
 	if(obj.wrapper.parentNode.id == 'palette'){
 		 
 		let objRect = obj.wrapper.getBoundingClientRect();
