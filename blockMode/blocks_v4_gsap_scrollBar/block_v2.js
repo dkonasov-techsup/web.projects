@@ -34,11 +34,11 @@ class Block{
 		
 		this.wrapper.append(svgBody);
 		this.keyBlock = this.drawKeyBlock();
-		this.setSvgWdt();
+		this.resizeSvg();
 		this.eventsHandler();							
 	}
 
-	setSvgWdt(){
+	resizeSvg(){
 		let newWdt = 0;		
 		for(let i=0; i<this.svgBody.children.length; i++){
 			newWdt += this.svgBody.children[i].getBBox().width;
@@ -165,13 +165,14 @@ class InputBlock extends Block{
 		this.keyBlock = this.drawKeyBlock();
 		this.inputBlock = this.drawInputBlock();
 		this.descBlock = this.drawDescBlock();
-		this.setSvgWdt();
+		this.resizeSvg();
 		this.eventsHandler();			
 	}
 
 	drawInputBlock(){
 		let stPosX = this.keyBlock.wdt;
-		let endPosX = this.addInputArea(stPosX) + stPosX;
+		let inputArea = this.addInputArea(stPosX);
+		let endPosX = inputArea.wdt + stPosX;
 
 		let inputBlock = document.createElementNS(Block.xmlns, "path");		
 		inputBlock.setAttributeNS(null,"d", (`M${stPosX} 0 H${endPosX} V50 H${stPosX} Z`));
@@ -181,14 +182,14 @@ class InputBlock extends Block{
 		// inputBlock.setAttributeNS(null,"stroke",this.config.colors.bg);
 		// inputBlock.setAttributeNS(null,"stroke-width", 0);
 
-		// not necessary
+		// Test how <g> in svg affects rendering
 		// let inputGroup = document.createElementNS(Block.xmlns, "g");
 		// inputGroup.setAttributeNS(null, "id","input_block_group");
 		// inputGroup.append(inputBlock);
 	
 		this.svgBody.append(inputBlock);
 		let blockWidth = inputBlock.getBBox().width;
-		return {el: inputBlock, wdt: blockWidth};
+		return {el: inputBlock, wdt: blockWidth, input:inputArea};
 	}
 
 	addInputArea(stPosX){
@@ -199,17 +200,23 @@ class InputBlock extends Block{
 		input.value = this.inpValue;
 		//more attribute in styles
 
-		let measureSpan = document.createElement('span');
-		measureSpan.className = "measure_span";
+		let spanEl = document.createElement('span');
+		spanEl.className = "measure_span";
 					
 		this.wrapper.append(input);
-		this.wrapper.append(measureSpan);
+		this.wrapper.append(spanEl);
 
-		input.style.top = measureSpan.style.top = 7 + "px";
-		input.style.left = measureSpan.style.left = stPosX + "px";
-		let endPosX = parseInt(window.getComputedStyle(input, null).getPropertyValue('width'));	
+		input.style.top = spanEl.style.top = 7 + "px";
+		input.style.left = spanEl.style.left = stPosX + "px";
+		// input.style.width = this.resizeInputArea(input,spanEl) + "px";
+
+		spanEl.textContent = input.value;	
+		let inputWidth = input.style.width = spanEl.offsetWidth + 'px' 
+		input.style.width = inputWidth;
+
+		let endPosX = input.getBoundingClientRect().width;		
 		
-		return(endPosX);	
+		return{el:input, wdt:endPosX};	
 	}
 
 	drawDescBlock(){
@@ -228,42 +235,48 @@ class InputBlock extends Block{
 		descGroup.prepend(descBlock);
 
 		this.svgBody.append(descGroup);
-		let blockWidth = descBlock.getBBox().width;
+		let blockWidth = descBlock.getBoundingClientRect().width;
 		return {el: descGroup, wdt: blockWidth};
 	}
 
 	eventsHandler(){
 		super.eventsHandler();
-
+		// Fix for chrome stop the bubbling of the change event
+		// Need update to track current block value
 		let inputEl = this.wrapper.querySelector('.input_area');
-		inputEl.addEventListener('focusout',(e)=>{
-			console.log('focusout');
+		inputEl.addEventListener('change',(e)=>{
+			e.stopImmediatePropagation();
 		})
 
 		//use arrow-function from save link `this`
-		this.wrapper.addEventListener('input',(e)=>{
-
-			let inputEl = this.wrapper.querySelector('.input_area');
-			let spanEl = this.wrapper.querySelector('.measure_span');
+		this.wrapper.addEventListener('input',(e)=>{	
 
 			// return inputEl.type == "color" ? false : true;
 			if(inputEl.type=="color"){return};
 
-			// resize inputArea
-			spanEl.textContent = inputEl.value;	
-			let inputWidth = inputEl.style.width = spanEl.offsetWidth + 'px';
-			
-			let stPosX = this.keyBlock.wdt;
-			let endPosX = stPosX + parseInt(inputWidth);
-			this.inputBlock.el.setAttributeNS(null,"d", (`M${stPosX} 0 H${endPosX} V50 H${stPosX} Z`));
-
-			// resize descArea
-			let offsetX = parseInt(inputWidth) - 36;
-			this.descBlock.el.setAttributeNS(null, "transform",`translate(${offsetX},0)`);
-
-			// resize svgBody
-			this.setSvgWdt();			
+			this.resizeInputArea();			
+			this.resizeDescBlock();			
+			this.resizeSvg();			
 		})
+	}
+
+	resizeInputArea(){
+		let inputEl = this.wrapper.querySelector('.input_area');
+		let spanEl = this.wrapper.querySelector('.measure_span');
+
+		spanEl.textContent = inputEl.value;	
+		let inputWidth = inputEl.style.width = spanEl.offsetWidth + 'px';
+		
+		// resize inputBlock
+		let stPosX = this.keyBlock.wdt;
+		let endPosX = stPosX + parseInt(inputWidth);
+		this.inputBlock.el.setAttributeNS(null,"d", (`M${stPosX} 0 H${endPosX} V50 H${stPosX} Z`));
+		return inputEl.style.width;
+	}
+
+	resizeDescBlock(){			
+		let offsetX = this.inputBlock.el.getBoundingClientRect().width - this.inputBlock.wdt;
+		this.descBlock.el.setAttributeNS(null, "transform",`translate(${offsetX},0)`);
 	}		
 }
 
@@ -285,7 +298,7 @@ class ColorBlock extends InputBlock{
 		input.style.left = stPosX +"px";
 		let endPosX = parseInt(window.getComputedStyle(input, null).getPropertyValue('width'));	
 		
-		return(endPosX);	
+		return{el:input, wdt:endPosX};	
 	}
 }
 
@@ -411,17 +424,11 @@ function blMouseDown(obj){
 
 // Prototype02-------GSAP D&D---------
 function onPress(){
-	
-	console.log(event.target);	
-	// console.log(this);
-	let input = this.target.querySelector('input');
-	let span = this.target.querySelector('.measure_span');
-	// console.log(span);
-	// input.focus();
-	// span.blur()
 }
 
 function onDragStart(obj){
+
+	console.log(event);
 
 	if(obj.wrapper.parentNode.id == 'palette'){
 		 
@@ -451,12 +458,12 @@ function onDrag(obj){
 }
 
 function onDragEnd(obj){	
+	console.log(event);
 
 	if (this.hitTest(dropArea, "100%")){		 		
 		dropArea.append(this.target);
 		blc1.addBlock(obj,blc1.blockList);		
 	}
-
 	else{
 		let parEl = palette.querySelector(`#${this.target.id}`);
 		let parRect = parEl.getBoundingClientRect();
@@ -504,8 +511,6 @@ class BlockList{
 
 	setWrpHeight(){
 		let list = this.blockList;
-		// console.log(list);
-
 		let listBoxHght = calc(list);
 		
 		function calc(list){
@@ -566,7 +571,7 @@ class BlockList{
 //Block sequence for new list(Palette + workspaceList)
 const sbPaletteReqSeq = ['takeOff', 'toLand', 'moveFwd', 'moveBwd', 'moveLft', 'moveRght', 'setCol', 'toLand', 'moveFwd', 'moveBwd', 'setCol'];
 const sbPalette = new BlockList({type:'sbPalette', reqSeq:sbPaletteReqSeq, wrapper: palette});
-sbPalette.setWrpHeight();
+sbPalette.setWrpHeight(); //test 
 
 let blc1 = new BlockList({type:'pattern0', reqSeq:[]});
 
