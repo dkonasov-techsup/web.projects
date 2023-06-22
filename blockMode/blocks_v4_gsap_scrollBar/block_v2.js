@@ -280,6 +280,48 @@ class InputBlock extends Block{
 	}		
 }
 
+
+//move in new version, trying use one block svg
+class updBlock{	
+	constructor(wrapper, config){
+		const defaultConfig = {};		
+		this.config = Object.assign(defaultConfig, config);
+		this.wrapper = wrapper;								
+	}
+	init(){
+		let svgBody = this.svgBody = document.createElementNS(Block.xmlns, "svg");
+			svgBody.setAttributeNS(null, "id", "svg_body");
+			svgBody.setAttributeNS(null, "height", "60");		
+			svgBody.setAttributeNS(null, "fill", this.config.colors.bg);
+		
+		this.wrapper.append(svgBody);
+		this.textArea1 = this.addTextArea(this.config.textVal.keyText,0);
+		this.renderSvg();
+		// this.eventsHandler();
+	}
+
+	addTextArea(textVal,xPos){
+		let textEl = document.createElement('span');
+		textEl.appendChild(textNode);
+		textEl.setAttribute("font-size", "18");
+		textEl.setAttribute("x", xPos);
+		textEl.setAttribute("y", "50%");
+		textEl.setAttribute("fill", this.config.colors.font);
+		textEl.setAttribute("font-weight", "bold");
+		textEl.setAttribute("font-family", "Segoe UI");
+		textEl.setAttribute("dominant-baseline", "middle");
+		
+		this.wrapper.append(textEl);
+		let textWdt = parseInt(textEl.getBBox().width)+(Block.textPadding*2);	
+		
+		return {el: textEl, wdt: textWdt};
+	}
+	renderSvg(){
+		
+	}
+}
+
+
 class ColorBlock extends InputBlock{
 
 	constructor(wrapper,config){
@@ -307,9 +349,11 @@ const BLOCK_OPTION = {
 	toLand:   {type: Block, 		contId: "toLand",   colors:{bg:"#ed4a0f", font:'#fff'}, textVal:{keyText:'LAND'}},
 	moveFwd:  {type: InputBlock, 	contId: "moveFwd",  colors:{bg:"#4d97ff", font:'#fff'}, textVal:{keyText:'MOVE', descText:'forward'},  inpDefVal:0.56},
 	moveBwd:  {type: InputBlock, 	contId: "moveBwd",  colors:{bg:"#4d97ff", font:'#fff'}, textVal:{keyText:'MOVE', descText:'backward'}, inpDefVal:0.56},
-	moveLft:  {type: InputBlock, 	contId: "moveLft",  colors:{bg:"#4d97ff", font:'#fff'}, textVal:{keyText:'MOVE', descText:'left'},  inpDefVal:0.56},
-	moveRght: {type: InputBlock, 	contId: "moveRght", colors:{bg:"#4d97ff", font:'#fff'}, textVal:{keyText:'MOVE', descText:'right'},  inpDefVal:0.56},	
-	setCol:   {type: ColorBlock, 	contId: "setCol",   colors:{bg:"#04d200", font:'#fff'}, textVal:{keyText:'SET',  descText:'color'},	  inpDefVal:'#027800'},	
+	moveLft:  {type: InputBlock, 	contId: "moveLft",  colors:{bg:"#4d97ff", font:'#fff'}, textVal:{keyText:'MOVE', descText:'left'},     inpDefVal:0.56},
+	moveRght: {type: InputBlock, 	contId: "moveRght", colors:{bg:"#4d97ff", font:'#fff'}, textVal:{keyText:'MOVE', descText:'right'},    inpDefVal:0.56},
+	setPause: {type: InputBlock, 	contId: "setPause", colors:{bg:"#b703fb", font:'#fff'}, textVal:{keyText:'PAUSE', descText:'msec'},    inpDefVal:1000},	
+	setCol:   {type: ColorBlock, 	contId: "setCol",   colors:{bg:"#04d200", font:'#fff'}, textVal:{keyText:'SET',  descText:'color'},	   inpDefVal:'#027800'},
+	deBug:    {type: updBlock, 		contId: "deBug",   colors:{bg:"#000", font:'#fff'}, textVal:{keyText:'THIS',  descText:'debug'},	   inpDefVal:'debugValue'},	
 }
 
 //D&D methods on mouse events with GSAP
@@ -569,7 +613,7 @@ class BlockList{
 }
 
 //Block sequence for new list(Palette + workspaceList)
-const sbPaletteReqSeq = ['takeOff', 'toLand', 'moveFwd', 'moveBwd', 'moveLft', 'moveRght', 'setCol', 'toLand', 'moveFwd', 'moveBwd', 'setCol'];
+const sbPaletteReqSeq = ['takeOff', 'toLand', 'moveFwd', 'moveBwd', 'moveLft', 'moveRght', 'setPause', 'setCol', 'toLand', 'moveFwd', 'moveBwd', 'setCol'];
 const sbPalette = new BlockList({type:'sbPalette', reqSeq:sbPaletteReqSeq, wrapper: palette});
 sbPalette.setWrpHeight(); //test 
 
