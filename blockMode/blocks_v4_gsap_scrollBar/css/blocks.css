@@ -37,6 +37,7 @@
 	background: none;	
 }
 
+
 .input_area[type="color"]::-webkit-color-swatch-wrapper {
 	padding: 0;
 }
@@ -60,4 +61,14 @@
 #block_drop_area{
 	height: inherit;
 }
-/*---------------------------
+
+.block_textArea{
+	align-self: center;
+	text-align: center;
+	position: absolute;
+	
+	font-size: 18px;
+	font-weight: 700;
+	font-family:"Segoe UI";
+	/*color:#fff;*/
+}

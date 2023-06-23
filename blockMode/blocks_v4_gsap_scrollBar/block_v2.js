@@ -282,11 +282,15 @@ class InputBlock extends Block{
 
 
 //move in new version, trying use one block svg
-class updBlock{	
+class updBlock{
+
+	static textPadding = 18;
+
 	constructor(wrapper, config){
 		const defaultConfig = {};		
 		this.config = Object.assign(defaultConfig, config);
-		this.wrapper = wrapper;								
+		this.wrapper = wrapper;
+		this.content = {};								
 	}
 	init(){
 		let svgBody = this.svgBody = document.createElementNS(Block.xmlns, "svg");
@@ -295,29 +299,42 @@ class updBlock{
 			svgBody.setAttributeNS(null, "fill", this.config.colors.bg);
 		
 		this.wrapper.append(svgBody);
-		this.textArea1 = this.addTextArea(this.config.textVal.keyText,0);
+		 
+		this.content.textArea1 = this.addTextArea(this.config.textVal.keyText,0);
 		this.renderSvg();
 		// this.eventsHandler();
 	}
 
 	addTextArea(textVal,xPos){
-		let textEl = document.createElement('span');
-		textEl.appendChild(textNode);
-		textEl.setAttribute("font-size", "18");
-		textEl.setAttribute("x", xPos);
-		textEl.setAttribute("y", "50%");
-		textEl.setAttribute("fill", this.config.colors.font);
-		textEl.setAttribute("font-weight", "bold");
-		textEl.setAttribute("font-family", "Segoe UI");
-		textEl.setAttribute("dominant-baseline", "middle");
-		
+
+		xPos += updBlock.textPadding;
+		let textEl = document.createElement('div');
+			textEl.classList.add('block_textArea');
+		let textNode = document.createTextNode(textVal);
+
 		this.wrapper.append(textEl);
-		let textWdt = parseInt(textEl.getBBox().width)+(Block.textPadding*2);	
+
+		textEl.appendChild(textNode);		
+		// textEl.style.left = xPos + "px";		
+		textEl.style.color =  this.config.colors.font;		
 		
+		let textWdt = parseInt(textEl.getBoundingClientRect().width)+(updBlock.textPadding*2);	
+		textEl.style.width = textWdt + "px";
+
 		return {el: textEl, wdt: textWdt};
 	}
 	renderSvg(){
-		
+		this.sumWidth = calc(this.content);
+		function calc(content){
+			let sumWidth = 0;
+			for(const part of Object.keys(content)){
+				console.log(content[part]);
+				let curWidth = content[part].el.getBoundingClientRect().width;
+				sumWidth += curWidth;
+			}
+			return sumWidth;
+			console.log(sumHght);
+		}
 	}
 }
 
@@ -353,7 +370,7 @@ const BLOCK_OPTION = {
 	moveRght: {type: InputBlock, 	contId: "moveRght", colors:{bg:"#4d97ff", font:'#fff'}, textVal:{keyText:'MOVE', descText:'right'},    inpDefVal:0.56},
 	setPause: {type: InputBlock, 	contId: "setPause", colors:{bg:"#b703fb", font:'#fff'}, textVal:{keyText:'PAUSE', descText:'msec'},    inpDefVal:1000},	
 	setCol:   {type: ColorBlock, 	contId: "setCol",   colors:{bg:"#04d200", font:'#fff'}, textVal:{keyText:'SET',  descText:'color'},	   inpDefVal:'#027800'},
-	deBug:    {type: updBlock, 		contId: "deBug",   colors:{bg:"#000", font:'#fff'}, textVal:{keyText:'THIS',  descText:'debug'},	   inpDefVal:'debugValue'},	
+	deBug:    {type: updBlock, 		contId: "deBug",   colors:{bg:"#000", font:'#fff'}, textVal:{keyText:'TAKEOFF',  descText:'debug'},	   inpDefVal:'debugValue'},	
 }
 
 //D&D methods on mouse events with GSAP
@@ -613,7 +630,7 @@ class BlockList{
 }
 
 //Block sequence for new list(Palette + workspaceList)
-const sbPaletteReqSeq = ['takeOff', 'toLand', 'moveFwd', 'moveBwd', 'moveLft', 'moveRght', 'setPause', 'setCol', 'toLand', 'moveFwd', 'moveBwd', 'setCol'];
+const sbPaletteReqSeq = ['deBug', 'takeOff', 'toLand', 'moveFwd', 'moveBwd', 'moveLft', 'moveRght', 'setPause', 'setCol', 'toLand', 'moveFwd', 'moveBwd', 'setCol'];
 const sbPalette = new BlockList({type:'sbPalette', reqSeq:sbPaletteReqSeq, wrapper: palette});
 sbPalette.setWrpHeight(); //test 
 
