@@ -34,11 +34,11 @@ class Block{
 		
 		this.wrapper.append(svgBody);
 		this.keyBlock = this.drawKeyBlock();
-		this.setSvgWdt();
+		this.resizeSvg();
 		this.eventsHandler();							
 	}
 
-	setSvgWdt(){
+	resizeSvg(){
 		let newWdt = 0;		
 		for(let i=0; i<this.svgBody.children.length; i++){
 			newWdt += this.svgBody.children[i].getBBox().width;
@@ -57,7 +57,7 @@ class Block{
 		textEl.setAttributeNS(null, "fill", this.config.colors.font);
 		textEl.setAttributeNS(null, "font-weight", "bold");
 		textEl.setAttributeNS(null, "font-family", "Segoe UI");
-		textEl.setAttributeNS(null, "alignment-baseline", "middle");
+		textEl.setAttributeNS(null, "dominant-baseline", "middle");
 		
 		this.svgBody.append(textEl);
 		let textWdt = parseInt(textEl.getBBox().width)+(Block.textPadding*2);	
@@ -67,7 +67,7 @@ class Block{
 
 	drawKeyBlock(){
 		let keyText = this.drawText(this.config.textVal.keyText, 0);
-		console.log(keyText);
+		// console.log(keyText);
 
 		let endPosX = keyText.wdt < 100 ? 100 : keyText.wdt;		
 		//text alignment, when its width is less than 100 (note that drawText.wdt includes double padding)		
@@ -106,9 +106,9 @@ class Block{
 
 	eventsHandler(){
 		// off default D&D
-		this.wrapper.ondragstart = ()=>{
-		  return false;
-		};
+		// this.wrapper.ondragstart = ()=>{
+		//   return false;
+		// };
 
 		// from custom d&d:
 		// this.wrapper.onmousedown = ()=>{
@@ -117,7 +117,7 @@ class Block{
 
 		let blockDnD = Draggable.create(this.wrapper,{
 			dragClickables: false,
-			autoScroll : 1,
+			autoScroll : 0,
 			type: "left,top",
 			onPress: onPress,			
 			onDragStart: onDragStart,
@@ -160,17 +160,19 @@ class InputBlock extends Block{
 		svgBody.setAttributeNS(null, "id", "svg_body");
 		svgBody.setAttributeNS(null, "height", "60");
 		svgBody.setAttributeNS(null, "fill", this.config.colors.bg);
+
 		this.wrapper.append(svgBody);
 		this.keyBlock = this.drawKeyBlock();
 		this.inputBlock = this.drawInputBlock();
 		this.descBlock = this.drawDescBlock();
-		this.setSvgWdt();
+		this.resizeSvg();
 		this.eventsHandler();			
 	}
 
 	drawInputBlock(){
 		let stPosX = this.keyBlock.wdt;
-		let endPosX = this.addInputArea(stPosX) + stPosX;
+		let inputArea = this.addInputArea(stPosX);
+		let endPosX = inputArea.wdt + stPosX;
 
 		let inputBlock = document.createElementNS(Block.xmlns, "path");		
 		inputBlock.setAttributeNS(null,"d", (`M${stPosX} 0 H${endPosX} V50 H${stPosX} Z`));
@@ -178,11 +180,16 @@ class InputBlock extends Block{
 
 		// Gaps between svg paths?
 		// inputBlock.setAttributeNS(null,"stroke",this.config.colors.bg);
-		// inputBlock.setAttributeNS(null,"stroke-width",'0');
+		// inputBlock.setAttributeNS(null,"stroke-width", 0);
+
+		// Test how <g> in svg affects rendering
+		// let inputGroup = document.createElementNS(Block.xmlns, "g");
+		// inputGroup.setAttributeNS(null, "id","input_block_group");
+		// inputGroup.append(inputBlock);
 	
 		this.svgBody.append(inputBlock);
 		let blockWidth = inputBlock.getBBox().width;
-		return {el: inputBlock, wdt: blockWidth};
+		return {el: inputBlock, wdt: blockWidth, input:inputArea};
 	}
 
 	addInputArea(stPosX){
@@ -191,21 +198,25 @@ class InputBlock extends Block{
 		input.setAttribute("type","text");
 		input.setAttribute("maxlength","6"); //for HTML5
 		input.value = this.inpValue;
-
 		//more attribute in styles
 
-		let measureSpan = document.createElement('span');
-		measureSpan.className = "measure_span";
-
+		let spanEl = document.createElement('span');
+		spanEl.className = "measure_span";
 					
 		this.wrapper.append(input);
-		this.wrapper.append(measureSpan);
+		this.wrapper.append(spanEl);
 
-		input.style.top = measureSpan.style.top = 7 + "px";
-		input.style.left = measureSpan.style.left = stPosX + "px";
-		let endPosX = parseInt(window.getComputedStyle(input, null).getPropertyValue('width'));	
+		input.style.top = spanEl.style.top = 7 + "px";
+		input.style.left = spanEl.style.left = stPosX + "px";
+		// input.style.width = this.resizeInputArea(input,spanEl) + "px";
+
+		spanEl.textContent = input.value;	
+		let inputWidth = input.style.width = spanEl.offsetWidth + 'px' 
+		input.style.width = inputWidth;
+
+		let endPosX = input.getBoundingClientRect().width;		
 		
-		return(endPosX);	
+		return{el:input, wdt:endPosX};	
 	}
 
 	drawDescBlock(){
@@ -224,39 +235,233 @@ class InputBlock extends Block{
 		descGroup.prepend(descBlock);
 
 		this.svgBody.append(descGroup);
-		let blockWidth = descBlock.getBBox().width;
+		let blockWidth = descBlock.getBoundingClientRect().width;
 		return {el: descGroup, wdt: blockWidth};
 	}
 
 	eventsHandler(){
 		super.eventsHandler();
-		//use arrow-function from save link `this`
-		this.wrapper.addEventListener('input',()=>{	
+		// Fix for chrome stop the bubbling of the change event
+		// Need update to track current block value
+		let inputEl = this.wrapper.querySelector('.input_area');
+		inputEl.addEventListener('change',(e)=>{
+			e.stopImmediatePropagation();
+		})
 
-			let inputEl = this.wrapper.querySelector('.input_area');
-			let spanEl = this.wrapper.querySelector('.measure_span');
+		//use arrow-function from save link `this`
+		this.wrapper.addEventListener('input',(e)=>{	
 
 			// return inputEl.type == "color" ? false : true;
 			if(inputEl.type=="color"){return};
 
-			// resize inputArea
-			spanEl.textContent = inputEl.value;	
-			let inputWidth = inputEl.style.width = spanEl.offsetWidth + 'px';
-			
-			let stPosX = this.keyBlock.wdt;
-			let endPosX = stPosX + parseInt(inputWidth);
-			this.inputBlock.el.setAttributeNS(null,"d", (`M${stPosX} 0 H${endPosX} V50 H${stPosX} Z`));
-
-			// resize descArea
-			let offsetX = parseInt(inputWidth) - 36;
-			this.descBlock.el.setAttributeNS(null, "transform",`translate(${offsetX},0)`);
-
-			// resize svgBody
-			console.log(offsetX);
-			let svgBodyWdt = this.keyBlock.wdt + this.inputBlock.wdt + this.descBlock.wdt + offsetX;
-			this.svgBody.setAttributeNS(null,"width",svgBodyWdt);			
+			this.resizeInputArea();			
+			this.resizeDescBlock();			
+			this.resizeSvg();			
 		})
+	}
+
+	resizeInputArea(){
+		let inputEl = this.wrapper.querySelector('.input_area');
+		let spanEl = this.wrapper.querySelector('.measure_span');
+
+		spanEl.textContent = inputEl.value;	
+		let inputWidth = inputEl.style.width = spanEl.offsetWidth + 'px';
+		
+		// resize inputBlock
+		let stPosX = this.keyBlock.wdt;
+		let endPosX = stPosX + parseInt(inputWidth);
+		this.inputBlock.el.setAttributeNS(null,"d", (`M${stPosX} 0 H${endPosX} V50 H${stPosX} Z`));
+		return inputEl.style.width;
+	}
+
+	resizeDescBlock(){
+		let offsetX = this.inputBlock.el.getBoundingClientRect().width - this.inputBlock.wdt;
+		this.descBlock.el.setAttributeNS(null, "transform",`translate(${offsetX},0)`);
 	}		
+}
+
+//UP in VERSION (use one path)
+class UpdBlock{
+
+	static xmlns = "http://www.w3.org/2000/svg";
+	static rRad = 8;
+	static textPadding = 18;
+
+	constructor(wrapper, config){
+		const defaultConfig = {};		
+		this.config = Object.assign(defaultConfig, config);
+		this.wrapper = wrapper;
+		this.content = {};								
+	}
+
+	init(){
+		let svgBody = this.svgBody = document.createElementNS(Block.xmlns, "svg");
+			svgBody.setAttributeNS(null, "id", "svg_body");
+			svgBody.setAttributeNS(null, "height", "64");		
+			svgBody.setAttributeNS(null, "fill", this.config.colors.bg);
+		
+		this.wrapper.append(svgBody);		 
+		this.content.textArea1 = this.addTextArea(this.config.textVal.keyText,0);
+		
+		this.renderSvg();
+		this.eventsHandler();
+	}
+	
+	addTextArea(textVal,xPos){
+		// console.log(xPos);
+		// xPos += UpdBlock.textPadding;
+		let textEl = document.createElement('text');
+			textEl.classList.add('block_textArea');
+		let textNode = document.createTextNode(textVal);
+
+		this.wrapper.append(textEl);
+
+		textEl.appendChild(textNode);		
+		textEl.style.left = xPos + "px";
+		textEl.style.top = 16 + "px"; //16? calc normal height
+		textEl.style.color =  this.config.colors.font;
+		textEl.style.whiteSpace = "nowrap";		
+		
+		let textWdt = parseInt(textEl.getBoundingClientRect().width)+(UpdBlock.textPadding*2);	
+		textEl.style.width = textWdt + "px";
+
+		return {el: textEl, wdt: textWdt};
+	}
+
+	renderSvg(obj){
+		if(this === obj){
+			// console.log(this.svgBody.children[0])
+			this.svgBody.children[0].remove();
+		}
+
+		let curSumWdt = calc(this.content);
+		function calc(content){
+			let sumWidth = 0;
+			for(const part of Object.keys(content)){
+				// console.log(content[part]);
+				let curWidth = content[part].wdt;
+				sumWidth += curWidth;
+			}
+			return sumWidth;			
+		}
+		console.log(curSumWdt);
+		let endPosX = curSumWdt;
+
+		this.svgBody.setAttributeNS(null, "width", endPosX);
+
+		let path = document.createElementNS(UpdBlock.xmlns, "path");		
+		let path1 = `M0 ${UpdBlock.rRad} Q0,0 ${UpdBlock.rRad},0 H26 Q31,0 35,5 T44,10 H60 Q65,10 69,5 T78,0 H${endPosX-UpdBlock.rRad} Q ${endPosX},0 ${endPosX},${UpdBlock.rRad}`;
+		let path2 = `V${50-UpdBlock.rRad} Q${endPosX},50 ${endPosX-UpdBlock.rRad},50 H76 Q71,50 67,55 T58,60 H46 Q41,60 37,55 T28,50 H${UpdBlock.rRad} Q0,50 0,${50-UpdBlock.rRad} Z`;
+
+		path.setAttributeNS(null, "d", `${path1} ${path2}`);
+		path.setAttributeNS(null,"id","path");
+		// path.setAttributeNS(null,"stroke-width","1");
+		// path.setAttributeNS(null,"stroke","#fff");
+
+		this.svgBody.prepend(path);
+	}
+
+	eventsHandler(){
+		const blockDnD = Draggable.create(this.wrapper,{
+			  dragClickables: false,
+			  autoScroll : 0,
+			  type: "left,top",
+			  onPress: onPress,			
+			  onDragStart: onDragStart,
+			  onDragStartParams: [this],
+			  
+			  onDrag: onDrag,
+			  onDragParams: [this],
+			  onDragEnd: onDragEnd,
+			  onDragEndParams: [this],
+		});
+	}
+
+}
+
+class UpdInputBlock extends UpdBlock{
+
+	constructor(wrapper, config){
+		super(wrapper, config);
+		this.inpValue = config.inpDefVal;
+		this.content = {};										
+	}
+
+	init(){
+		let svgBody = this.svgBody = document.createElementNS(Block.xmlns, "svg");
+			svgBody.setAttributeNS(null, "id", "svg_body");
+			svgBody.setAttributeNS(null, "height", "60");		
+			svgBody.setAttributeNS(null, "fill", this.config.colors.bg);
+		
+		this.wrapper.append(svgBody);
+		 
+		this.content.textArea1 = this.addTextArea(this.config.textVal.keyText, 0);
+		this.content.inputArea1 = this.addInputArea(this.content.textArea1.wdt);
+		this.content.textArea2 = this.addTextArea(this.config.textVal.descText, this.content.inputArea1.endPosX);
+		this.content.inputArea2 = this.addInputArea(this.content.textArea2.wdt);		
+
+		this.renderSvg();
+		this.eventsHandler();
+	}
+
+	buildContent(){
+
+	}
+
+	addInputArea(stPosX){
+		let input = document.createElement('input');
+			input.className = "input_area";		
+			input.setAttribute("type","text");
+			input.setAttribute("maxlength","6"); //for HTML5
+			input.value = this.inpValue;
+			//more attribute in styles
+
+		let spanEl = document.createElement('span');
+			spanEl.className = "measure_span";
+					
+		this.wrapper.append(input);
+		this.wrapper.append(spanEl);
+
+		input.style.top = spanEl.style.top = 7 + "px";
+		input.style.left = spanEl.style.left = stPosX + "px";		
+
+		//set first width for placeholder
+		spanEl.textContent = input.value;	
+		let inputWidth = spanEl.offsetWidth; 
+		input.style.width = inputWidth + 'px';
+
+		// mb use obj.offsetLeft?
+		let endPosX = stPosX + inputWidth;
+		// console.log (endPosX);		
+		return{el:input, span:spanEl, wdt:inputWidth, endPosX:endPosX};	
+	}
+
+	resizeInputArea(area){
+		console.log(area);
+		console.log(area.el.offsetLeft);
+		let inputEl = area.el;
+		let spanEl = area.span;
+
+		spanEl.textContent = inputEl.value;	
+		let inputWidth = area.wdt = spanEl.offsetWidth; 
+		inputEl.style.width = inputWidth + 'px';
+
+		console.log(this.content.inputArea1);
+		// area.wdt = inputWidth;
+
+	}
+
+	eventsHandler(){
+
+		super.eventsHandler();
+
+		this.wrapper.addEventListener('input',(e)=>{
+			this.resizeInputArea(this.content.inputArea1);	
+			this.renderSvg(this);
+			// return inputEl.type == "color" ? false : true;
+			// if(inputEl.type=="color"){return};			
+		})
+	}
 }
 
 class ColorBlock extends InputBlock{
@@ -277,16 +482,20 @@ class ColorBlock extends InputBlock{
 		input.style.left = stPosX +"px";
 		let endPosX = parseInt(window.getComputedStyle(input, null).getPropertyValue('width'));	
 		
-		return(endPosX);	
+		return{el:input, wdt:endPosX};	
 	}
 }
 
 const BLOCK_OPTION = {
-	takeOff: {type: Block, 		contId: "takeOff", colors:{bg:"#ed4a0f", font:'#fff'}, textVal:{keyText:'TAKEOFF'}},
-	toLand:  {type: Block, 		contId: "toLand",  colors:{bg:"#ed4a0f", font:'#fff'}, textVal:{keyText:'LAND'}},
-	moveFwd: {type: InputBlock, contId: "moveFwd", colors:{bg:"#4d97ff", font:'#fff'}, textVal:{keyText:'MOVE', descText:'forward'},  inpDefVal:0.56},
-	moveBwd: {type: InputBlock, contId: "moveBwd", colors:{bg:"#4d97ff", font:'#fff'}, textVal:{keyText:'MOVE', descText:'backward'}, inpDefVal:0.56},	
-	setCol:  {type: ColorBlock, contId: "setCol",  colors:{bg:"#04d200", font:'#fff'}, textVal:{keyText:'SET',  descText:'color'},	  inpDefVal:'#027800'},	
+	takeOff:  {type: Block, 		contId: "takeOff",  colors:{bg:"#ed4a0f", font:'#fff'}, textVal:{keyText:'TAKEOFF'}},
+	toLand:   {type: Block, 		contId: "toLand",   colors:{bg:"#ed4a0f", font:'#fff'}, textVal:{keyText:'LAND'}},
+	moveFwd:  {type: InputBlock, 	contId: "moveFwd",  colors:{bg:"#4d97ff", font:'#fff'}, textVal:{keyText:'MOVE', descText:'forward'},  inpDefVal:0.56},
+	moveBwd:  {type: InputBlock, 	contId: "moveBwd",  colors:{bg:"#4d97ff", font:'#fff'}, textVal:{keyText:'MOVE', descText:'backward'}, inpDefVal:0.56},
+	moveLft:  {type: InputBlock, 	contId: "moveLft",  colors:{bg:"#4d97ff", font:'#fff'}, textVal:{keyText:'MOVE', descText:'left'},     inpDefVal:0.56},
+	moveRght: {type: InputBlock, 	contId: "moveRght", colors:{bg:"#4d97ff", font:'#fff'}, textVal:{keyText:'MOVE', descText:'right'},    inpDefVal:0.56},
+	setPause: {type: InputBlock, 	contId: "setPause", colors:{bg:"#b703fb", font:'#fff'}, textVal:{keyText:'PAUSE', descText:'msec'},    inpDefVal:1000},	
+	setCol:   {type: ColorBlock, 	contId: "setCol",   colors:{bg:"#04d200", font:'#fff'}, textVal:{keyText:'SET',  descText:'color'},	   inpDefVal:'#027800'},
+	deBug:    {type: UpdInputBlock, contId: "deBug",   colors:{bg:"#000", font:'#fff'}, textVal:{keyText:'I FKNG DEBUG BLOCK',  descText:'I RULE THE CHAOS'}, inpDefVal:'>_<'},	
 }
 
 //D&D methods on mouse events with GSAP
@@ -400,10 +609,12 @@ function blMouseDown(obj){
 }
 
 // Prototype02-------GSAP D&D---------
-function onPress(){	
+function onPress(){
 }
 
 function onDragStart(obj){
+
+	console.log(event);
 
 	if(obj.wrapper.parentNode.id == 'palette'){
 		 
@@ -433,12 +644,12 @@ function onDrag(obj){
 }
 
 function onDragEnd(obj){	
+	console.log(event);
 
 	if (this.hitTest(dropArea, "100%")){		 		
 		dropArea.append(this.target);
 		blc1.addBlock(obj,blc1.blockList);		
 	}
-
 	else{
 		let parEl = palette.querySelector(`#${this.target.id}`);
 		let parRect = parEl.getBoundingClientRect();
@@ -462,7 +673,7 @@ class BlockList{
 		this.config = Object.assign(defaultConfig, config);
 		this.type = this.config.type;
 		this.wrapper = this.config.wrapper;
-		this.blockList = this.initBlockList(config);
+		this.blockList = this.initBlockList(config);		
 	}
 
 	initBlockList(){
@@ -480,8 +691,23 @@ class BlockList{
 				newBlock.init();
 				return newBlock;				
 			});	
-		}
+		}		
 		return newBlockList;
+	}
+
+	setWrpHeight(){
+		let list = this.blockList;
+		let listBoxHght = calc(list);
+		
+		function calc(list){
+			let sumHght = 0;
+			list.forEach((el,i)=>{
+				let curHght = el.wrapper.getBoundingClientRect().height;
+				sumHght += curHght;
+			})
+			return sumHght;
+		}
+		this.wrapper.style.height = listBoxHght + 'px';				
 	}
 
 	updPos(obj){
@@ -502,7 +728,7 @@ class BlockList{
 		})
 	}
 
-	addBlock(obj,blockList){		
+	addBlock(obj,blockList){
 		let newPos = 0;		
 		let objRect = obj.wrapper.getBoundingClientRect();
 					
@@ -525,15 +751,16 @@ class BlockList{
 			gsap.to(el.wrapper,{duration:0.3, left:newXpos, top:newYpos});
 			newYpos += el.wrapper.getBoundingClientRect().height;
 		});
-	}
+	}	
 }
 
 //Block sequence for new list(Palette + workspaceList)
-const sbPaletteReqSeq = ['takeOff', 'toLand', 'moveFwd', 'moveBwd', 'setCol', 'toLand', 'moveFwd', 'moveBwd', 'setCol', 'toLand', 'moveFwd', 'moveBwd', 'setCol'];
+const sbPaletteReqSeq = ['deBug', 'takeOff', 'toLand', 'moveFwd', 'moveBwd', 'moveLft', 'moveRght', 'setPause', 'setCol', 'toLand', 'moveFwd', 'moveBwd', 'setCol'];
 const sbPalette = new BlockList({type:'sbPalette', reqSeq:sbPaletteReqSeq, wrapper: palette});
+sbPalette.setWrpHeight(); //test 
 
 let blc1 = new BlockList({type:'pattern0', reqSeq:[]});
 
 console.log(sbPalette,blc1);
 //Добавить для отладки тестовый лист с последовательностью. 
-;
+

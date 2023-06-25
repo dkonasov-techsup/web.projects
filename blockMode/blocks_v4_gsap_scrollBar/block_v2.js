@@ -274,16 +274,17 @@ class InputBlock extends Block{
 		return inputEl.style.width;
 	}
 
-	resizeDescBlock(){			
+	resizeDescBlock(){
 		let offsetX = this.inputBlock.el.getBoundingClientRect().width - this.inputBlock.wdt;
 		this.descBlock.el.setAttributeNS(null, "transform",`translate(${offsetX},0)`);
 	}		
 }
 
+//UP in VERSION (use one path)
+class UpdBlock{
 
-//move in new version, trying use one block svg
-class updBlock{
-
+	static xmlns = "http://www.w3.org/2000/svg";
+	static rRad = 8;
 	static textPadding = 18;
 
 	constructor(wrapper, config){
@@ -292,6 +293,112 @@ class updBlock{
 		this.wrapper = wrapper;
 		this.content = {};								
 	}
+
+	init(){
+		let svgBody = this.svgBody = document.createElementNS(Block.xmlns, "svg");
+			svgBody.setAttributeNS(null, "id", "svg_body");
+			svgBody.setAttributeNS(null, "height", "64");		
+			svgBody.setAttributeNS(null, "fill", this.config.colors.bg);
+		
+		this.wrapper.append(svgBody);		 
+		this.content.textArea1 = this.addTextArea(this.config.textVal.keyText,0);
+		
+		this.renderSvg();
+		this.eventsHandler();
+	}
+	
+	addTextArea(textVal,xPos){
+		// console.log(xPos);
+		// xPos += UpdBlock.textPadding;
+		let textEl = document.createElement('text');
+			textEl.classList.add('block_textArea');
+		let textNode = document.createTextNode(textVal);
+
+		this.wrapper.append(textEl);
+
+		textEl.appendChild(textNode);		
+		textEl.style.left = xPos + "px";
+		textEl.style.top = 16 + "px"; //16? calc normal height
+		textEl.style.color =  this.config.colors.font;
+		textEl.style.whiteSpace = "nowrap";		
+		
+		let textWdt = parseInt(textEl.getBoundingClientRect().width)+(UpdBlock.textPadding*2);	
+		textEl.style.width = textWdt + "px";
+
+		return {el: textEl, wdt: textWdt};
+	}
+
+	renderSvg(obj){
+		if(this === obj){
+			// console.log(this.svgBody.children[0])
+			this.svgBody.children[0].remove();
+		}
+
+		let curSumWdt = calc(this.content);
+		function calc(content){
+			let sumWidth = 0;
+			for(const part of Object.keys(content)){
+				// console.log(content[part]);
+				let curWidth = content[part].wdt;
+				sumWidth += curWidth;
+			}
+			return sumWidth;			
+		}
+		console.log(curSumWdt);
+		let endPosX = curSumWdt;
+
+		this.svgBody.setAttributeNS(null, "width", endPosX);
+
+		let path = document.createElementNS(UpdBlock.xmlns, "path");		
+		let path1 = `M0 ${UpdBlock.rRad} Q0,0 ${UpdBlock.rRad},0 H26 Q31,0 35,5 T44,10 H60 Q65,10 69,5 T78,0 H${endPosX-UpdBlock.rRad} Q ${endPosX},0 ${endPosX},${UpdBlock.rRad}`;
+		let path2 = `V${50-UpdBlock.rRad} Q${endPosX},50 ${endPosX-UpdBlock.rRad},50 H76 Q71,50 67,55 T58,60 H46 Q41,60 37,55 T28,50 H${UpdBlock.rRad} Q0,50 0,${50-UpdBlock.rRad} Z`;
+
+		path.setAttributeNS(null, "d", `${path1} ${path2}`);
+		path.setAttributeNS(null,"id","path");
+		// path.setAttributeNS(null,"stroke-width","1");
+		// path.setAttributeNS(null,"stroke","#fff");
+
+		this.svgBody.prepend(path);
+	}
+
+	eventsHandler(){
+		const blockDnD = Draggable.create(this.wrapper,{
+			  dragClickables: false,
+			  autoScroll : 0,
+			  type: "left,top",
+			  onPress: onPress,			
+			  onDragStart: onDragStart,
+			  onDragStartParams: [this],
+			  
+			  onDrag: onDrag,
+			  onDragParams: [this],
+			  onDragEnd: onDragEnd,
+			  onDragEndParams: [this],
+		});
+	}
+
+	calc(content){
+		console.log(content);
+		let sumWidth = 0;
+		for(const part of Object.keys(content)){
+			// console.log(content[part]);
+			let curWidth = content[part].wdt;
+			sumWidth += curWidth;
+		}
+		return sumWidth;			
+	}
+
+}
+
+class UpdInputBlock extends UpdBlock{
+
+	constructor(wrapper, config){
+		super(wrapper, config);
+		this.inpValue = config.inpDefVal;
+		this.content = {};
+		Object.defineProperty(this.content, "sumWdt", { value: this.calc(this.content), configurable: true, writable: true, enumerable: false });										
+	}
+
 	init(){
 		let svgBody = this.svgBody = document.createElementNS(Block.xmlns, "svg");
 			svgBody.setAttributeNS(null, "id", "svg_body");
@@ -300,44 +407,77 @@ class updBlock{
 		
 		this.wrapper.append(svgBody);
 		 
-		this.content.textArea1 = this.addTextArea(this.config.textVal.keyText,0);
+		this.buildContent();
+
 		this.renderSvg();
-		// this.eventsHandler();
+		this.eventsHandler();
 	}
 
-	addTextArea(textVal,xPos){
+	buildContent(){
+		// this.defineProperty(user, "name", { value: "Вася", configurable: true, writable: true, enumerable: true });
 
-		xPos += updBlock.textPadding;
-		let textEl = document.createElement('div');
-			textEl.classList.add('block_textArea');
-		let textNode = document.createTextNode(textVal);
+		this.content.textArea1 = this.addTextArea(this.config.textVal.keyText, 0);
+		this.content.inputArea1 = this.addInputArea(this.content.textArea1.wdt);
+		this.content.textArea2 = this.addTextArea(this.config.textVal.descText, this.content.inputArea1.endPosX);
+		this.content.inputArea2 = this.addInputArea(this.content.textArea2.wdt);
 
-		this.wrapper.append(textEl);
-
-		textEl.appendChild(textNode);		
-		// textEl.style.left = xPos + "px";		
-		textEl.style.color =  this.config.colors.font;		
-		
-		let textWdt = parseInt(textEl.getBoundingClientRect().width)+(updBlock.textPadding*2);	
-		textEl.style.width = textWdt + "px";
-
-		return {el: textEl, wdt: textWdt};
 	}
-	renderSvg(){
-		this.sumWidth = calc(this.content);
-		function calc(content){
-			let sumWidth = 0;
-			for(const part of Object.keys(content)){
-				console.log(content[part]);
-				let curWidth = content[part].el.getBoundingClientRect().width;
-				sumWidth += curWidth;
-			}
-			return sumWidth;
-			console.log(sumHght);
-		}
+
+	addInputArea(stPosX){
+		let input = document.createElement('input');
+			input.className = "input_area";		
+			input.setAttribute("type","text");
+			input.setAttribute("maxlength","6"); //for HTML5
+			input.value = this.inpValue;
+			//more attribute in styles
+
+		let spanEl = document.createElement('span');
+			spanEl.className = "measure_span";
+					
+		this.wrapper.append(input);
+		this.wrapper.append(spanEl);
+
+		input.style.top = spanEl.style.top = 7 + "px";
+		input.style.left = spanEl.style.left = stPosX + "px";		
+
+		//set first width for placeholder
+		spanEl.textContent = input.value;	
+		let inputWidth = spanEl.offsetWidth; 
+		input.style.width = inputWidth + 'px';
+
+		// mb use obj.offsetLeft?
+		let endPosX = stPosX + inputWidth;
+		// console.log (endPosX);		
+		return{el:input, span:spanEl, wdt:inputWidth, endPosX:endPosX};	
+	}
+
+	resizeInputArea(area){
+		console.log(area);
+		console.log(area.el.offsetLeft);
+		let inputEl = area.el;
+		let spanEl = area.span;
+
+		spanEl.textContent = inputEl.value;	
+		let inputWidth = area.wdt = spanEl.offsetWidth; 
+		inputEl.style.width = inputWidth + 'px';
+
+		console.log(this.content.inputArea1);
+		// area.wdt = inputWidth;
+
+	}
+
+	eventsHandler(){
+
+		super.eventsHandler();
+
+		this.wrapper.addEventListener('input',(e)=>{
+			this.resizeInputArea(this.content.inputArea1);	
+			this.renderSvg(this);
+			// return inputEl.type == "color" ? false : true;
+			// if(inputEl.type=="color"){return};			
+		})
 	}
 }
-
 
 class ColorBlock extends InputBlock{
 
@@ -370,7 +510,7 @@ const BLOCK_OPTION = {
 	moveRght: {type: InputBlock, 	contId: "moveRght", colors:{bg:"#4d97ff", font:'#fff'}, textVal:{keyText:'MOVE', descText:'right'},    inpDefVal:0.56},
 	setPause: {type: InputBlock, 	contId: "setPause", colors:{bg:"#b703fb", font:'#fff'}, textVal:{keyText:'PAUSE', descText:'msec'},    inpDefVal:1000},	
 	setCol:   {type: ColorBlock, 	contId: "setCol",   colors:{bg:"#04d200", font:'#fff'}, textVal:{keyText:'SET',  descText:'color'},	   inpDefVal:'#027800'},
-	deBug:    {type: updBlock, 		contId: "deBug",   colors:{bg:"#000", font:'#fff'}, textVal:{keyText:'TAKEOFF',  descText:'debug'},	   inpDefVal:'debugValue'},	
+	deBug:    {type: UpdInputBlock, contId: "deBug",   colors:{bg:"#000", font:'#fff'}, textVal:{keyText:'I FKNG DEBUG BLOCK',  descText:'I RULE THE CHAOS'}, inpDefVal:'>_<'},	
 }
 
 //D&D methods on mouse events with GSAP
