@@ -308,8 +308,7 @@ class UpdBlock{
 	}
 	
 	addTextArea(textVal,xPos){
-		// console.log(xPos);
-		// xPos += UpdBlock.textPadding;
+		console.log(this.content); 
 		let textEl = document.createElement('text');
 			textEl.classList.add('block_textArea');
 		let textNode = document.createTextNode(textVal);
@@ -325,6 +324,7 @@ class UpdBlock{
 		let textWdt = parseInt(textEl.getBoundingClientRect().width)+(UpdBlock.textPadding*2);	
 		textEl.style.width = textWdt + "px";
 
+
 		return {el: textEl, wdt: textWdt};
 	}
 
@@ -334,18 +334,8 @@ class UpdBlock{
 			this.svgBody.children[0].remove();
 		}
 
-		let curSumWdt = calc(this.content);
-		function calc(content){
-			let sumWidth = 0;
-			for(const part of Object.keys(content)){
-				// console.log(content[part]);
-				let curWidth = content[part].wdt;
-				sumWidth += curWidth;
-			}
-			return sumWidth;			
-		}
-		console.log(curSumWdt);
-		let endPosX = curSumWdt;
+		let contWdt = this.calcWdt();
+		let endPosX = contWdt;
 
 		this.svgBody.setAttributeNS(null, "width", endPosX);
 
@@ -377,17 +367,18 @@ class UpdBlock{
 		});
 	}
 
-	calc(content){
-		console.log(content);
+	calcWdt(){
+		let content = this.content;
+		// console.log(content);
 		let sumWidth = 0;
 		for(const part of Object.keys(content)){
 			// console.log(content[part]);
 			let curWidth = content[part].wdt;
 			sumWidth += curWidth;
 		}
+		this.content.sumWdt = sumWidth;
 		return sumWidth;			
 	}
-
 }
 
 class UpdInputBlock extends UpdBlock{
@@ -395,8 +386,7 @@ class UpdInputBlock extends UpdBlock{
 	constructor(wrapper, config){
 		super(wrapper, config);
 		this.inpValue = config.inpDefVal;
-		this.content = {};
-		Object.defineProperty(this.content, "sumWdt", { value: this.calc(this.content), configurable: true, writable: true, enumerable: false });										
+		this.content = {};												
 	}
 
 	init(){
@@ -408,19 +398,19 @@ class UpdInputBlock extends UpdBlock{
 		this.wrapper.append(svgBody);
 		 
 		this.buildContent();
-
-		this.renderSvg();
+		this.renderSvg();		
 		this.eventsHandler();
 	}
 
 	buildContent(){
-		// this.defineProperty(user, "name", { value: "Вася", configurable: true, writable: true, enumerable: true });
+		Object.defineProperty(this.content, "sumWdt", { value: 0, configurable: true, writable: true, enumerable: false });
 
-		this.content.textArea1 = this.addTextArea(this.config.textVal.keyText, 0);
-		this.content.inputArea1 = this.addInputArea(this.content.textArea1.wdt);
-		this.content.textArea2 = this.addTextArea(this.config.textVal.descText, this.content.inputArea1.endPosX);
-		this.content.inputArea2 = this.addInputArea(this.content.textArea2.wdt);
-
+		this.content.textArea1 = this.addTextArea(this.config.textVal.keyText, this.calcWdt());
+		this.content.inputArea1 = this.addInputArea(this.calcWdt());
+		this.content.textArea2 = this.addTextArea(this.config.textVal.descText, this.calcWdt());
+		this.content.inputArea2 = this.addInputArea(this.calcWdt());
+		this.content.textArea3 = this.addTextArea(this.config.textVal.descText, this.calcWdt());
+		
 	}
 
 	addInputArea(stPosX){
@@ -446,13 +436,12 @@ class UpdInputBlock extends UpdBlock{
 		input.style.width = inputWidth + 'px';
 
 		// mb use obj.offsetLeft?
-		let endPosX = stPosX + inputWidth;
-		// console.log (endPosX);		
-		return{el:input, span:spanEl, wdt:inputWidth, endPosX:endPosX};	
+			
+		return{el:input, span:spanEl, wdt:inputWidth};	
 	}
 
-	resizeInputArea(area){
-		console.log(area);
+	resizeInputArea(input){
+		console.log(input);
 		console.log(area.el.offsetLeft);
 		let inputEl = area.el;
 		let spanEl = area.span;
@@ -461,9 +450,8 @@ class UpdInputBlock extends UpdBlock{
 		let inputWidth = area.wdt = spanEl.offsetWidth; 
 		inputEl.style.width = inputWidth + 'px';
 
-		console.log(this.content.inputArea1);
+		// console.log(this.content.inputArea1);
 		// area.wdt = inputWidth;
-
 	}
 
 	eventsHandler(){
@@ -471,7 +459,8 @@ class UpdInputBlock extends UpdBlock{
 		super.eventsHandler();
 
 		this.wrapper.addEventListener('input',(e)=>{
-			this.resizeInputArea(this.content.inputArea1);	
+			this.resizeInputArea(e.target);
+			// this.buildContent();	
 			this.renderSvg(this);
 			// return inputEl.type == "color" ? false : true;
 			// if(inputEl.type=="color"){return};			
