@@ -320,8 +320,9 @@ class UpdBlock{
 		textEl.style.top = 16 + "px"; //16? calc normal height
 		textEl.style.color =  this.config.colors.font;
 		textEl.style.whiteSpace = "nowrap";		
-		
-		let textWdt = parseInt(textEl.getBoundingClientRect().width)+(UpdBlock.textPadding*2);	
+
+		let textRect = textEl.getBoundingClientRect();
+		let textWdt = parseInt(textRect.width)+(UpdBlock.textPadding*2);
 		textEl.style.width = textWdt + "px";
 
 
@@ -405,7 +406,7 @@ class UpdInputBlock extends UpdBlock{
 	buildContent(){
 		Object.defineProperty(this.content, "sumWdt", { value: 0, configurable: true, writable: true, enumerable: false });
 
-		this.content.textArea1 = this.addTextArea(this.config.textVal.keyText, this.calcWdt());
+		this.content.textArea1 = this.addTextArea(this.config.textVal.keyText, 0);
 		this.content.inputArea1 = this.addInputArea(this.calcWdt());
 		this.content.textArea2 = this.addTextArea(this.config.textVal.descText, this.calcWdt());
 		this.content.inputArea2 = this.addInputArea(this.calcWdt());
