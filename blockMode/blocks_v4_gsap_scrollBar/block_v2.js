@@ -387,7 +387,7 @@ class UpdInputBlock extends UpdBlock{
 	constructor(wrapper, config){
 		super(wrapper, config);
 		this.inpValue = config.inpDefVal;
-		this.content = {};												
+		this.content = [];												
 	}
 
 	init(){
@@ -403,15 +403,18 @@ class UpdInputBlock extends UpdBlock{
 		this.eventsHandler();
 	}
 
-	buildContent(){
+	buildContent(){ // buildArea1
 		Object.defineProperty(this.content, "sumWdt", { value: 0, configurable: true, writable: true, enumerable: false });
 
-		this.content.textArea1 = this.addTextArea(this.config.textVal.keyText, 0);
-		this.content.inputArea1 = this.addInputArea(this.calcWdt());
-		this.content.textArea2 = this.addTextArea(this.config.textVal.descText, this.calcWdt());
-		this.content.inputArea2 = this.addInputArea(this.calcWdt());
-		this.content.textArea3 = this.addTextArea(this.config.textVal.descText, this.calcWdt());
-		
+		// this.content.textArea1 = this.addTextArea(this.config.textVal.keyText, 0);
+		// this.content.inputArea1 = this.addInputArea(this.calcWdt());
+		// this.content.textArea2 = this.addTextArea(this.config.textVal.descText, this.calcWdt());
+		// this.content.inputArea2 = this.addInputArea(this.calcWdt());
+		// this.content.textArea3 = this.addTextArea(this.config.textVal.descText, this.calcWdt());
+
+		this.content.push(this.addTextArea(this.config.textVal.keyText, 0));
+		this.content.push(this.addInputArea(this.content[this.content.length-1].wdt));
+		this.content.push(this.addTextArea(this.config.textVal.descText, this.content[this.content.length-1].wdt));
 	}
 
 	addInputArea(stPosX){
