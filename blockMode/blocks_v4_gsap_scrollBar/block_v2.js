@@ -412,9 +412,11 @@ class UpdInputBlock extends UpdBlock{
 		// this.content.inputArea2 = this.addInputArea(this.calcWdt());
 		// this.content.textArea3 = this.addTextArea(this.config.textVal.descText, this.calcWdt());
 
-		this.content.push(this.addTextArea(this.config.textVal.keyText, 0));
-		this.content.push(this.addInputArea(this.content[this.content.length-1].wdt));
-		this.content.push(this.addTextArea(this.config.textVal.descText, this.content[this.content.length-1].wdt));
+		this.content.push(this.addTextArea(this.config.textVal.keyText, 0));		
+		this.content.push(this.addInputArea(this.calcWdt()));
+		this.content.push(this.addTextArea(this.config.textVal.descText,this.calcWdt()));
+		this.content.push(this.addInputArea(this.calcWdt()));
+		this.content.push(this.addTextArea(" ",this.calcWdt()));
 	}
 
 	addInputArea(stPosX){
@@ -444,9 +446,10 @@ class UpdInputBlock extends UpdBlock{
 		return{el:input, span:spanEl, wdt:inputWidth};	
 	}
 
-	resizeInputArea(input){
-		console.log(input);
-		console.log(area.el.offsetLeft);
+	resizeInputArea(e){
+		console.log(e);
+		// console.log(input);
+		// console.log(input.offsetLeft);
 		let inputEl = area.el;
 		let spanEl = area.span;
 
@@ -463,7 +466,7 @@ class UpdInputBlock extends UpdBlock{
 		super.eventsHandler();
 
 		this.wrapper.addEventListener('input',(e)=>{
-			this.resizeInputArea(e.target);
+			this.resizeInputArea(e);
 			// this.buildContent();	
 			this.renderSvg(this);
 			// return inputEl.type == "color" ? false : true;
