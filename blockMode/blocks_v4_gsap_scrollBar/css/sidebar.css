@@ -2,7 +2,7 @@
 	position: fixed;
 	z-index: 10;
 	left: 0;
-	top: 0;
+	top: 41px;
 	bottom: 0;
 	height: 100%;
 	background-color: var(--sidebar-gray);
@@ -97,10 +97,10 @@
 	padding: 0px;
 	background: none;	
 	border: none;
-	width: 44px;
-	height: 44px;
+	width: 54px;
+	height: 54px;
 	cursor: pointer;
-	font-size: 24px;
+	font-size: 26px;
 	transition: all linear 100ms;
 }
 

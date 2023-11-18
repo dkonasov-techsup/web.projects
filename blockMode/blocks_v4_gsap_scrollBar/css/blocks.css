@@ -59,7 +59,7 @@
 
 
 #block_drop_area{
-	height: inherit;
+	height: 100vh;
 }
 
 .block_textArea{

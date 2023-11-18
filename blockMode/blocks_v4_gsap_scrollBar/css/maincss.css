@@ -19,7 +19,7 @@ body{
 
 .page_inner{
 	margin: 0px;	
-	height: 1800px;
+	height: 100vh;
 	transition: margin 150ms ease;
 }
 

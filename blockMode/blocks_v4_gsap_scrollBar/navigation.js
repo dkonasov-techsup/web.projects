@@ -85,18 +85,18 @@ function sidebar_toggle(){
 }
 
 // Sidebar position (в зависмости от скрола документа)
-document.addEventListener("DOMContentLoaded", stickSidebar)
-document.addEventListener("scroll",stickSidebar);
+// document.addEventListener("DOMContentLoaded", stickSidebar)
+// document.addEventListener("scroll",stickSidebar);
 
-function stickSidebar(){
-	let pageScrl = parseInt(window.pageYOffset);
-	if (pageScrl <= 41){
-		sidebar.style.top = (41-pageScrl) + "px";
-	}
-	else{
-		sidebar.style.top = 0 + "px";
-	} 
-}
+// function stickSidebar(){
+// 	let pageScrl = parseInt(window.pageYOffset);
+// 	if (pageScrl <= 41){
+// 		sidebar.style.top = (41-pageScrl) + "px";
+// 	}
+// 	else{
+// 		sidebar.style.top = 0 + "px";
+// 	} 
+// }
 
 // Page position (when sidebar moving)
 function resizePage(){
